@@ -129,6 +129,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="doc\UWP Horloge - Version 100.xlsx" />
+    <None Include="doc\UWP Horloge - Version 101.xlsx" />
     <None Include="Horloge_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
