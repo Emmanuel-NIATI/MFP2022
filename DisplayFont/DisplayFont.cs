@@ -3,6 +3,78 @@
 namespace DisplayFont
 {
 
+    public class Convertissor
+    {
+
+        public static bool[] ConvertHexToBin(String _hex)
+        {
+
+            bool[] res = new bool[4];
+
+            if ("0".Equals(_hex)) { res[0] = false; res[1] = false; res[2] = false; res[3] = false; }
+
+            if ("1".Equals(_hex)) { res[0] = true; res[1] = false; res[2] = false; res[3] = false; }
+
+            if ("2".Equals(_hex)) { res[0] = false; res[1] = true; res[2] = false; res[3] = false; }
+
+            if ("3".Equals(_hex)) { res[0] = true; res[1] = true; res[2] = false; res[3] = false; }
+
+            if ("4".Equals(_hex)) { res[0] = false; res[1] = false; res[2] = true; res[3] = false; }
+
+            if ("5".Equals(_hex)) { res[0] = true; res[1] = false; res[2] = true; res[3] = false; }
+
+            if ("6".Equals(_hex)) { res[0] = false; res[1] = true; res[2] = true; res[3] = false; }
+
+            if ("7".Equals(_hex)) { res[0] = true; res[1] = true; res[2] = true; res[3] = false; }
+
+            if ("8".Equals(_hex)) { res[0] = false; res[1] = false; res[2] = false; res[3] = true; }
+
+            if ("9".Equals(_hex)) { res[0] = true; res[1] = false; res[2] = false; res[3] = true; }
+
+            if ("A".Equals(_hex) || "a".Equals(_hex)) { res[0] = false; res[1] = true; res[2] = false; res[3] = true; }
+
+            if ("B".Equals(_hex) || "b".Equals(_hex)) { res[0] = true; res[1] = true; res[2] = false; res[3] = true; }
+
+            if ("C".Equals(_hex) || "c".Equals(_hex)) { res[0] = false; res[1] = false; res[2] = true; res[3] = true; }
+
+            if ("D".Equals(_hex) || "d".Equals(_hex)) { res[0] = true; res[1] = false; res[2] = true; res[3] = true; }
+
+            if ("E".Equals(_hex) || "E".Equals(_hex)) { res[0] = false; res[1] = true; res[2] = true; res[3] = true; }
+
+            if ("F".Equals(_hex) || "f".Equals(_hex)) { res[0] = true; res[1] = true; res[2] = true; res[3] = true; }
+
+            return res;
+
+        }
+
+        public static String ConvertBinToHex(bool _b3, bool _b2, bool _b1, bool _b0)
+        {
+
+            String res = "0";
+
+            if (!_b3 && !_b2 && !_b1 && !_b0) { res = "0"; }
+            if (!_b3 && !_b2 && !_b1 && _b0) { res = "1"; }
+            if (!_b3 && !_b2 && _b1 && !_b0) { res = "2"; }
+            if (!_b3 && !_b2 && _b1 && _b0) { res = "3"; }
+            if (!_b3 && _b2 && !_b1 && !_b0) { res = "4"; }
+            if (!_b3 && _b2 && !_b1 && _b0) { res = "5"; }
+            if (!_b3 && _b2 && _b1 && !_b0) { res = "6"; }
+            if (!_b3 && _b2 && _b1 && _b0) { res = "7"; }
+            if (_b3 && !_b2 && !_b1 && !_b0) { res = "8"; }
+            if (_b3 && !_b2 && !_b1 && _b0) { res = "9"; }
+            if (_b3 && !_b2 && _b1 && !_b0) { res = "A"; }
+            if (_b3 && !_b2 && _b1 && _b0) { res = "B"; }
+            if (_b3 && _b2 && !_b1 && !_b0) { res = "C"; }
+            if (_b3 && _b2 && !_b1 && _b0) { res = "D"; }
+            if (_b3 && _b2 && _b1 && !_b0) { res = "E"; }
+            if (_b3 && _b2 && _b1 && _b0) { res = "F"; }
+
+            return res;
+
+        }
+
+    }
+
     public class FontCharacterDescriptor
     {
 
@@ -34,7 +106,7 @@ namespace DisplayFont
             foreach (FontCharacterDescriptor _fcd in FontTableStandart)
             {
 
-                if ( _fcd.Character == _Character )
+                if (_fcd.Character == _Character)
                 {
 
                     fcd = _fcd;
@@ -54,7 +126,7 @@ namespace DisplayFont
             foreach (FontCharacterDescriptor _fcd in FontTableStandart)
             {
 
-                if ( _fcd.Order == _Order )
+                if (_fcd.Order == _Order)
                 {
 
                     fcd = _fcd;
@@ -81,7 +153,7 @@ namespace DisplayFont
 
         }
 
-        private static readonly FontCharacterDescriptor[] FontTableStandart = 
+        private static readonly FontCharacterDescriptor[] FontTableStandart =
         {
 
             new FontCharacterDescriptor( 000, ' ', new byte[]{ 0x00, 0x00, 0x00, 0x00, 0x00}, "Caractère  "),
@@ -339,7 +411,10 @@ namespace DisplayFont
             new FontCharacterDescriptor( 252, '³', new byte[]{ 0x00, 0x15, 0x15, 0x1F, 0x00}, "Caractère ³"),
             new FontCharacterDescriptor( 253, '²', new byte[]{ 0x00, 0x1D, 0x15, 0x17, 0x00}, "Caractère ²"),
             new FontCharacterDescriptor( 254, '■', new byte[]{ 0x00, 0x1C, 0x1C, 0x1C, 0x00}, "Caractère ■"),
-            new FontCharacterDescriptor( 255, ' ', new byte[]{ 0x00, 0x00, 0x00, 0x00, 0x00}, "Caractère  ")
+            new FontCharacterDescriptor( 255, ' ', new byte[]{ 0x00, 0x00, 0x00, 0x00, 0x00}, "Caractère  "),
+
+            new FontCharacterDescriptor( 256, '€', new byte[]{ 0x14, 0x3E, 0x55, 0x55, 0x55}, "Caractère €")
+
 
         };
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DisplayFont;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using DisplayFont;
+  
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Pixel
@@ -209,14 +210,14 @@ namespace Pixel
             if (_h1.Length == 1) { _h1 = "0" + _h1; }
 
             String _h11 = _h1.Substring(0, 1);
-            bool[] _b11 = Convert.ConvertHexToBin(_h11);
+            bool[] _b11 = Convertissor.ConvertHexToBin(_h11);
             if (_b11[0]) { btn04.BorderBrush = SCB_Black; btn04.Background = SCB_Color; } else { btn04.BorderBrush = SCB_Black; btn04.Background = SCB_White; }
             if (_b11[1]) { btn05.BorderBrush = SCB_Black; btn05.Background = SCB_Color; } else { btn05.BorderBrush = SCB_Black; btn05.Background = SCB_White; }
             if (_b11[2]) { btn06.BorderBrush = SCB_Black; btn06.Background = SCB_Color; } else { btn06.BorderBrush = SCB_Black; btn06.Background = SCB_White; }
             if (_b11[3]) { btn07.BorderBrush = SCB_Black; btn07.Background = SCB_Color; } else { btn07.BorderBrush = SCB_Black; btn07.Background = SCB_Grey; }
 
             String _h01 = _h1.Substring(1, 1);
-            bool[] _b01 = Convert.ConvertHexToBin(_h01);
+            bool[] _b01 = Convertissor.ConvertHexToBin(_h01);
             if (_b01[0]) { btn00.BorderBrush = SCB_Black; btn00.Background = SCB_Color; } else { btn00.BorderBrush = SCB_Black; btn00.Background = SCB_White; }
             if (_b01[1]) { btn01.BorderBrush = SCB_Black; btn01.Background = SCB_Color; } else { btn01.BorderBrush = SCB_Black; btn01.Background = SCB_White; }
             if (_b01[2]) { btn02.BorderBrush = SCB_Black; btn02.Background = SCB_Color; } else { btn02.BorderBrush = SCB_Black; btn02.Background = SCB_White; }
@@ -226,14 +227,14 @@ namespace Pixel
             if (_h2.Length == 1) { _h2 = "0" + _h2; }
 
             String _h12 = _h2.Substring(0, 1);
-            bool[] _b12 = Convert.ConvertHexToBin(_h12);
+            bool[] _b12 = Convertissor.ConvertHexToBin(_h12);
             if (_b12[0]) { btn14.BorderBrush = SCB_Black; btn14.Background = SCB_Color; } else { btn14.BorderBrush = SCB_Black; btn14.Background = SCB_White; }
             if (_b12[1]) { btn15.BorderBrush = SCB_Black; btn15.Background = SCB_Color; } else { btn15.BorderBrush = SCB_Black; btn15.Background = SCB_White; }
             if (_b12[2]) { btn16.BorderBrush = SCB_Black; btn16.Background = SCB_Color; } else { btn16.BorderBrush = SCB_Black; btn16.Background = SCB_White; }
             if (_b12[3]) { btn17.BorderBrush = SCB_Black; btn17.Background = SCB_Color; } else { btn17.BorderBrush = SCB_Black; btn17.Background = SCB_Grey; }
 
             String _h02 = _h2.Substring(1, 1);
-            bool[] _b02 = Convert.ConvertHexToBin(_h02);
+            bool[] _b02 = Convertissor.ConvertHexToBin(_h02);
             if (_b02[0]) { btn10.BorderBrush = SCB_Black; btn10.Background = SCB_Color; } else { btn10.BorderBrush = SCB_Black; btn10.Background = SCB_White; }
             if (_b02[1]) { btn11.BorderBrush = SCB_Black; btn11.Background = SCB_Color; } else { btn11.BorderBrush = SCB_Black; btn11.Background = SCB_White; }
             if (_b02[2]) { btn12.BorderBrush = SCB_Black; btn12.Background = SCB_Color; } else { btn12.BorderBrush = SCB_Black; btn12.Background = SCB_White; }
@@ -243,14 +244,14 @@ namespace Pixel
             if (_h3.Length == 1) { _h3 = "0" + _h3; }
 
             String _h13 = _h3.Substring(0, 1);
-            bool[] _b13 = Convert.ConvertHexToBin(_h13);
+            bool[] _b13 = Convertissor.ConvertHexToBin(_h13);
             if (_b13[0]) { btn24.BorderBrush = SCB_Black; btn24.Background = SCB_Color; } else { btn24.BorderBrush = SCB_Black; btn24.Background = SCB_White; }
             if (_b13[1]) { btn25.BorderBrush = SCB_Black; btn25.Background = SCB_Color; } else { btn25.BorderBrush = SCB_Black; btn25.Background = SCB_White; }
             if (_b13[2]) { btn26.BorderBrush = SCB_Black; btn26.Background = SCB_Color; } else { btn26.BorderBrush = SCB_Black; btn26.Background = SCB_White; }
             if (_b13[3]) { btn27.BorderBrush = SCB_Black; btn27.Background = SCB_Color; } else { btn27.BorderBrush = SCB_Black; btn27.Background = SCB_Grey; }
 
             String _h03 = _h3.Substring(1, 1);
-            bool[] _b03 = Convert.ConvertHexToBin(_h03);
+            bool[] _b03 = Convertissor.ConvertHexToBin(_h03);
             if (_b03[0]) { btn20.BorderBrush = SCB_Black; btn20.Background = SCB_Color; } else { btn20.BorderBrush = SCB_Black; btn20.Background = SCB_White; }
             if (_b03[1]) { btn21.BorderBrush = SCB_Black; btn21.Background = SCB_Color; } else { btn21.BorderBrush = SCB_Black; btn21.Background = SCB_White; }
             if (_b03[2]) { btn22.BorderBrush = SCB_Black; btn22.Background = SCB_Color; } else { btn22.BorderBrush = SCB_Black; btn22.Background = SCB_White; }
@@ -260,14 +261,14 @@ namespace Pixel
             if (_h4.Length == 1) { _h4 = "0" + _h4; }
 
             String _h14 = _h4.Substring(0, 1);
-            bool[] _b14 = Convert.ConvertHexToBin(_h14);
+            bool[] _b14 = Convertissor.ConvertHexToBin(_h14);
             if (_b14[0]) { btn34.BorderBrush = SCB_Black; btn34.Background = SCB_Color; } else { btn34.BorderBrush = SCB_Black; btn34.Background = SCB_White; }
             if (_b14[1]) { btn35.BorderBrush = SCB_Black; btn35.Background = SCB_Color; } else { btn35.BorderBrush = SCB_Black; btn35.Background = SCB_White; }
             if (_b14[2]) { btn36.BorderBrush = SCB_Black; btn36.Background = SCB_Color; } else { btn36.BorderBrush = SCB_Black; btn36.Background = SCB_White; }
             if (_b11[3]) { btn37.BorderBrush = SCB_Black; btn37.Background = SCB_Color; } else { btn37.BorderBrush = SCB_Black; btn37.Background = SCB_Grey; }
 
         String _h04 = _h4.Substring(1, 1);
-            bool[] _b04 = Convert.ConvertHexToBin(_h04);
+            bool[] _b04 = Convertissor.ConvertHexToBin(_h04);
             if (_b04[0]) { btn30.BorderBrush = SCB_Black; btn30.Background = SCB_Color; } else { btn30.BorderBrush = SCB_Black; btn30.Background = SCB_White; }
             if (_b04[1]) { btn31.BorderBrush = SCB_Black; btn31.Background = SCB_Color; } else { btn31.BorderBrush = SCB_Black; btn31.Background = SCB_White; }
             if (_b04[2]) { btn32.BorderBrush = SCB_Black; btn32.Background = SCB_Color; } else { btn32.BorderBrush = SCB_Black; btn32.Background = SCB_White; }
@@ -277,14 +278,14 @@ namespace Pixel
             if (_h5.Length == 1) { _h5 = "0" + _h5; }
 
             String _h15 = _h5.Substring(0, 1);
-            bool[] _b15 = Convert.ConvertHexToBin(_h15);
+            bool[] _b15 = Convertissor.ConvertHexToBin(_h15);
             if (_b15[0]) { btn44.BorderBrush = SCB_Black; btn44.Background = SCB_Color; } else { btn44.BorderBrush = SCB_Black; btn44.Background = SCB_White; }
             if (_b15[1]) { btn45.BorderBrush = SCB_Black; btn45.Background = SCB_Color; } else { btn45.BorderBrush = SCB_Black; btn45.Background = SCB_White; }
             if (_b15[2]) { btn46.BorderBrush = SCB_Black; btn46.Background = SCB_Color; } else { btn46.BorderBrush = SCB_Black; btn46.Background = SCB_White; }
             if (_b15[3]) { btn47.BorderBrush = SCB_Black; btn47.Background = SCB_Color; } else { btn47.BorderBrush = SCB_Black; btn47.Background = SCB_Grey; }
 
             String _h05 = _h5.Substring(1, 1);
-            bool[] _b05 = Convert.ConvertHexToBin(_h05);
+            bool[] _b05 = Convertissor.ConvertHexToBin(_h05);
             if (_b05[0]) { btn40.BorderBrush = SCB_Black; btn40.Background = SCB_Color; } else { btn40.BorderBrush = SCB_Black; btn40.Background = SCB_White; }
             if (_b05[1]) { btn41.BorderBrush = SCB_Black; btn41.Background = SCB_Color; } else { btn41.BorderBrush = SCB_Black; btn41.Background = SCB_White; }
             if (_b05[2]) { btn42.BorderBrush = SCB_Black; btn42.Background = SCB_Color; } else { btn42.BorderBrush = SCB_Black; btn42.Background = SCB_White; }

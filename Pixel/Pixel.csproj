@@ -122,8 +122,6 @@
     <Compile Include="Charactere.xaml.cs">
       <DependentUpon>Charactere.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ConvertClass.cs" />
-    <Compile Include="DisplayFontClass.cs" />
     <Compile Include="Hexadecimal.xaml.cs">
       <DependentUpon>Hexadecimal.xaml</DependentUpon>
     </Compile>
@@ -216,6 +214,15 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DisplayFont\DisplayFont.csproj">
+      <Project>{CD0E206E-3300-43D3-838E-1FDCA9D0E687}</Project>
+      <Name>DisplayFont</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
