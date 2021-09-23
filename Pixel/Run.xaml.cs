@@ -1,6 +1,7 @@
 ﻿using DisplayFont;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,7 +26,7 @@ namespace Pixel
     public sealed partial class Run : Page
     {
 
-        private UInt16 Order = 0;
+        private UInt32 Order = 0;
 
         private FontCharacterDescriptor fcd;
 
@@ -39,7 +40,6 @@ namespace Pixel
         private Brush SCB_Red = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 255, 0, 0));
         private Brush SCB_Green = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 255, 0));
         private Brush SCB_Blue = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 0, 0, 255));
-
 
         public Run()
         {
@@ -100,9 +100,9 @@ namespace Pixel
 
             //
 
-            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart(Order);
+            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart( Order );
 
-            FontCharacterDescriptorToScreen(fcd);
+            FontCharacterDescriptorToScreen( fcd );
 
             //
 
@@ -114,8 +114,8 @@ namespace Pixel
         {
 
             Order = 0;
-            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart(Order);
-            FontCharacterDescriptorToScreen(fcd);
+            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart( Order );
+            FontCharacterDescriptorToScreen( fcd );
 
         }
 
@@ -125,16 +125,16 @@ namespace Pixel
             if (Order > 0)
             {
 
-                Order = (UInt16)(Order - 1);
+                Order = Order - 1;
             }
             else
             {
 
-                Order = 255;
+                Order = DisplayFontTable.GetFontTableStandartSize() - 1;
             }
 
-            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart(Order);
-            FontCharacterDescriptorToScreen(fcd);
+            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart( Order );
+            FontCharacterDescriptorToScreen( fcd );
 
         }
 
@@ -148,15 +148,15 @@ namespace Pixel
 
                 btnPlay.Content = "\xE769";
 
-                while (Order < (UInt16)(DisplayFontTable.GetFontTableStandartSize() - 1) && isPlaying)
+                while ( Order < (DisplayFontTable.GetFontTableStandartSize() - 1) && isPlaying)
                 {
 
-                    Order = (UInt16)(Order + 1);
+                    Order = Order + 1;
 
-                    fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart(Order);
-                    FontCharacterDescriptorToScreen(fcd);
+                    fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart( Order );
+                    FontCharacterDescriptorToScreen( fcd );
 
-                    await Task.Delay(500);
+                    await Task.Delay( 500 );
                 }
 
             }
@@ -172,10 +172,10 @@ namespace Pixel
         private void BtnNext_Click(object sender, RoutedEventArgs e)
         {
 
-            if (Order < (UInt16)(DisplayFontTable.GetFontTableStandartSize() - 1))
+            if (Order < (DisplayFontTable.GetFontTableStandartSize() - 1) )
             {
 
-                Order = (UInt16)(Order + 1);
+                Order = Order + 1;
             }
             else
             {
@@ -183,26 +183,22 @@ namespace Pixel
                 Order = 0;
             }
 
-            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart(Order);
-            FontCharacterDescriptorToScreen(fcd);
+            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart( Order );
+            FontCharacterDescriptorToScreen( fcd );
 
         }
 
         private void BtnFastForward_Click(object sender, RoutedEventArgs e)
         {
 
-            Order = (UInt16)(DisplayFontTable.GetFontTableStandartSize() - 1);
-            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart(Order);
-            FontCharacterDescriptorToScreen(fcd);
+            Order = DisplayFontTable.GetFontTableStandartSize() - 1;
+            fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart( Order );
+            FontCharacterDescriptorToScreen( fcd );
 
         }
 
         private void FontCharacterDescriptorToScreen(FontCharacterDescriptor fcd)
         {
-
-            // 
-
-            String _order = fcd.Order.ToString();
 
             String _c = fcd.Character.ToString();
 
@@ -296,11 +292,6 @@ namespace Pixel
             //
 
             TB_CHAR.Text = _c;
-
-            if (_order.Length == 1) { _order = "00" + _order; }
-            if (_order.Length == 2) { _order = "0" + _order; }
-
-            TB_ORDER.Text = _order;
 
             TB_H1.Text = "0x" + _h1;
             TB_H2.Text = "0x" + _h2;

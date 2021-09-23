@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DisplayFont;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -226,20 +227,20 @@ namespace Pixel
             if (btnSelected.Equals("BTN_AFFH41")) { affh41.BorderThickness = new Thickness(2.0); } else { affh41.BorderThickness = new Thickness(1.0); }
             if (btnSelected.Equals("BTN_AFFH40")) { affh40.BorderThickness = new Thickness(2.0); } else { affh40.BorderThickness = new Thickness(1.0); }
 
-            bool[] b0H = Convert.ConvertHexToBin(affh01.Content.ToString());
-            bool[] b0L = Convert.ConvertHexToBin(affh00.Content.ToString());
+            bool[] b0H = Convertissor.ConvertHexToBin(affh01.Content.ToString());
+            bool[] b0L = Convertissor.ConvertHexToBin(affh00.Content.ToString());
 
-            bool[] b1H = Convert.ConvertHexToBin(affh11.Content.ToString());
-            bool[] b1L = Convert.ConvertHexToBin(affh10.Content.ToString());
+            bool[] b1H = Convertissor.ConvertHexToBin(affh11.Content.ToString());
+            bool[] b1L = Convertissor.ConvertHexToBin(affh10.Content.ToString());
 
-            bool[] b2H = Convert.ConvertHexToBin(affh21.Content.ToString());
-            bool[] b2L = Convert.ConvertHexToBin(affh20.Content.ToString());
+            bool[] b2H = Convertissor.ConvertHexToBin(affh21.Content.ToString());
+            bool[] b2L = Convertissor.ConvertHexToBin(affh20.Content.ToString());
 
-            bool[] b3H = Convert.ConvertHexToBin(affh31.Content.ToString());
-            bool[] b3L = Convert.ConvertHexToBin(affh30.Content.ToString());
+            bool[] b3H = Convertissor.ConvertHexToBin(affh31.Content.ToString());
+            bool[] b3L = Convertissor.ConvertHexToBin(affh30.Content.ToString());
 
-            bool[] b4H = Convert.ConvertHexToBin(affh41.Content.ToString());
-            bool[] b4L = Convert.ConvertHexToBin(affh40.Content.ToString());
+            bool[] b4H = Convertissor.ConvertHexToBin(affh41.Content.ToString());
+            bool[] b4L = Convertissor.ConvertHexToBin(affh40.Content.ToString());
 
             b07 = b0H[3]; b06 = b0H[2]; b05 = b0H[1]; b04 = b0H[0];
             b03 = b0L[3]; b02 = b0L[2]; b01 = b0L[1]; b00 = b0L[0];

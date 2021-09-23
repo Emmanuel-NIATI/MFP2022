@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DisplayFont;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -308,20 +309,20 @@ namespace Pixel
             if (b01) { affb01.Content = "1"; } else { affb01.Content = "0"; }
             if (b00) { affb00.Content = "1"; } else { affb00.Content = "0"; }
 
-            affh01.Content = Convert.ConvertBinToHex(b07, b06, b05, b04);
-            affh00.Content = Convert.ConvertBinToHex(b03, b02, b01, b00);
+            affh01.Content = Convertissor.ConvertBinToHex(b07, b06, b05, b04);
+            affh00.Content = Convertissor.ConvertBinToHex(b03, b02, b01, b00);
 
-            affh11.Content = Convert.ConvertBinToHex(b17, b16, b15, b14);
-            affh10.Content = Convert.ConvertBinToHex(b13, b12, b11, b10);
+            affh11.Content = Convertissor.ConvertBinToHex(b17, b16, b15, b14);
+            affh10.Content = Convertissor.ConvertBinToHex(b13, b12, b11, b10);
 
-            affh21.Content = Convert.ConvertBinToHex(b27, b26, b25, b24);
-            affh20.Content = Convert.ConvertBinToHex(b23, b22, b21, b20);
+            affh21.Content = Convertissor.ConvertBinToHex(b27, b26, b25, b24);
+            affh20.Content = Convertissor.ConvertBinToHex(b23, b22, b21, b20);
 
-            affh31.Content = Convert.ConvertBinToHex(b37, b36, b35, b34);
-            affh30.Content = Convert.ConvertBinToHex(b33, b32, b31, b30);
+            affh31.Content = Convertissor.ConvertBinToHex(b37, b36, b35, b34);
+            affh30.Content = Convertissor.ConvertBinToHex(b33, b32, b31, b30);
 
-            affh41.Content = Convert.ConvertBinToHex(b47, b46, b45, b44);
-            affh40.Content = Convert.ConvertBinToHex(b43, b42, b41, b40);
+            affh41.Content = Convertissor.ConvertBinToHex(b47, b46, b45, b44);
+            affh40.Content = Convertissor.ConvertBinToHex(b43, b42, b41, b40);
  
         }
 
