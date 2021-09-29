@@ -39,7 +39,7 @@ namespace DisplayFont
 
             if ("D".Equals(_hex) || "d".Equals(_hex)) { res[0] = true; res[1] = false; res[2] = true; res[3] = true; }
 
-            if ("E".Equals(_hex) || "E".Equals(_hex)) { res[0] = false; res[1] = true; res[2] = true; res[3] = true; }
+            if ("E".Equals(_hex) || "e".Equals(_hex)) { res[0] = false; res[1] = true; res[2] = true; res[3] = true; }
 
             if ("F".Equals(_hex) || "f".Equals(_hex)) { res[0] = true; res[1] = true; res[2] = true; res[3] = true; }
 
