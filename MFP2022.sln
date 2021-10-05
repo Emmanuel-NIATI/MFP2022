@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28307.1622
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Horloge", "Horloge\Horloge.csproj", "{C6D1F6F4-B00B-4667-9BFB-94DAC894C2F8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CD0E206E-3300-43D3-838E-1FDCA9D0E687} = {CD0E206E-3300-43D3-838E-1FDCA9D0E687}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pixel", "Pixel\Pixel.csproj", "{63D5027D-0235-40EB-94D3-3AB7E1C3DAA4}"
 EndProject

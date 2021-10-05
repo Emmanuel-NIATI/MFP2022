@@ -1,3 +1,4 @@
+using DisplayFont;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -406,7 +407,7 @@ namespace LCDDisplayDriver
 
         // Zone Image
 
-        public async void LoadFile(int[] _picture, string name )
+        public async void LoadImage(int[] _picture, string name )
         {
 
             StorageFile srcfile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(name));
@@ -510,14 +511,424 @@ namespace LCDDisplayDriver
 
         // Zone Texte
 
+        private void MakeChar(char c, int x0, int y0, int size, int color)
+        {
+
+            int widthCharOriginal = 6;
+            int heightCharOriginal = 8;
+
+            int widthCharSized = widthCharOriginal * size;
+            int heightCharSized = heightCharOriginal * size;
+
+            // bounds checks
+            if ((x0 >= LCD_W) || (y0 >= LCD_H) || ((x0 + widthCharSized - 1) < 0) || ((y0 + heightCharSized - 1) < 0))
+            {
+
+                return;
+            }
+        
+            byte[] car = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart(c).Data;
+
+            String c0 = car[0].ToString("X");
+            String c1 = car[1].ToString("X");
+            String c2 = car[2].ToString("X");
+            String c3 = car[3].ToString("X");
+            String c4 = car[4].ToString("X");
+
+            if (c0.Length < 2) { c0 = "0" + c0; }
+            if (c1.Length < 2) { c1 = "0" + c1; }
+            if (c2.Length < 2) { c2 = "0" + c2; }
+            if (c3.Length < 2) { c3 = "0" + c3; }
+            if (c4.Length < 2) { c4 = "0" + c4; }
+
+            String c01 = c0.Substring(0, 1);
+            String c00 = c0.Substring(1, 1);
+
+            String c11 = c1.Substring(0, 1);
+            String c10 = c1.Substring(1, 1);
+
+            String c21 = c2.Substring(0, 1);
+            String c20 = c2.Substring(1, 1);
+
+            String c31 = c3.Substring(0, 1);
+            String c30 = c3.Substring(1, 1);
+
+            String c41 = c4.Substring(0, 1);
+            String c40 = c4.Substring(1, 1);
+
+            bool[] b01 = Convertissor.ConvertHexToBin(c01);
+            bool[] b00 = Convertissor.ConvertHexToBin(c00);
+
+            bool[] b11 = Convertissor.ConvertHexToBin(c11);
+            bool[] b10 = Convertissor.ConvertHexToBin(c10);
+
+            bool[] b21 = Convertissor.ConvertHexToBin(c21);
+            bool[] b20 = Convertissor.ConvertHexToBin(c20);
+
+            bool[] b31 = Convertissor.ConvertHexToBin(c31);
+            bool[] b30 = Convertissor.ConvertHexToBin(c30);
+
+            bool[] b41 = Convertissor.ConvertHexToBin(c41);
+            bool[] b40 = Convertissor.ConvertHexToBin(c40);
+
+            int[] _charOriginal = new int[widthCharOriginal * heightCharOriginal];
+
+            if (b00[0]) { _charOriginal[0] = color; } else { _charOriginal[0] = 0x0000; }
+            if (b10[0]) { _charOriginal[1] = color; } else { _charOriginal[1] = 0x0000; }
+            if (b20[0]) { _charOriginal[2] = color; } else { _charOriginal[2] = 0x0000; }
+            if (b30[0]) { _charOriginal[3] = color; } else { _charOriginal[3] = 0x0000; }
+            if (b40[0]) { _charOriginal[4] = color; } else { _charOriginal[4] = 0x0000; }
+            _charOriginal[5] = 0x0000;
+
+            if (b00[1]) { _charOriginal[6] = color; } else { _charOriginal[6] = 0x0000; }
+            if (b10[1]) { _charOriginal[7] = color; } else { _charOriginal[7] = 0x0000; }
+            if (b20[1]) { _charOriginal[8] = color; } else { _charOriginal[8] = 0x0000; }
+            if (b30[1]) { _charOriginal[9] = color; } else { _charOriginal[9] = 0x0000; }
+            if (b40[1]) { _charOriginal[10] = color; } else { _charOriginal[10] = 0x0000; }
+            _charOriginal[11] = 0x0000;
+
+            if (b00[2]) { _charOriginal[12] = color; } else { _charOriginal[12] = 0x0000; }
+            if (b10[2]) { _charOriginal[13] = color; } else { _charOriginal[13] = 0x0000; }
+            if (b20[2]) { _charOriginal[14] = color; } else { _charOriginal[14] = 0x0000; }
+            if (b30[2]) { _charOriginal[15] = color; } else { _charOriginal[15] = 0x0000; }
+            if (b40[2]) { _charOriginal[16] = color; } else { _charOriginal[16] = 0x0000; }
+            _charOriginal[17] = 0x0000;
+
+            if (b00[3]) { _charOriginal[18] = color; } else { _charOriginal[18] = 0x0000; }
+            if (b10[3]) { _charOriginal[19] = color; } else { _charOriginal[19] = 0x0000; }
+            if (b20[3]) { _charOriginal[20] = color; } else { _charOriginal[20] = 0x0000; }
+            if (b30[3]) { _charOriginal[21] = color; } else { _charOriginal[21] = 0x0000; }
+            if (b40[3]) { _charOriginal[22] = color; } else { _charOriginal[22] = 0x0000; }
+            _charOriginal[23] = 0x0000;
+
+            if (b01[0]) { _charOriginal[24] = color; } else { _charOriginal[24] = 0x0000; }
+            if (b11[0]) { _charOriginal[25] = color; } else { _charOriginal[25] = 0x0000; }
+            if (b21[0]) { _charOriginal[26] = color; } else { _charOriginal[26] = 0x0000; }
+            if (b31[0]) { _charOriginal[27] = color; } else { _charOriginal[27] = 0x0000; }
+            if (b41[0]) { _charOriginal[28] = color; } else { _charOriginal[28] = 0x0000; }
+            _charOriginal[29] = 0x0000;
+
+            if (b01[1]) { _charOriginal[30] = color; } else { _charOriginal[30] = 0x0000; }
+            if (b11[1]) { _charOriginal[31] = color; } else { _charOriginal[31] = 0x0000; }
+            if (b21[1]) { _charOriginal[32] = color; } else { _charOriginal[32] = 0x0000; }
+            if (b31[1]) { _charOriginal[33] = color; } else { _charOriginal[33] = 0x0000; }
+            if (b41[1]) { _charOriginal[34] = color; } else { _charOriginal[34] = 0x0000; }
+            _charOriginal[35] = 0x0000;
+
+            if (b01[2]) { _charOriginal[36] = color; } else { _charOriginal[36] = 0x0000; }
+            if (b11[2]) { _charOriginal[37] = color; } else { _charOriginal[37] = 0x0000; }
+            if (b21[2]) { _charOriginal[38] = color; } else { _charOriginal[38] = 0x0000; }
+            if (b31[2]) { _charOriginal[39] = color; } else { _charOriginal[39] = 0x0000; }
+            if (b41[2]) { _charOriginal[40] = color; } else { _charOriginal[40] = 0x0000; }
+            _charOriginal[41] = 0x0000;
+
+            _charOriginal[42] = 0x0000;
+            _charOriginal[43] = 0x0000;
+            _charOriginal[44] = 0x0000;
+            _charOriginal[45] = 0x0000;
+            _charOriginal[46] = 0x0000;
+            _charOriginal[47] = 0x0000;
+
+            int[] _charSized = new int[widthCharSized * heightCharSized];
+
+            int cs = 0;
+
+            for (int hco = 0; hco < heightCharOriginal; hco++)
+            {
+
+                for (int hts = 0; hts < size; hts++)
+                {
+
+                    for (int wco = 0; wco < widthCharOriginal; wco++)
+                    {
+
+                        for (int wts = 0; wts < size; wts++)
+                        {
+
+                            _charSized[cs] = _charOriginal[hco * widthCharOriginal + wco];
+
+                            cs++;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            DrawPicture(_charSized, x0, y0, widthCharSized, heightCharSized, color);
+            	
+        }
+
+        private void Print(char c, int size, int color)
+        {
+
+    	    if ( c == '\n' )         // Nouvelle ligne
+            {
+
+                // Next line based on font size
+                this.cursorY += size * 8;
+                // Back to  character 0
+                this.cursorX = 0;
+
+            }
+            else if ( c == '\r' )		// Retour à la ligne
+            {
+
+                // Back to  character 0
+                this.cursorX = 0;
+
+            }
+            else if ( c == '\t' )		// Tabulation (4 caractères)
+            {
+
+                // 4 caractères plus à droite
+                this.cursorX += size * 6 * 4;
+
+            }
+            else
+            {
+
+                this.MakeChar(c, this.cursorX, this.cursorY, size, color);
+
+                this.cursorX += size * 6;
+
+                if (this.cursorX > (LCD_W - size * 6))
+                {
+
+                    // next line based on font size
+                    this.cursorY += (byte)(size * 8);
+                    // back to  character 0
+                    this.cursorX = 0;
+                }
+
+            }
+
+        }
+
+        public void PlaceCursor(int x, int y)
+        {   
+
+            this.cursorX = x;
+            this.cursorY = y;
+
+        }
+
+        public void Print(String s, int size, int color)
+        {
+
+            for (int i = 0; i < s.Length; i++)
+            {
+
+                this.Print(s.ElementAt<char>(i), size, color);
+            }
+
+        }
+
+        public void Println(String s, int size, int color)
+        {
+
+            for (int i = 0; i<s.Length; i++)
+            {
+
+                this.Print(s.ElementAt<char>(i), size, color);
+            }
+
+            this.Print("\n", size, color);
+
+        }
 
 
+        // Zone Graphique
 
+        public void LCDPixel(int x0, int y0, int color)
+        {
 
+            if ((x0< 0) || (x0 >= LCD_W) || (y0< 0) || (y0 >= LCD_H))
+            {
+                return;
+            }
 
+            int x1 = x0 + 1;
+            int y1 = y0 + 1;
 
+            byte VH = (byte)(color >> 8);
+            byte VL = (byte)(color & 0xFF);
 
+            byte[] buffer = new byte[2];
 
+            for (int index = 0; index<buffer.Length; index += 2)
+            {
+                buffer[index] = VH;
+                buffer[index + 1] = VL;
+
+            }
+
+            SetAddress(x0, y0, x1, y1);
+            SendData(buffer);
+
+        }
+
+        public void DrawLine(int x1, int y1, int x2, int y2, int color)
+        {
+
+            if ( x1 >= LCD_W || y1 >= LCD_H || x2 >= LCD_W || y2 >= LCD_H )
+            {
+                return;
+            }
+
+            if (x1 == x2)
+            {
+
+                for (int n = y1; n < y2; n++)
+                {
+
+                    int xn = x1;
+                    int yn = n;
+
+                    LCDPixel(xn, yn, color);
+
+                }
+
+            }
+            else if (y1 == y2)
+            {
+
+                for (int n = x1; n < x2; n++)
+                {
+
+                    int xn = n;
+                    int yn = y1;
+
+                    LCDPixel(xn, yn, color);
+
+                }
+
+            }
+            else if (x1 == x2 && y1 == y2)
+            {
+
+                LCDPixel(x1, y1, color);
+            }
+            else if( x2 > x1 )
+            {
+
+                double dx = x2 - x1;
+                double dy = y2 - y1;
+
+                double a = dy / dx;
+
+                for (int n = 0; n < (x2 - x1); n++)
+                {
+
+                    int xn = n + x1;
+
+                    int yn = (int)(a * n + y1);
+
+                    LCDPixel(xn, yn, color);
+
+                }
+
+            }
+            else if (x2 < x1)
+            {
+
+                int X1 = x2;
+                int Y1 = y2;
+
+                int X2 = x1;
+                int Y2 = y1;
+
+                double dX = X2 - X1;
+                double dY = Y2 - Y1;
+
+                double a = dY / dX;
+
+                for (int n = 0; n < (X2 - X1); n++)
+                {
+
+                    int xn = (int)(n + X1);
+
+                    int yn = (int)(a * n + Y1);
+
+                    LCDPixel(xn, yn, color);
+
+                }
+
+            }
+
+        }
+
+        public void DrawArc(int x0, int y0, int Radius, int startAngle, int endAngle, int color)
+        {
+
+            double increment = 0.1;
+
+            double startA = startAngle;
+
+            double endA = endAngle;
+
+            if (startA > 360)
+            {
+                startA = 360;
+            }
+
+            if (endA > 360)
+            {
+
+                endA = 360;
+            }
+
+            for (double i = startA; i < endA; i += increment)
+            {
+
+                double angle = i * Math.PI / 180;
+
+                int x = (int)(x0 + Radius * Math.Sin(angle));
+                int y = (int)(y0 - Radius * Math.Cos(angle));
+
+                LCDPixel(x, y, color);
+
+            }
+
+        }
+
+        public void DrawCircle(int x0, int y0, int radius, int color)
+        {
+
+            DrawArc(x0, y0, radius, 0, 360, color);
+        }
+
+        public void DrawRectangle(int x0, int y0, int width, int height, int color)
+        {
+
+            // bounds check
+            if (x0 >= LCD_W || y0 >= LCD_H || (x0 + width - 1) >= LCD_W || (y0 + height - 1) >= LCD_H)
+            {
+
+                return;
+            }
+
+            int xa = x0;
+            int ya = y0;
+
+            int xb = x0 + width - 1;
+            int yb = y0;
+
+            int xc = x0 + width - 1;
+            int yc = y0 + height - 1;
+
+            int xd = x0;
+            int yd = y0 + height - 1;
+
+            DrawLine(xa, ya, xb, yb, color);
+            DrawLine(xd, yd, xc, yc, color);
+            DrawLine(xa, ya, xd, yd, color);
+            DrawLine(xb, yb, xc, yc, color);
+
+        }
+                                   
     }
 
 }
