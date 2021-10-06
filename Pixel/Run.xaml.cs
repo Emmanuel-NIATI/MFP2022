@@ -26,7 +26,7 @@ namespace Pixel
     public sealed partial class Run : Page
     {
 
-        private UInt32 Order = 0;
+        private int Order = 0;
 
         private FontCharacterDescriptor fcd;
 
@@ -130,7 +130,7 @@ namespace Pixel
             else
             {
 
-                Order = DisplayFontTable.GetFontTableStandartSize() - 1;
+                Order = DisplayFontTable.GetFontTableStandartLength() - 1;
             }
 
             fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart( Order );
@@ -148,7 +148,7 @@ namespace Pixel
 
                 btnPlay.Content = "\xE769";
 
-                while ( Order < (DisplayFontTable.GetFontTableStandartSize() - 1) && isPlaying)
+                while ( Order < (DisplayFontTable.GetFontTableStandartLength() - 1) && isPlaying)
                 {
 
                     Order = Order + 1;
@@ -172,7 +172,7 @@ namespace Pixel
         private void BtnNext_Click(object sender, RoutedEventArgs e)
         {
 
-            if (Order < (DisplayFontTable.GetFontTableStandartSize() - 1) )
+            if (Order < (DisplayFontTable.GetFontTableStandartLength() - 1) )
             {
 
                 Order = Order + 1;
@@ -191,7 +191,7 @@ namespace Pixel
         private void BtnFastForward_Click(object sender, RoutedEventArgs e)
         {
 
-            Order = DisplayFontTable.GetFontTableStandartSize() - 1;
+            Order = DisplayFontTable.GetFontTableStandartLength() - 1;
             fcd = DisplayFontTable.GetFontCharacterDescriptorFromFontTableStandart( Order );
             FontCharacterDescriptorToScreen( fcd );
 

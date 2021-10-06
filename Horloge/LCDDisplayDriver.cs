@@ -13,6 +13,7 @@ using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.Storage.FileProperties;
+using System.Diagnostics;
 
 namespace LCDDisplayDriver
 {
@@ -170,27 +171,27 @@ namespace LCDDisplayDriver
 
         // Liste des couleurs
 
-        public static readonly int COLOR_BLACK = 0x0000;         //   0,   0,   0
-        public static readonly int COLOR_NAVY = 0x000F;          //   0,   0, 123
-        public static readonly int COLOR_DARKGREEN = 0x03E0;     //   0, 125,   0
-        public static readonly int COLOR_DARKCYAN = 0x03EF;      //   0, 125, 123
-        public static readonly int COLOR_MAROON = 0x7800;        // 123,   0,   0
-        public static readonly int COLOR_PURPLE = 0x780F;        // 123,   0, 123
-        public static readonly int COLOR_OLIVE = 0x7BE0;         // 123, 125,   0
-        public static readonly int COLOR_LIGHTGREY = 0xC618;     // 198, 195, 198
-        public static readonly int COLOR_DARKGREY = 0x7BEF;      // 123, 125, 123
-        public static readonly int COLOR_BLUE = 0x001F;          //   0,   0, 255
-        public static readonly int COLOR_GREEN = 0x07E0;         //   0, 255,   0
-        public static readonly int COLOR_CYAN = 0x07FF;          //   0, 255, 255
-        public static readonly int COLOR_RED = 0xF800;           // 255,   0,   0
-        public static readonly int COLOR_MAGENTA = 0xF81F;       // 255,   0, 255
-        public static readonly int COLOR_YELLOW = 0xFFE0;        // 255, 255,   0
-        public static readonly int COLOR_WHITE = 0xFFFF;         // 255, 255, 255
-        public static readonly int COLOR_ORANGE = 0xFD20;        // 255, 165,   0
-        public static readonly int COLOR_GREENYELLOW = 0xAFE5;   // 173, 255,  41
-        public static readonly int COLOR_PINK = 0xFC18;          // 255, 130, 198
+        public static readonly uint COLOR_BLACK = 0x0000;         //   0,   0,   0
+        public static readonly uint COLOR_NAVY = 0x000F;          //   0,   0, 123
+        public static readonly uint COLOR_DARKGREEN = 0x03E0;     //   0, 125,   0
+        public static readonly uint COLOR_DARKCYAN = 0x03EF;      //   0, 125, 123
+        public static readonly uint COLOR_MAROON = 0x7800;        // 123,   0,   0
+        public static readonly uint COLOR_PURPLE = 0x780F;        // 123,   0, 123
+        public static readonly uint COLOR_OLIVE = 0x7BE0;         // 123, 125,   0
+        public static readonly uint COLOR_LIGHTGREY = 0xC618;     // 198, 195, 198
+        public static readonly uint COLOR_DARKGREY = 0x7BEF;      // 123, 125, 123
+        public static readonly uint COLOR_BLUE = 0x001F;          //   0,   0, 255
+        public static readonly uint COLOR_GREEN = 0x07E0;         //   0, 255,   0
+        public static readonly uint COLOR_CYAN = 0x07FF;          //   0, 255, 255
+        public static readonly uint COLOR_RED = 0xF800;           // 255,   0,   0
+        public static readonly uint COLOR_MAGENTA = 0xF81F;       // 255,   0, 255
+        public static readonly uint COLOR_YELLOW = 0xFFE0;        // 255, 255,   0
+        public static readonly uint COLOR_WHITE = 0xFFFF;         // 255, 255, 255
+        public static readonly uint COLOR_ORANGE = 0xFD20;        // 255, 165,   0
+        public static readonly uint COLOR_GREENYELLOW = 0xAFE5;   // 173, 255,  41
+        public static readonly uint COLOR_PINK = 0xFC18;          // 255, 130, 198
 
-        public static readonly int COLOR_PINK_PAULINE = 0xFD38;  // 255, 165, 198
+        public static readonly uint COLOR_PINK_PAULINE = 0xFD38;  // 255, 165, 198
 
         public ILI9341()
         {
@@ -350,21 +351,21 @@ namespace LCDDisplayDriver
 
         // Zone Couleur
 
-        public int RGB888ToRGB565(byte r8, byte g8, byte b8)
+        public uint RGB888ToRGB565(byte r8, byte g8, byte b8)
         {
 
             ushort r5 = (ushort)((r8 * 249 + 1014) >> 11);
             ushort g6 = (ushort)((g8 * 253 + 505) >> 10);
             ushort b5 = (ushort)((b8 * 249 + 1014) >> 11);
 
-            return (r5 << 11 | g6 << 5 | b5);
+            return (uint)(r5 << 11 | g6 << 5 | b5);
 
         }
 
 
         // Zone Ecran
 
-        private void FillRectangle(int x0, int y0, int width, int height, int color)
+        private void FillRectangle(int x0, int y0, int width, int height, uint color)
         {
 
             int nbrBande = height / resolution;
@@ -392,7 +393,7 @@ namespace LCDDisplayDriver
 
         }
 
-        public void ColorScreen(int color)
+        public void ColorScreen(uint color)
         {
 
             this.FillRectangle(0, 0, LCD_W, LCD_H, color);
@@ -407,17 +408,10 @@ namespace LCDDisplayDriver
 
         // Zone Image
 
-        public async void LoadImage(int[] _picture, string name )
+        public async void LoadImage(uint[] _picture, uint width, uint height, string name )
         {
 
             StorageFile srcfile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(name));
-
-            ImageProperties imageProperties = await srcfile.Properties.GetImagePropertiesAsync();
-
-            int w = (int) imageProperties.Width;
-            int h = (int) imageProperties.Height;
-
-            _picture = new int[ w * h ];
 
             using (IRandomAccessStream fileStream = await srcfile.OpenAsync(Windows.Storage.FileAccessMode.Read))
             {
@@ -427,15 +421,15 @@ namespace LCDDisplayDriver
                 BitmapTransform transform = new BitmapTransform()
                 {
 
-                    ScaledWidth = System.Convert.ToUInt32(w),
-                    ScaledHeight = System.Convert.ToUInt32(h)
+                    ScaledWidth = System.Convert.ToUInt32(width),
+                    ScaledHeight = System.Convert.ToUInt32(height)
                 };
 
                 PixelDataProvider pixelData = await decoder.GetPixelDataAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Straight, transform, ExifOrientationMode.IgnoreExifOrientation, ColorManagementMode.DoNotColorManage);
 
                 byte[] sourcePixels = pixelData.DetachPixelData();
 
-                if (sourcePixels.Length == w * h * 4)
+                if (sourcePixels.Length == width * height * 4)
                 {
 
                     int pi = 0;
@@ -466,6 +460,8 @@ namespace LCDDisplayDriver
                         i = (i + 1) % 4;
                     }
 
+
+
                 }
                 else
                 {
@@ -477,7 +473,7 @@ namespace LCDDisplayDriver
 
         }
 
-        public void DrawPicture(int[] _picture, int x0, int y0, int width, int height, int color)
+        public void DrawPicture(uint[] _picture, int x0, int y0, int width, int height)
         {
 
             int block_size = width * resolution;
@@ -487,7 +483,7 @@ namespace LCDDisplayDriver
             int i = 0;
             int line = 0;
 
-            foreach (ushort s in _picture)
+            foreach (uint s in _picture)
             {
 
                 buffer[i * 2] = (byte)((s >> 8) & 0xFF);
@@ -511,7 +507,7 @@ namespace LCDDisplayDriver
 
         // Zone Texte
 
-        private void MakeChar(char c, int x0, int y0, int size, int color)
+        private void MakeChar(char c, int x0, int y0, int size, uint color)
         {
 
             int widthCharOriginal = 6;
@@ -571,7 +567,7 @@ namespace LCDDisplayDriver
             bool[] b41 = Convertissor.ConvertHexToBin(c41);
             bool[] b40 = Convertissor.ConvertHexToBin(c40);
 
-            int[] _charOriginal = new int[widthCharOriginal * heightCharOriginal];
+            uint[] _charOriginal = new uint[widthCharOriginal * heightCharOriginal];
 
             if (b00[0]) { _charOriginal[0] = color; } else { _charOriginal[0] = 0x0000; }
             if (b10[0]) { _charOriginal[1] = color; } else { _charOriginal[1] = 0x0000; }
@@ -629,7 +625,7 @@ namespace LCDDisplayDriver
             _charOriginal[46] = 0x0000;
             _charOriginal[47] = 0x0000;
 
-            int[] _charSized = new int[widthCharSized * heightCharSized];
+            uint[] _charSized = new uint[widthCharSized * heightCharSized];
 
             int cs = 0;
 
@@ -657,11 +653,11 @@ namespace LCDDisplayDriver
 
             }
 
-            DrawPicture(_charSized, x0, y0, widthCharSized, heightCharSized, color);
+            DrawPicture(_charSized, x0, y0, widthCharSized, heightCharSized);
             	
         }
 
-        private void Print(char c, int size, int color)
+        private void Print(char c, int size, uint color)
         {
 
     	    if ( c == '\n' )         // Nouvelle ligne
@@ -715,7 +711,7 @@ namespace LCDDisplayDriver
 
         }
 
-        public void Print(String s, int size, int color)
+        public void Print(String s, int size, uint color)
         {
 
             for (int i = 0; i < s.Length; i++)
@@ -726,7 +722,7 @@ namespace LCDDisplayDriver
 
         }
 
-        public void Println(String s, int size, int color)
+        public void Println(String s, int size, uint color)
         {
 
             for (int i = 0; i<s.Length; i++)
