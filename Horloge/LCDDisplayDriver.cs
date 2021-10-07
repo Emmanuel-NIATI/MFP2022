@@ -408,16 +408,21 @@ namespace LCDDisplayDriver
 
         // Zone Image
 
-        public async void LoadImage(uint[] _picture, uint width, uint height, string name )
+        public async void LoadImage(uint[] _picture, string name )
         {
 
-            StorageFile srcfile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(name));
+            StorageFile sourcefile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(name));
 
-            using (IRandomAccessStream fileStream = await srcfile.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            ImageProperties imageProperties = await sourcefile.Properties.GetImagePropertiesAsync();
+
+            uint width = imageProperties.Width;
+            uint height = imageProperties.Height;
+            
+            using (IRandomAccessStream fileStream = await sourcefile.OpenAsync(Windows.Storage.FileAccessMode.Read))
             {
 
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(fileStream);
-                
+
                 BitmapTransform transform = new BitmapTransform()
                 {
 
