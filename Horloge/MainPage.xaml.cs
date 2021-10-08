@@ -41,7 +41,7 @@ namespace Horloge
 
         // Variables liées à l'affichage LCD
         uint[] rgb_chat01 = new uint[ 240 * 320 ];
-
+        uint[] rgb_fo = new uint[ 240 * 320 ];
 
         public MainPage()
         {
@@ -66,7 +66,8 @@ namespace Horloge
         {
 
             ecran.LoadImage(rgb_chat01, "ms-appx:///Pictures/chat01.png");
-            
+            ecran.LoadImage(rgb_fo, "ms-appx:///Pictures/fo.png");
+
         }
 
         private void InitGpio()
@@ -121,8 +122,10 @@ namespace Horloge
 
 
             ecran.PlaceCursor(0, 0);
-
-            ecran.Print("0", 4, ILI9341.COLOR_PINK_PAULINE);
+            ecran.Print("09:32", 4, ILI9341.COLOR_PINK);
+            ecran.Println(":25", 3, ILI9341.COLOR_PINK);
+            ecran.PlaceCursor(0, 32);
+            ecran.Println("Ven 08/10/2021", 2, ILI9341.COLOR_PINK);
 
         }
 
