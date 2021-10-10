@@ -108,6 +108,27 @@ namespace Horloge
 
         }
 
+        private void afficherHorloge( string _hh, string _mm, string _ss, string _dow, string _day, string _month, string _year)
+        {
+
+            // Affiche HH:MM:SS
+
+            ecran.PlaceCursor(0, 34 * 8);
+            ecran.Print( _hh + ":" + _mm, 4, ILI9341.COLOR_PINK);
+
+            ecran.PlaceCursor(20 * 6, 34 * 8);
+            ecran.Print( ":" + _ss, 3, ILI9341.COLOR_PINK);
+
+            ecran.PlaceCursor(23 * 6, 34 * 8);
+            ecran.Print(_ss, 3, ILI9341.COLOR_PINK);
+
+            // Affiche Dow dd/mm/yyyy
+
+            ecran.PlaceCursor(0, 38 * 8);
+            ecran.Print( _dow + " " + _day + "/" + _month + "/" + _year, 2, ILI9341.COLOR_PINK);
+
+        }
+
         private async void InitSpiDisplay()
         {
 
@@ -117,23 +138,66 @@ namespace Horloge
             // Effacer l'écran
             ecran.ClearScreen();
 
-
+            // Dessiner l'image de fond
             ecran.DrawPicture(rgb_chat01, 0, 0, 240, 320);
 
+            // Initialiser l'affichage de l'heure et de la date
+            string hh = "09";
+            string mm = "30";
+            string ss = "25";
+            string dow = "Ven";
+            string day = "08";
+            string month = "10";
+            string year = "2021";
 
-            ecran.PlaceCursor(0, 0);
-            ecran.Print("09:32", 4, ILI9341.COLOR_PINK);
-            ecran.Println(":25", 3, ILI9341.COLOR_PINK);
-            ecran.PlaceCursor(0, 32);
-            ecran.Println("Ven 08/10/2021", 2, ILI9341.COLOR_PINK);
+            afficherHorloge(hh, mm, ss, dow, day, month, year);
 
         }
 
         private void TravauxTimer()
         {
 
+            // Configuration du Timer
+            DispatcherTimer dispatcherTimerHorloge = new DispatcherTimer();
+            dispatcherTimerHorloge.Tick += DispatcherTimerHorloge_Tick;
+            dispatcherTimerHorloge.Interval = new TimeSpan(0, 0, 0, 0, 200);
+            dispatcherTimerHorloge.Start();
 
         }
+
+        private void DispatcherTimerHorloge_Tick(object sender, object e)
+        {
+
+            DateTime _DateTime = DateTime.Now;
+
+            string _hh = _DateTime.Hour.ToString();
+            string _mm = _DateTime.Minute.ToString();
+            string _ss = _DateTime.Second.ToString();
+
+            string _dow = _DateTime.DayOfWeek.ToString();
+            string _day = _DateTime.Day.ToString();
+            string _month = _DateTime.Month.ToString();
+            string _year = _DateTime.Year.ToString();
+
+            if (_hh.Length < 2) { _hh = "0" + _hh; }
+            if (_mm.Length < 2) { _mm = "0" + _mm; }
+            if (_ss.Length < 2) { _ss = "0" + _ss; }
+
+            if (_dow.Equals("Sunday")) { _dow = "Dim"; }
+            if (_dow.Equals("Monday")) { _dow = "Lun"; }
+            if (_dow.Equals("Tuesday")) { _dow = "Mar"; }
+            if (_dow.Equals("Wednesday")) { _dow = "Mer"; }
+            if (_dow.Equals("Thursday")) { _dow  = "Jeu"; }
+            if (_dow.Equals("Friday")) { _dow = "Ven"; }
+            if (_dow.Equals("Saturday")) { _dow  = "Sam"; }
+
+            if (_day.Length < 2) { _day = "0" + _day; }
+            if (_month.Length < 2) { _month = "0" + _month; }
+
+            afficherHorloge(_hh, _mm, _ss, _dow, _day, _month, _year);
+
+        }
+
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
