@@ -32,12 +32,12 @@ namespace Horloge
         // Variables liées au GPIO
         private GpioController _gpc;
 
-        private GpioPin _pin27;
-        private GpioPin _pin05;
-        private GpioPin _pin13;
-        private GpioPin _pin19;
-        private GpioPin _pin26;
-        private GpioPin _pin21;
+        private GpioPin _gpio27;
+        private GpioPin _gpio05;
+        private GpioPin _gpio13;
+        private GpioPin _gpio19;
+        private GpioPin _gpio26;
+        private GpioPin _gpio21;
 
         // Variables liées à l'affichage LCD
         uint[] rgb_chat01 = new uint[ 240 * 320 ];
@@ -77,34 +77,34 @@ namespace Horloge
             _gpc = GpioController.GetDefault();
 
             // Bouton Gris sur GPIO 27 en entrée
-            _pin27 = _gpc.OpenPin(27);
-            _pin27.SetDriveMode(GpioPinDriveMode.InputPullDown);
-            _pin27.DebounceTimeout = new TimeSpan(10000);
+            _gpio27 = _gpc.OpenPin(27);
+            _gpio27.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            _gpio27.DebounceTimeout = new TimeSpan(10000);
 
             // Bouton Blanc sur GPIO 5 en entrée
-            _pin05 = _gpc.OpenPin(5);
-            _pin05.SetDriveMode(GpioPinDriveMode.InputPullDown);
-            _pin05.DebounceTimeout = new TimeSpan(10000);
+            _gpio05 = _gpc.OpenPin(5);
+            _gpio05.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            _gpio05.DebounceTimeout = new TimeSpan(10000);
 
             // Bouton Vert sur GPIO 13 en entrée
-            _pin13 = _gpc.OpenPin(13);
-            _pin13.SetDriveMode(GpioPinDriveMode.InputPullDown);
-            _pin13.DebounceTimeout = new TimeSpan(10000);
+            _gpio13 = _gpc.OpenPin(13);
+            _gpio13.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            _gpio13.DebounceTimeout = new TimeSpan(10000);
 
             // Bouton Bleu sur GPIO 19 en entrée
-            _pin19 = _gpc.OpenPin(19);
-            _pin19.SetDriveMode(GpioPinDriveMode.InputPullDown);
-            _pin19.DebounceTimeout = new TimeSpan(10000);
+            _gpio19 = _gpc.OpenPin(19);
+            _gpio19.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            _gpio19.DebounceTimeout = new TimeSpan(10000);
 
             // Bouton Jaune sur GPIO 26 en entrée
-            _pin26 = _gpc.OpenPin(26);
-            _pin26.SetDriveMode(GpioPinDriveMode.InputPullDown);
-            _pin26.DebounceTimeout = new TimeSpan(10000);
+            _gpio26 = _gpc.OpenPin(26);
+            _gpio26.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            _gpio26.DebounceTimeout = new TimeSpan(10000);
 
             // Buzzer sur sur GPIO 21 en sortie
-            _pin21 = _gpc.OpenPin(21);
-            _pin21.SetDriveMode(GpioPinDriveMode.Output);
-            _pin21.Write(GpioPinValue.Low);
+            _gpio21 = _gpc.OpenPin(21);
+            _gpio21.SetDriveMode(GpioPinDriveMode.Output);
+            _gpio21.Write(GpioPinValue.Low);
 
         }
 
