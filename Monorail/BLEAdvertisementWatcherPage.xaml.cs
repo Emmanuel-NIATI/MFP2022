@@ -144,19 +144,30 @@ namespace Monorail
                 if (args.Advertisement.LocalName != "")
                 {
 
-                    BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync( args.BluetoothAddress );
-
-                    bluetoothDevice = new BluetoothDevice();
-
-                    bluetoothDevice.Id = bluetoothLEDevice.DeviceId;
-                    bluetoothDevice.Address = args.BluetoothAddress + "";
-                    bluetoothDevice.Name = args.Advertisement.LocalName;
-                    bluetoothDevice.Strength = args.RawSignalStrengthInDBm + "";
-
-                    if( !FindBluetoothDevice( bluetoothDevice.Id ) )
+                    try
                     {
 
-                        listBluetoothDevice.Add(bluetoothDevice);
+                        BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress);
+
+                        bluetoothDevice = new BluetoothDevice();
+
+                        bluetoothDevice.Id = bluetoothLEDevice.DeviceId;
+                        bluetoothDevice.Address = args.BluetoothAddress + "";
+                        bluetoothDevice.Name = args.Advertisement.LocalName;
+                        bluetoothDevice.Strength = args.RawSignalStrengthInDBm + "";
+
+                        if (!FindBluetoothDevice(bluetoothDevice.Id))
+                        {
+
+                            listBluetoothDevice.Add(bluetoothDevice);
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+
+                        Debug.WriteLine("Exception : " + e.Message);
+
                     }
 
                 }
