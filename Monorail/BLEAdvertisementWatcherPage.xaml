@@ -5,7 +5,6 @@
     xmlns:local="using:Monorail"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:bluetooth="using:Windows.Devices.Bluetooth"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     
@@ -34,7 +33,7 @@
 
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="12,10,12,12">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="12,12,12,12">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -42,24 +41,30 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Margin="0,0,0,10" Grid.Row="0">
-            <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">Enumerate nearby Bluetooth Low Energy Advertisement.</TextBlock>
-            <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
-                <Button x:Name="EnumerateButton" Content="Start" Click="{x:Bind EnumerateButton_Click}" Margin="0,0,10,0"/>
+        <StackPanel Margin="0,10,0,10" Grid.Row="0">
+
+            <TextBlock Style="{StaticResource ScenarioHeaderTextStyle}" TextWrapping="Wrap">Enumerate nearby BLE Advertisement.</TextBlock>
+            
+            <StackPanel Margin="0,10,0,10" Orientation="Horizontal">
+                <Button x:Name="EnumerateButton" Content="Run" Click="{x:Bind EnumerateButton_Click}" Margin="0,0,0,0"/>
             </StackPanel>
+        
         </StackPanel>
 
-        <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="0,10,0,0" BorderBrush="AntiqueWhite" BorderThickness="1">
+        <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="0,10,0,10" BorderBrush="AntiqueWhite" BorderThickness="1">
             <ListView x:Name="ResultsListView" ItemTemplate="{StaticResource ResultsListViewTemplate}" ItemsSource="{x:Bind listBluetoothDevice, Mode=OneWay}"/>
         </ScrollViewer>
 
         <StackPanel Grid.Row="2" x:Name="StatusPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
-            <TextBlock x:Name="StatusLabel" Margin="10,0,0,10" TextWrapping="Wrap" Text="Status:" />
+            
+            <TextBlock x:Name="StatusLabel" Margin="0,10,0,10" TextWrapping="Wrap" Text="Status : " />
+            
             <Border x:Name="StatusBorder" Margin="0,0,0,0">
-                <ScrollViewer VerticalScrollMode="Auto"  VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                    <TextBlock x:Name="StatusBlock" FontWeight="Bold" MaxWidth="{Binding ElementName=Splitter, Path=ActualWidth}" Margin="10,10,10,20" TextWrapping="Wrap" />
+                <ScrollViewer VerticalScrollMode="Auto"  VerticalScrollBarVisibility="Auto">
+                    <TextBlock x:Name="StatusBlock" FontWeight="Bold" MaxWidth="{Binding ElementName=Splitter, Path=ActualWidth}" Margin="10,10,10,10" TextWrapping="Wrap" />
                 </ScrollViewer>
             </Border>
+            
         </StackPanel>
 
     </Grid>
