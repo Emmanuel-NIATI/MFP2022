@@ -15,8 +15,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <RelativePanel>
-            <Button Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="30" Click="HamburgerButton_Click" />
+        <RelativePanel Grid.Row="0">
+            <Button Name="HamburgerButton" FontFamily="Segoe MDL2 Assets" Width="50" Height="40" Content="&#xE700;" FontSize="30" Click="HamburgerButton_Click" />
+            <TextBlock x:Name="SampleTitle" Text="Télécommande du Monorail en LEGO" Style="{StaticResource PageHeaderTextStyle}" TextWrapping="Wrap" Margin="60,10,0,0" />
         </RelativePanel>
 
         <SplitView Name="MySplitView" Grid.Row="1" DisplayMode="CompactOverlay" OpenPaneLength="300" CompactPaneLength="50" HorizontalAlignment="Left">
@@ -24,6 +25,7 @@
                 <Frame Name="MyFrame"></Frame>
             </SplitView.Content>
             <SplitView.Pane>
+
                 <ListBox SelectionMode="Single" Name="IconsListBox" SelectionChanged="IconsListBox_SelectionChanged">
 
                     <ListBoxItem Name="BLEAdvertisementWatcherListBoxItem">

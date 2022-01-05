@@ -152,6 +152,9 @@ namespace Monorail
                         bluetoothDevice = new BluetoothDevice();
 
                         bluetoothDevice.Id = bluetoothLEDevice.DeviceId;
+
+
+
                         bluetoothDevice.Address = args.BluetoothAddress + "";
                         bluetoothDevice.Name = args.Advertisement.LocalName;
                         bluetoothDevice.Strength = args.RawSignalStrengthInDBm + "";
