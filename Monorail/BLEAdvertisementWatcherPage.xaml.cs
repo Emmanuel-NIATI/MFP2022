@@ -192,34 +192,38 @@ namespace Monorail
 
         }
 
-        private void ResultsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ResultsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+            /*
             resultsListViewSelectedIndex = ResultsListView.SelectedIndex;
-
-        }
-
-        private async void ResultsListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-
-            bluetoothDevice = (BluetoothDevice) e.ClickedItem;
-
-            BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothDevice.Address));
-            
-            // BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromIdAsync(bluetoothDevice.Address));
-
-
-            DevicePairingResult dpr = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
-            GattDeviceService service = await GattDeviceService.FromIdAsync(bluetoothLEDevice.DeviceInformation.Id);
 
             if (resultsListViewSelectedIndex == ResultsListView.SelectedIndex && ResultsListView.SelectedIndex != -1)
             {
 
+                bluetoothDevice = (BluetoothDevice) e.OriginalSource;
+
+                BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothDevice.Address));
+
+                DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
+
                 rootPage.Navigate(typeof(MicrobitPage));
 
             }
+            */
 
         }
+
+
+        private void ResultsListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
+        }
+
+
+
 
         public void NotifyUser(string strMessage, NotifyType type)
         {
@@ -255,6 +259,7 @@ namespace Monorail
             StatusMessage,
             ErrorMessage
         };
+
 
     }
 
