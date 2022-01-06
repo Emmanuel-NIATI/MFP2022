@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,9 +12,14 @@ using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
+
 using System.ComponentModel;
-using Windows.UI.Xaml.Data;
+
 using System.Collections.ObjectModel;
+
+using Windows.Storage.Streams;
+using Windows.Security.Cryptography;
+
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -32,8 +38,7 @@ namespace Monorail
         private ObservableCollection<BluetoothDevice> listBluetoothDevice = new ObservableCollection<BluetoothDevice>();
 
         BluetoothDevice bluetoothDevice;
-
-        int resultsListViewSelectedIndex = -1;
+        BluetoothLEDevice bluetoothLEDevice;
 
         private MainPage rootPage;
 
@@ -47,7 +52,6 @@ namespace Monorail
         {
 
             rootPage = MainPage.Current;
-
 
             watcher.Received += Watcher_Received;
             watcher.Stopped += Watcher_Stopped;
@@ -92,6 +96,8 @@ namespace Monorail
 
             watcher.Received += Watcher_Received;
             watcher.Stopped += Watcher_Stopped;
+
+            NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
 
         }
 
@@ -153,8 +159,6 @@ namespace Monorail
 
                         bluetoothDevice.Id = bluetoothLEDevice.DeviceId;
 
-
-
                         bluetoothDevice.Address = args.BluetoothAddress + "";
                         bluetoothDevice.Name = args.Advertisement.LocalName;
                         bluetoothDevice.Strength = args.RawSignalStrengthInDBm + "";
@@ -182,7 +186,6 @@ namespace Monorail
         private async void Watcher_Stopped(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementWatcherStoppedEventArgs args)
         {
 
-            // Notify the user that the watcher was stopped
             await this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
 
@@ -197,25 +200,41 @@ namespace Monorail
 
             Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 
-            /*
-            resultsListViewSelectedIndex = ResultsListView.SelectedIndex;
-
-            if (resultsListViewSelectedIndex == ResultsListView.SelectedIndex && ResultsListView.SelectedIndex != -1)
+            if (e.AddedItems.Count > 0)
             {
 
-                bluetoothDevice = (BluetoothDevice) e.OriginalSource;
+                bluetoothDevice = (BluetoothDevice)ResultsListView.SelectedItem;
 
-                BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothDevice.Address));
+                bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothLEDevice.Address));
 
-                DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
+                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> at the beggining : " + bluetoothLEDevice.ConnectionStatus);
 
-                rootPage.Navigate(typeof(MicrobitPage));
+                if (bluetoothLEDevice.ConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
+                {
+
+                    DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
+
+                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> After Pairing : " + devicePairingResult.Status);
+
+                    if (devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired))
+                    {
+
+                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Paired");
+
+                        IReadOnlyList<GattDeviceService> listGattDeviceService = bluetoothLEDevice.GattServices;
+
+                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattCharacteristic : " + listGattDeviceService.Count);
+
+                    }
+
+                }
 
             }
-            */
+
+
+
 
         }
-
 
         private void ResultsListView_ItemClick(object sender, ItemClickEventArgs e)
         {

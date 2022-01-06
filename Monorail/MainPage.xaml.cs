@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Bluetooth;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -24,6 +25,7 @@ namespace Monorail
     {
 
         public static MainPage Current;
+        public BluetoothLEDevice BLEDevice { get; set; }
 
         public MainPage()
         {
