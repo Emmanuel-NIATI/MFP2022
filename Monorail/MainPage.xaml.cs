@@ -34,8 +34,8 @@ namespace Monorail
 
             Current = this;
 
-            MyFrame.Navigate(typeof(BLEAdvertisementWatcherPage));
-                        
+            MyFrame.Navigate(typeof(BLEPairedDevicePage));
+            
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
@@ -46,8 +46,14 @@ namespace Monorail
 
         private void IconsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            
 
-            if (BLEAdvertisementWatcherListBoxItem.IsSelected)
+            if (BLEPairedDeviceListBoxItem.IsSelected)
+            {
+
+                MyFrame.Navigate(typeof(BLEPairedDevicePage));
+            }
+            else if (BLEAdvertisementWatcherListBoxItem.IsSelected)
             {
 
                 MyFrame.Navigate(typeof(BLEAdvertisementWatcherPage));

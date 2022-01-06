@@ -198,51 +198,23 @@ namespace Monorail
         private async void ResultsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-
             if (e.AddedItems.Count > 0)
             {
 
                 bluetoothDevice = (BluetoothDevice)ResultsListView.SelectedItem;
 
-                bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothLEDevice.Address));
-
-                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> at the beggining : " + bluetoothLEDevice.ConnectionStatus);
+                bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothDevice.Address));
 
                 if (bluetoothLEDevice.ConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
                 {
 
                     DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
 
-                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> After Pairing : " + devicePairingResult.Status);
-
-                    if (devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired))
-                    {
-
-                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Paired");
-
-                        IReadOnlyList<GattDeviceService> listGattDeviceService = bluetoothLEDevice.GattServices;
-
-                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattCharacteristic : " + listGattDeviceService.Count);
-
-                    }
-
                 }
 
             }
 
-
-
-
         }
-
-        private void ResultsListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-
-        }
-
-
-
 
         public void NotifyUser(string strMessage, NotifyType type)
         {

@@ -28,17 +28,24 @@
 
                 <ListBox SelectionMode="Single" Name="IconsListBox" SelectionChanged="IconsListBox_SelectionChanged">
 
+                    <ListBoxItem Name="BLEPairedDeviceListBoxItem">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="30" Text="&#xE702;" />
+                            <TextBlock FontFamily="Segoe UI" Text="Liste des des appareils BLE appairés" FontSize="12" Margin="20,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+
                     <ListBoxItem Name="BLEAdvertisementWatcherListBoxItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="30" Text="&#xE702;" />
-                            <TextBlock FontFamily="Calibri" Text="Détection des appareils BLE Advertisement" FontSize="12" Margin="20,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock FontFamily="Segoe UI" Text="Détection des appareils BLE Advertisement" FontSize="12" Margin="20,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </ListBoxItem>
 
                     <ListBoxItem Name="MicrobitListBoxItem">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="30" Text="&#xE787;" />
-                            <TextBlock FontFamily="Calibri" Text="Gestion de la carte micro:bit" FontSize="12" Margin="20,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock FontFamily="Segoe UI" Text="Gestion de la carte micro:bit" FontSize="12" Margin="20,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </ListBoxItem>
 
