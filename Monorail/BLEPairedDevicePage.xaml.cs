@@ -135,8 +135,6 @@ namespace Monorail
         private async void Watcher_DeviceAdded(DeviceWatcher sender, DeviceInformation deviceInfo)
         {
 
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Watcher_DeviceAdded : ");
-
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
 
