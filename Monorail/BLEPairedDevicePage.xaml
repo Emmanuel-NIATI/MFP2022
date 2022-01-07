@@ -9,8 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     
     <Page.Resources>
-                
-        <DataTemplate x:Key="ResultsListViewTemplate" x:DataType="local:BluetoothDevice">
+
+        <DataTemplate x:Key="ResultsListViewTemplate" x:DataType="local:BluetoothLEDeviceDisplay">
 
             <StackPanel Orientation="Vertical">
                 <TextBlock>Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontWeight="Bold"/></TextBlock>
@@ -40,7 +40,7 @@
         </StackPanel>
 
         <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="0,0,0,5" BorderBrush="AntiqueWhite" BorderThickness="1">
-            <ListView x:Name="ResultsListView" ItemTemplate="{StaticResource ResultsListViewTemplate}" ItemsSource="{x:Bind listBluetoothDevice, Mode=OneWay}"   SelectionChanged="ResultsListView_SelectionChanged" />
+            <ListView x:Name="ResultsListView" ItemTemplate="{StaticResource ResultsListViewTemplate}" ItemsSource="{x:Bind listBluetoothLEDeviceDisplay, Mode=OneWay}"   SelectionChanged="ResultsListView_SelectionChanged" />
         </ScrollViewer>
 
         <StackPanel Margin="0,0,0,0" Grid.Row="2" x:Name="StatusPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">

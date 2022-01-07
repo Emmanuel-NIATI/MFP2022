@@ -35,9 +35,9 @@ namespace Monorail
 
         bool isWatcherStarted = false;
 
-        private ObservableCollection<BluetoothDevice> listBluetoothDevice = new ObservableCollection<BluetoothDevice>();
+        private ObservableCollection<BluetoothLEDeviceDisplay> listBluetoothLEDeviceDisplay = new ObservableCollection<BluetoothLEDeviceDisplay>();
 
-        BluetoothDevice bluetoothDevice;
+        BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay;
         BluetoothLEDevice bluetoothLEDevice;
 
         private MainPage rootPage;
@@ -110,7 +110,7 @@ namespace Monorail
 
                 isWatcherStarted = true;
 
-                listBluetoothDevice.Clear();
+                listBluetoothLEDeviceDisplay.Clear();
 
                 watcher.ScanningMode = BluetoothLEScanningMode.Active;
 
@@ -127,10 +127,10 @@ namespace Monorail
 
             bool _isPresent = false;
 
-            foreach (BluetoothDevice bluetoothDevice in listBluetoothDevice)
+            foreach (BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay in listBluetoothLEDeviceDisplay)
             {
 
-                if (bluetoothDevice.Id == id)
+                if (bluetoothLEDeviceDisplay.Id == id)
                 {
                     _isPresent = true;
                 }
@@ -155,18 +155,18 @@ namespace Monorail
 
                         BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress);
 
-                        bluetoothDevice = new BluetoothDevice();
+                        bluetoothLEDeviceDisplay = new BluetoothLEDeviceDisplay();
 
-                        bluetoothDevice.Id = bluetoothLEDevice.DeviceId;
+                        bluetoothLEDeviceDisplay.Id = bluetoothLEDevice.DeviceId;
 
-                        bluetoothDevice.Address = args.BluetoothAddress + "";
-                        bluetoothDevice.Name = args.Advertisement.LocalName;
-                        bluetoothDevice.Strength = args.RawSignalStrengthInDBm + "";
+                        bluetoothLEDeviceDisplay.Address = args.BluetoothAddress + "";
+                        bluetoothLEDeviceDisplay.Name = args.Advertisement.LocalName;
+                        bluetoothLEDeviceDisplay.Strength = args.RawSignalStrengthInDBm + "";
 
-                        if (!FindBluetoothDevice(bluetoothDevice.Id))
+                        if (!FindBluetoothDevice(bluetoothLEDeviceDisplay.Id))
                         {
 
-                            listBluetoothDevice.Add(bluetoothDevice);
+                            listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
                         }
 
                     }
@@ -201,9 +201,9 @@ namespace Monorail
             if (e.AddedItems.Count > 0)
             {
 
-                bluetoothDevice = (BluetoothDevice)ResultsListView.SelectedItem;
+                bluetoothLEDeviceDisplay = (BluetoothLEDeviceDisplay) ResultsListView.SelectedItem;
 
-                bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothDevice.Address));
+                bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothLEDeviceDisplay.Address));
 
                 if (bluetoothLEDevice.ConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
                 {
@@ -254,75 +254,5 @@ namespace Monorail
 
     }
 
-    public class BluetoothDevice : INotifyPropertyChanged
-    {
-
-        public string _Id { get; set; }
-        public string Id
-        {
-
-            get { return _Id; }
-            set
-            {
-
-                _Id = value;
-                OnPropertyChanged(new PropertyChangedEventArgs("Id"));
-            }
-
-        }
-
-        public string _Address { get; set; }
-        public string Address
-        {
-
-            get { return _Address; }
-            set
-            {
-
-                _Address = value;
-                OnPropertyChanged(new PropertyChangedEventArgs("Address"));
-            }
-
-        }
-
-        public string _Name { get; set; }
-        public string Name
-        {
-
-            get { return _Name; }
-            set
-            {
-
-                _Name = value;
-                OnPropertyChanged(new PropertyChangedEventArgs("Name"));
-            }
-
-        }
-
-        public string _Strength { get; set; }
-        public string Strength
-        {
-
-            get { return _Strength; }
-            set
-            {
-
-                _Strength = value;
-                OnPropertyChanged(new PropertyChangedEventArgs("Strength"));
-            }
-
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, e);
-            }
-        }
-
-    }
 
 }

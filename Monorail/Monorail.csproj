@@ -133,6 +133,7 @@
     <Compile Include="BLEPairedDevicePage.xaml.cs">
       <DependentUpon>BLEPairedDevicePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DisplayHelpers.cs" />
     <Compile Include="MicrobitPage.xaml.cs">
       <DependentUpon>MicrobitPage.xaml</DependentUpon>
     </Compile>
