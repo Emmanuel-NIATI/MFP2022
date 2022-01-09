@@ -9,15 +9,12 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 using Windows.Devices.Bluetooth;
-using Windows.Devices.Bluetooth.Advertisement;
-using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
-
-using System.ComponentModel;
 
 using System.Collections.ObjectModel;
 using System.Collections;
 using Windows.UI.Core;
+using System.Threading.Tasks;
 
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=234238
@@ -30,7 +27,7 @@ namespace Monorail
     public sealed partial class BLEPairedDevicePage : Page
     {
 
-        private DeviceWatcher watcher = DeviceInformation.CreateWatcher(BluetoothDevice.GetDeviceSelectorFromPairingState(false) );
+        private DeviceWatcher watcher = DeviceInformation.CreateWatcher();
 
         bool isWatcherStarted = false;
 
@@ -38,6 +35,7 @@ namespace Monorail
 
         BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay;
         BluetoothLEDevice bluetoothLEDevice;
+        BluetoothDevice bluetoothDevice;
 
         private MainPage rootPage;
 
@@ -62,6 +60,8 @@ namespace Monorail
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
 
+
+           
             NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
 
         }
@@ -72,7 +72,7 @@ namespace Monorail
             App.Current.Suspending -= App_Suspending;
             App.Current.Resuming -= App_Resuming;
 
-            watcher.Stop();
+            if( isWatcherStarted ) { watcher.Stop(); }
 
             watcher.Added -= Watcher_DeviceAdded;
             watcher.Updated -= Watcher_DeviceUpdated;
@@ -82,11 +82,12 @@ namespace Monorail
 
             NotifyUser("Navigating away. Watcher stopped.", NotifyType.StatusMessage);
 
-            base.OnNavigatingFrom(e);
         }
 
         private void App_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
+
+            if (isWatcherStarted) { watcher.Stop(); }
 
             watcher.Added -= Watcher_DeviceAdded;
             watcher.Updated -= Watcher_DeviceUpdated;
@@ -131,9 +132,15 @@ namespace Monorail
 
         }
 
-
         private async void Watcher_DeviceAdded(DeviceWatcher sender, DeviceInformation deviceInfo)
         {
+
+            var selector = BluetoothLEDevice.GetDeviceSelector();
+            var devices = await DeviceInformation.FindAllAsync(selector);
+
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Devices : ");
+
+            Debug.WriteLine("");
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
@@ -141,13 +148,34 @@ namespace Monorail
                 if (isWatcherStarted)
                 {
 
-                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Watcher_DeviceAdded : ");
-                    Debug.WriteLine("");
-                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Id : " + deviceInfo.Id);
-                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Name : " + deviceInfo.Name);
-                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Pairing : " + deviceInfo.Pairing.IsPaired);
-                    //resultCollection.Add(new DeviceInformationDisplay(deviceInfo));
+                    
+                    if (deviceInfo.Name.Length > 12)
+                    {
 
+                        if (deviceInfo.Name.Substring(0,13).Equals("BBC micro:bit") )
+                        {
+
+                            if ( deviceInfo.Pairing.IsPaired )
+                            {
+
+                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Watcher_DeviceAdded : ");
+                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Id : " + deviceInfo.Id);
+                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Name : " + deviceInfo.Name);
+                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Pairing : " + deviceInfo.Pairing.IsPaired);
+                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Kind : " + deviceInfo.Kind);
+                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Type : " + deviceInfo.GetType().ToString() );
+                                Debug.WriteLine("");
+
+                                
+
+
+                            }
+
+                            //resultCollection.Add(new DeviceInformationDisplay(deviceInfo));
+
+                        }
+
+                    }
                 }
 
             });

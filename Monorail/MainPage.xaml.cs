@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel;
 using Windows.Devices.Bluetooth;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -25,7 +27,21 @@ namespace Monorail
     {
 
         public static MainPage Current;
-        public BluetoothLEDevice BLEDevice { get; set; }
+
+        public BluetoothLEDevice _BluetoothLEDevice { get; set; }
+        public BluetoothLEDevice BluetoothLEDevice
+        {
+
+            get { return _BluetoothLEDevice; }
+            set
+            {
+
+                _BluetoothLEDevice = value;                
+            }
+
+        }
+
+        public BluetoothLEDevice bluetoothLEDevice;
 
         public MainPage()
         {
@@ -35,7 +51,37 @@ namespace Monorail
             Current = this;
 
             MyFrame.Navigate(typeof(BLEPairedDevicePage));
-            
+
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+
+            App.Current.Suspending += App_Suspending;
+            App.Current.Resuming += App_Resuming;
+
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+
+            App.Current.Suspending -= App_Suspending;
+            App.Current.Resuming -= App_Resuming;
+
+        }
+
+        private void App_Suspending(object sender, object e)
+        {
+
+
+
+        }
+
+        private void App_Resuming(object sender, object e)
+        {
+
+
+
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)

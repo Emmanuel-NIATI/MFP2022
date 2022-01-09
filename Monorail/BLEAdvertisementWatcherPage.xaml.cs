@@ -39,6 +39,7 @@ namespace Monorail
 
         BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay;
         BluetoothLEDevice bluetoothLEDevice;
+        BluetoothDevice bluetoothDevice;
 
         private MainPage rootPage;
 
@@ -69,24 +70,23 @@ namespace Monorail
             App.Current.Suspending -= App_Suspending;
             App.Current.Resuming -= App_Resuming;
 
-            watcher.Stop();
+            if (isWatcherStarted) { watcher.Stop(); }
 
             watcher.Received -= Watcher_Received;
             watcher.Stopped -= Watcher_Stopped;
 
             NotifyUser("Navigating away. Watcher stopped.", NotifyType.StatusMessage);
 
-            base.OnNavigatingFrom(e);
         }
 
-        private void App_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+        private void App_Suspending(object sender, object e)
         {
 
-            watcher.Stop();
+            if (isWatcherStarted) { watcher.Stop(); }
 
             watcher.Received -= Watcher_Received;
             watcher.Stopped -= Watcher_Stopped;
-
+            
             NotifyUser("App suspending. Watcher stopped.", NotifyType.StatusMessage);
 
         }
@@ -100,7 +100,6 @@ namespace Monorail
             NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
 
         }
-
 
         private void EnumerateButton_Click(object sender, RoutedEventArgs e)
         {
@@ -210,6 +209,11 @@ namespace Monorail
 
                     DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
 
+                    rootPage.BluetoothLEDevice = bluetoothLEDevice;
+
+                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> bluetoothLEDevice :");
+                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> bluetoothLEDevice : " + bluetoothLEDevice.BluetoothAddress);
+                    Debug.WriteLine("");
                 }
 
             }
