@@ -1,15 +1,4 @@
-﻿//*********************************************************
-//
-// Copyright (c) Microsoft. All rights reserved.
-// This code is licensed under the Microsoft Public License.
-// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
-// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
-// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
-//
-//*********************************************************
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -25,6 +14,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Microbit
 {
+
     [ComImport]
     [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -56,25 +46,24 @@ namespace Microbit
         {
             if (softwareBitmap != null)
             {
-                // Swap the processed frame to _backBuffer and trigger UI thread to render it
+
                 softwareBitmap = Interlocked.Exchange(ref _backBuffer, softwareBitmap);
 
-                // UI thread always reset _backBuffer before using it.  Unused bitmap should be disposed.
                 softwareBitmap?.Dispose();
 
-                // Changes to xaml ImageElement must happen in UI thread through Dispatcher
                 var task = _imageElement.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                     async () =>
                     {
-                        // Don't let two copies of this task run at the same time.
+                        
                         if (_taskRunning)
                         {
                             return;
                         }
                         _taskRunning = true;
 
-                        // Keep draining frames from the backbuffer until the backbuffer is empty.
+
                         SoftwareBitmap latestBitmap;
+
                         while ((latestBitmap = Interlocked.Exchange(ref _backBuffer, null)) != null)
                         {
                             var imageSource = (SoftwareBitmapSource)_imageElement.Source;
@@ -83,50 +72,43 @@ namespace Microbit
                         }
 
                         _taskRunning = false;
+
                     });
             }
+
         }
-        // Function delegate that transforms a scanline from an input image to an output image.
+        
         private unsafe delegate void TransformScanline(int pixelWidth, byte* inputRowBytes, byte* outputRowBytes);
 
-        /// <summary>
-        /// Determines the subtype to request from the MediaFrameReader that will result in
-        /// a frame that can be rendered by ConvertToDisplayableImage.
-        /// </summary>
-        /// <returns>Subtype string to request, or null if subtype is not renderable.</returns>
         public static string GetSubtypeForFrameReader(MediaFrameSourceKind kind, MediaFrameFormat format)
         {
-            // Note that media encoding subtypes may differ in case.
-            // https://docs.microsoft.com/en-us/uwp/api/Windows.Media.MediaProperties.MediaEncodingSubtypes
+
             string subtype = format.Subtype;
+
             switch (kind)
             {
-                // For color sources, we accept anything and request that it be converted to Bgra8.
+            
                 case MediaFrameSourceKind.Color:
                     return MediaEncodingSubtypes.Bgra8;
 
-                // The only depth format we can render is D16.
                 case MediaFrameSourceKind.Depth:
                     return String.Equals(subtype, MediaEncodingSubtypes.D16, StringComparison.OrdinalIgnoreCase) ? subtype : null;
 
-                // The only infrared formats we can render are L8 and L16.
                 case MediaFrameSourceKind.Infrared:
-                    return (String.Equals(subtype, MediaEncodingSubtypes.L8, StringComparison.OrdinalIgnoreCase) ||
-                        String.Equals(subtype, MediaEncodingSubtypes.L16, StringComparison.OrdinalIgnoreCase)) ? subtype : null;
+                    return (String.Equals(subtype, MediaEncodingSubtypes.L8, StringComparison.OrdinalIgnoreCase) || String.Equals(subtype, MediaEncodingSubtypes.L16, StringComparison.OrdinalIgnoreCase)) ? subtype : null;
 
-                // No other source kinds are supported by this class.
                 default:
                     return null;
+
             }
+
         }
 
-        /// <summary>
-        /// Converts a frame to a SoftwareBitmap of a valid format to display in an Image control.
-        /// </summary>
-        /// <param name="inputFrame">Frame to convert.</param>
         public static unsafe SoftwareBitmap ConvertToDisplayableImage(VideoMediaFrame inputFrame)
         {
+
             SoftwareBitmap result = null;
+
             using (var inputBitmap = inputFrame?.SoftwareBitmap)
             {
                 if (inputBitmap != null)
@@ -364,7 +346,7 @@ namespace Microbit
             /// <param name="maxReliableDepth">Furthest distance at which the sensor can provide reliable measurements.</param>
             public static unsafe void PseudoColorForDepth(int pixelWidth, byte* inputRowBytes, byte* outputRowBytes, float depthScale, float minReliableDepth, float maxReliableDepth)
             {
-                // Visualize space in front of your desktop.
+
                 float minInMeters = minReliableDepth * depthScale;
                 float maxInMeters = maxReliableDepth * depthScale;
                 float one_min = 1.0f / minInMeters;
@@ -378,8 +360,6 @@ namespace Microbit
 
                     if (depth == 0)
                     {
-                        // Map invalid depth values to transparent pixels.
-                        // This happens when depth information cannot be calculated, e.g. when objects are too close.
                         outputRow[x] = 0;
                     }
                     else
@@ -387,41 +367,41 @@ namespace Microbit
                         var alpha = (1.0f / depth - one_min) / range;
                         outputRow[x] = PseudoColor(alpha * alpha);
                     }
+
                 }
+
             }
 
-            /// <summary>
-            /// Maps each pixel in a scanline from a 8 bit infrared value to a pseudo-color pixel.
-            /// </summary>
-            /// /// <param name="pixelWidth">Width of the input scanline, in pixels.</param>
-            /// <param name="inputRowBytes">Pointer to the start of the input scanline.</param>
-            /// <param name="outputRowBytes">Pointer to the start of the output scanline.</param>
-            public static unsafe void PseudoColorFor8BitInfrared(
-                int pixelWidth, byte* inputRowBytes, byte* outputRowBytes)
+            public static unsafe void PseudoColorFor8BitInfrared(int pixelWidth, byte* inputRowBytes, byte* outputRowBytes)
             {
+
                 byte* inputRow = inputRowBytes;
+
                 uint* outputRow = (uint*)outputRowBytes;
+
                 for (int x = 0; x < pixelWidth; x++)
                 {
                     outputRow[x] = InfraredColor(inputRow[x] / (float)Byte.MaxValue);
                 }
+
             }
 
-            /// <summary>
-            /// Maps each pixel in a scanline from a 16 bit infrared value to a pseudo-color pixel.
-            /// </summary>
-            /// <param name="pixelWidth">Width of the input scanline.</param>
-            /// <param name="inputRowBytes">Pointer to the start of the input scanline.</param>
-            /// <param name="outputRowBytes">Pointer to the start of the output scanline.</param>
             public static unsafe void PseudoColorFor16BitInfrared(int pixelWidth, byte* inputRowBytes, byte* outputRowBytes)
             {
+
                 ushort* inputRow = (ushort*)inputRowBytes;
+
                 uint* outputRow = (uint*)outputRowBytes;
+
                 for (int x = 0; x < pixelWidth; x++)
                 {
                     outputRow[x] = InfraredColor(inputRow[x] / (float)UInt16.MaxValue);
                 }
+
             }
+
         }
+
     }
+
 }

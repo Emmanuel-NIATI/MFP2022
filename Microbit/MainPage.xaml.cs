@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Diagnostics;
+using Windows.Devices.Bluetooth;
+using Windows.Devices.Enumeration;
 using Windows.UI.Core;
+
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -22,6 +19,19 @@ namespace Microbit
     {
 
         public static MainPage Current;
+
+        public BluetoothLEDevice _BluetoothLEDevice { get; set; }
+        public BluetoothLEDevice BluetoothLEDevice
+        {
+
+            get { return _BluetoothLEDevice; }
+            set
+            {
+
+                _BluetoothLEDevice = value;
+            }
+
+        }
 
         public MainPage()
         {
@@ -44,6 +54,37 @@ namespace Microbit
             {
                 ScenarioControl.SelectedIndex = 0;
             }
+
+            App.Current.Suspending += App_Suspending;
+            App.Current.Resuming += App_Resuming;
+
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+
+            App.Current.Suspending -= App_Suspending;
+            App.Current.Resuming -= App_Resuming;
+
+        }
+
+        protected async void App_Suspending(object sender, object e)
+        {
+
+            if( _BluetoothLEDevice != null )
+            {
+
+                DeviceUnpairingResult deviceUnpairingResult = await _BluetoothLEDevice.DeviceInformation.Pairing.UnpairAsync();
+            }
+
+            NotifyUser("App suspending.", NotifyType.StatusMessage);
+
+        }
+
+        protected void App_Resuming(object sender, object e)
+        {
+
+            NotifyUser("App resuming.", NotifyType.StatusMessage);
 
         }
 
@@ -130,6 +171,7 @@ namespace Microbit
         {
             Splitter.IsPaneOpen = !Splitter.IsPaneOpen;
         }
+
     }
 
     public enum NotifyType

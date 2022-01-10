@@ -34,8 +34,6 @@ namespace Microbit
         BluetoothLEDevice bluetoothLEDevice;
         BluetoothDevice bluetoothDevice;
 
-        
-
         public Scenario1_Advertisement()
         {
             this.InitializeComponent();
@@ -70,7 +68,7 @@ namespace Microbit
 
         }
 
-        private void App_Suspending(object sender, object e)
+        protected void App_Suspending(object sender, object e)
         {
 
             if (isWatcherStarted) { watcher.Stop(); }
@@ -199,22 +197,14 @@ namespace Microbit
                 {
 
                     DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
+                    rootPage.BluetoothLEDevice = bluetoothLEDevice;
 
-                    
-
-                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> bluetoothLEDevice :");
-                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> bluetoothLEDevice : " + bluetoothLEDevice.BluetoothAddress);
-                    Debug.WriteLine("");
                 }
 
             }
 
         }
 
-
-
     }
-
-
 
 }
