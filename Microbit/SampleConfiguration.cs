@@ -10,13 +10,13 @@ namespace Microbit
     public partial class MainPage : Page
     {
 
-        public const string FEATURE_NAME = "Bluetooth Low Energy C# Sample";
+        public const string FEATURE_NAME = "Gestion de la carte micro:bit";
 
         List<Scenario> scenarios = new List<Scenario>
         {
 
-            new Scenario() { Title="Nearby BLE Advertisement", ClassType=typeof(Scenario1_Advertisement) },
-            new Scenario() { Title="BLE Paired Device", ClassType=typeof(Scenario2_Device) },
+            new Scenario() { Logo="\xE702", Title="Nearby BLE Advertisement", ClassType=typeof(Scenario1_Advertisement) },
+            new Scenario() { Logo="\xE702", Title="BLE Paired Device", ClassType=typeof(Scenario2_Device) },
 
         };
 
@@ -27,6 +27,7 @@ namespace Microbit
 
     public class Scenario
     {
+        public string Logo { get; set; }
         public string Title { get; set; }
         public Type ClassType { get; set; }
     }

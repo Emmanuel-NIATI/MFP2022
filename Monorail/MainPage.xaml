@@ -21,9 +21,11 @@
         </RelativePanel>
 
         <SplitView Name="MySplitView" Grid.Row="1" DisplayMode="CompactOverlay" OpenPaneLength="300" CompactPaneLength="50" HorizontalAlignment="Left">
+            
             <SplitView.Content>
                 <Frame Name="MyFrame"></Frame>
             </SplitView.Content>
+            
             <SplitView.Pane>
 
                 <ListBox SelectionMode="Single" Name="IconsListBox" SelectionChanged="IconsListBox_SelectionChanged">
@@ -50,7 +52,9 @@
                     </ListBoxItem>
 
                 </ListBox>
+                
             </SplitView.Pane>
+            
         </SplitView>
 
     </Grid>

@@ -35,10 +35,12 @@ namespace Microbit
 
         public MainPage()
         {
+
             this.InitializeComponent();
 
             Current = this;
-            SampleTitle.Text = FEATURE_NAME;
+            App_Title.Text = FEATURE_NAME;
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -99,6 +101,7 @@ namespace Microbit
             if (s != null)
             {
                 ScenarioFrame.Navigate(s.ClassType);
+
                 if (Window.Current.Bounds.Width < 640)
                 {
                     Splitter.IsPaneOpen = false;
@@ -152,7 +155,6 @@ namespace Microbit
                 StatusPanel.Visibility = Visibility.Collapsed;
             }
 
-
             var peer = FrameworkElementAutomationPeer.FromElement(StatusBlock);
 
             if (peer != null)
@@ -179,6 +181,23 @@ namespace Microbit
         StatusMessage,
         ErrorMessage
     };
+
+    public class ScenarioLogoBindingConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            Scenario s = value as Scenario;
+
+            return s.Logo;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return true;
+        }
+
+    }
 
     public class ScenarioBindingConverter : IValueConverter
     {

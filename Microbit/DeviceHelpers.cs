@@ -44,7 +44,6 @@ namespace Microbit
 
             watcher.Start();
 
-            
             T result = await completionSource.Task;
 
             watcher.Stop();
