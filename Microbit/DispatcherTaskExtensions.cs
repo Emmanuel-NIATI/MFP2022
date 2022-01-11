@@ -4,7 +4,7 @@ using Windows.UI.Core;
 
 namespace Microbit
 {
-
+    /*
     public static class DispatcherTaskExtensions
     {
 
@@ -34,5 +34,5 @@ namespace Microbit
         public static async Task RunTaskAsync(this CoreDispatcher dispatcher, Func<Task> func, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal) => await RunTaskAsync(dispatcher, async () => { await func(); return false; }, priority);
 
     }
-
+    */
 }

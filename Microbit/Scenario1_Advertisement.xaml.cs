@@ -24,7 +24,7 @@ namespace Microbit
 
         private MainPage rootPage = MainPage.Current;
 
-        BluetoothLEAdvertisementWatcher watcher = new BluetoothLEAdvertisementWatcher();
+        BluetoothLEAdvertisementWatcher watcher;
 
         bool isWatcherStarted = false;
 
@@ -37,6 +37,9 @@ namespace Microbit
         public Scenario1_Advertisement()
         {
             this.InitializeComponent();
+
+            watcher = new BluetoothLEAdvertisementWatcher();
+            watcher.ScanningMode = BluetoothLEScanningMode.Active;
 
         }
 
@@ -59,7 +62,11 @@ namespace Microbit
             App.Current.Suspending -= App_Suspending;
             App.Current.Resuming -= App_Resuming;
 
-            if (isWatcherStarted) { watcher.Stop(); }
+            if (isWatcherStarted)
+            {
+                watcher.Stop();
+                isWatcherStarted = false;
+            }
 
             watcher.Received -= Watcher_Received;
             watcher.Stopped -= Watcher_Stopped;
@@ -71,7 +78,11 @@ namespace Microbit
         protected void App_Suspending(object sender, object e)
         {
 
-            if (isWatcherStarted) { watcher.Stop(); }
+            if (isWatcherStarted)
+            {
+                watcher.Stop();
+                isWatcherStarted = false;
+            }
 
             watcher.Received -= Watcher_Received;
             watcher.Stopped -= Watcher_Stopped;
@@ -96,13 +107,11 @@ namespace Microbit
             if (!isWatcherStarted)
             {
 
+                watcher.Start();
+
                 isWatcherStarted = true;
 
                 listBluetoothLEDeviceDisplay.Clear();
-
-                watcher.ScanningMode = BluetoothLEScanningMode.Active;
-
-                watcher.Start();
 
                 rootPage.NotifyUser("Running... Watcher started.", NotifyType.StatusMessage);
 
