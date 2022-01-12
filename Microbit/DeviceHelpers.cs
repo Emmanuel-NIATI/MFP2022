@@ -5,6 +5,8 @@ using Windows.Devices.Enumeration;
 
 namespace Microbit
 {
+
+    /*
     public partial class DeviceHelpers
     {
 
@@ -53,5 +55,6 @@ namespace Microbit
         }
 
     }
+    */
 
 }

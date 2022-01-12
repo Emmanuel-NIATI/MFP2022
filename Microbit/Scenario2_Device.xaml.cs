@@ -21,7 +21,7 @@ namespace Microbit
     public sealed partial class Scenario2_Device : Page
     {
 
-        private DeviceWatcher watcher = DeviceInformation.CreateWatcher();
+        private DeviceWatcher watcher;
 
         bool isWatcherStarted = false;
 
@@ -35,7 +35,15 @@ namespace Microbit
 
         public Scenario2_Device()
         {
+
             this.InitializeComponent();
+
+            string aqsAllBluetoothLEDevices = "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")";
+
+            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected", "System.Devices.Aep.Bluetooth.Le.IsConnectable" };
+
+            watcher = DeviceInformation.CreateWatcher(aqsAllBluetoothLEDevices, requestedProperties, DeviceInformationKind.AssociationEndpoint);
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -108,13 +116,11 @@ namespace Microbit
             if (!isWatcherStarted)
             {
 
+                watcher.Start();
+
                 isWatcherStarted = true;
 
                 listBluetoothLEDeviceDisplay.Clear();
-
-
-
-                watcher.Start();
 
                 rootPage.NotifyUser("Running... Watcher started.", NotifyType.StatusMessage);
 
