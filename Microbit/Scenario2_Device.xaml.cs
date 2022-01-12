@@ -135,8 +135,6 @@ namespace Microbit
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
 
-                sender.ToString();
-
                 if (isWatcherStarted)
                 {
 
@@ -147,7 +145,6 @@ namespace Microbit
                     Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Kind : " + deviceInfo.Kind);
                     Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Type : " + deviceInfo.GetType().ToString());
                     Debug.WriteLine("");
-
 
                 }
 
