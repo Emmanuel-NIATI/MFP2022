@@ -73,10 +73,18 @@ namespace Microbit
         protected async void App_Suspending(object sender, object e)
         {
 
-            if( _BluetoothLEDevice != null )
+            if ( _BluetoothLEDevice != null )
             {
 
-                DeviceUnpairingResult deviceUnpairingResult = await _BluetoothLEDevice.DeviceInformation.Pairing.UnpairAsync();
+                _BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync( _BluetoothLEDevice.BluetoothAddress );
+
+                if (_BluetoothLEDevice.DeviceInformation.Pairing.IsPaired )
+                {
+
+                    DeviceUnpairingResult deviceUnpairingResult = await _BluetoothLEDevice.DeviceInformation.Pairing.UnpairAsync();
+
+                }
+
             }
 
             NotifyUser("App suspending.", NotifyType.StatusMessage);

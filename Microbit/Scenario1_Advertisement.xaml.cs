@@ -20,9 +20,7 @@ namespace Microbit
 {
 
     public sealed partial class Scenario1_Advertisement : Page
-    {
-
-        private MainPage rootPage = MainPage.Current;
+    {        
 
         BluetoothLEAdvertisementWatcher watcher;
 
@@ -33,6 +31,11 @@ namespace Microbit
         BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay;
         BluetoothLEDevice bluetoothLEDevice;
         BluetoothDevice bluetoothDevice;
+
+        private MainPage rootPage = MainPage.Current;
+
+
+        // https://github.com/lzhengwei/UWP_Nordic_Uart_Transmitter
 
         public Scenario1_Advertisement()
         {
@@ -166,6 +169,17 @@ namespace Microbit
                             listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
                         }
 
+
+
+
+
+
+
+
+
+
+
+
                     }
                     catch (Exception e)
                     {
@@ -202,13 +216,19 @@ namespace Microbit
 
                 bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothLEDeviceDisplay.Address));
 
-                if (bluetoothLEDevice.ConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
+                if ( !bluetoothLEDevice.DeviceInformation.Pairing.IsPaired )
                 {
 
-                    DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
-                    rootPage.BluetoothLEDevice = bluetoothLEDevice;
+                    if (bluetoothLEDevice.DeviceInformation.Pairing.CanPair)
+                    {
+
+                        DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
+
+                    }
 
                 }
+
+                rootPage.BluetoothLEDevice = bluetoothLEDevice;
 
             }
 

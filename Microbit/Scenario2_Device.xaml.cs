@@ -40,7 +40,7 @@ namespace Microbit
 
             string aqsAllBluetoothLEDevices = "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")";
 
-            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected", "System.Devices.Aep.Bluetooth.Le.IsConnectable" };
+            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected", "System.Devices.Aep.IsPresent", "System.Devices.Aep.Bluetooth.Le.IsConnectable", "System.Devices.Aep.IsPaired" };
 
             watcher = DeviceInformation.CreateWatcher(aqsAllBluetoothLEDevices, requestedProperties, DeviceInformationKind.AssociationEndpoint);
 
@@ -131,11 +131,7 @@ namespace Microbit
         private async void Watcher_DeviceAdded(DeviceWatcher sender, DeviceInformation deviceInfo)
         {
 
-            var selector = BluetoothLEDevice.GetDeviceSelector();
-            var devices = await DeviceInformation.FindAllAsync(selector);
-
             Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Devices : ");
-
             Debug.WriteLine("");
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
