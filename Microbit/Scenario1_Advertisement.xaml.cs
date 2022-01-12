@@ -32,14 +32,16 @@ namespace Microbit
         BluetoothLEDevice bluetoothLEDevice;
         BluetoothDevice bluetoothDevice;
 
-        private MainPage rootPage = MainPage.Current;
-
+        private MainPage rootPage;
 
         // https://github.com/lzhengwei/UWP_Nordic_Uart_Transmitter
 
         public Scenario1_Advertisement()
         {
+
             this.InitializeComponent();
+
+            rootPage = MainPage.Current;
 
             watcher = new BluetoothLEAdvertisementWatcher();
             watcher.ScanningMode = BluetoothLEScanningMode.Active;
@@ -163,22 +165,22 @@ namespace Microbit
                         bluetoothLEDeviceDisplay.Name = args.Advertisement.LocalName;
                         bluetoothLEDeviceDisplay.Strength = args.RawSignalStrengthInDBm + "";
 
+                        if( bluetoothLEDevice.DeviceInformation.Pairing.IsPaired )
+                        {
+
+                            bluetoothLEDeviceDisplay.Paired = "Yes";
+
+                        }
+                        else
+                        {
+                            bluetoothLEDeviceDisplay.Paired = "No";
+                        }
+
                         if (!FindBluetoothDevice(bluetoothLEDeviceDisplay.Id))
                         {
 
                             listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
                         }
-
-
-
-
-
-
-
-
-
-
-
 
                     }
                     catch (Exception e)

@@ -67,6 +67,20 @@ namespace Microbit
 
         }
 
+        public string _Paired { get; set; }
+        public string Paired
+        {
+
+            get { return _Paired; }
+            set
+            {
+
+                _Paired = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("Paired"));
+            }
+
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged(PropertyChangedEventArgs e)

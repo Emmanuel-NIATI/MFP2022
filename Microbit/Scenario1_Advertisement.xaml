@@ -5,7 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:Microbit"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
 
@@ -14,6 +15,7 @@
             <StackPanel Orientation="Vertical">
                 <TextBlock>Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontWeight="Bold"/></TextBlock>
                 <TextBlock>Address : <Run Text="{x:Bind Address, Mode=OneWay}"/>, Strength : <Run Text="{x:Bind Strength, Mode=OneWay}"/> dbm</TextBlock>
+                <TextBlock>Paired : <Run Text="{x:Bind Paired, Mode=OneWay}"/></TextBlock>
             </StackPanel>
 
         </DataTemplate>

@@ -108,6 +108,7 @@ namespace Microbit
 
             if (s != null)
             {
+
                 ScenarioFrame.Navigate(s.ClassType);
 
                 if (Window.Current.Bounds.Width < 640)
