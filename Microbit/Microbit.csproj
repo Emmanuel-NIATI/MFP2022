@@ -123,9 +123,6 @@
     <Compile Include="Scenario2_Device.xaml.cs">
       <DependentUpon>Scenario2_Device.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DeviceHelpers.cs" />
-    <Compile Include="DispatcherTaskExtensions.cs" />
-    <Compile Include="DisplayHelpers.cs" />
     <Compile Include="FrameRenderer.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

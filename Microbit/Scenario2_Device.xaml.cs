@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
+using System.ComponentModel;
 using System.Diagnostics;
 
 using Windows.Devices.Bluetooth;
@@ -42,7 +42,7 @@ namespace Microbit
 
             string aqsAllBluetoothLEDevices = "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")";
 
-            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected", "System.Devices.Aep.IsPaired" };
+            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnectable", "System.Devices.Aep.IsConnected", "System.Devices.Aep.IsPaired" };
 
             watcher = DeviceInformation.CreateWatcher(aqsAllBluetoothLEDevices, requestedProperties, DeviceInformationKind.AssociationEndpoint);
 
@@ -138,56 +138,50 @@ namespace Microbit
 
         }
 
-        private bool FindBluetoothDevice(string id)
+        private BluetoothLEDeviceDisplay FindBluetoothLEDeviceDisplay(string id)
         {
-
-            bool _isPresent = false;
 
             foreach (BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay in listBluetoothLEDeviceDisplay)
             {
 
                 if (bluetoothLEDeviceDisplay.Id == id)
                 {
-                    _isPresent = true;
+
+                    return bluetoothLEDeviceDisplay;
+
                 }
 
             }
 
-            return _isPresent;
+            return null;
 
         }
 
         private async void Watcher_DeviceAdded(DeviceWatcher sender, DeviceInformation deviceInfo)
         {
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
 
-                if(deviceInfo.Name != "")
+                lock (this)
                 {
 
-                    BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay = new BluetoothLEDeviceDisplay();
-
-                    bluetoothLEDeviceDisplay.Id = deviceInfo.Id;
-                    bluetoothLEDeviceDisplay.Name = deviceInfo.Name;
-                    
-                    if(deviceInfo.Pairing.IsPaired)
+                    if (sender == watcher)
                     {
 
-                        bluetoothLEDeviceDisplay.Paired = "Yes";
+                        if (FindBluetoothLEDeviceDisplay( deviceInfo.Id ) == null )
+                        {
+
+                            if (deviceInfo.Name != string.Empty)
+                            {
+                                
+                                listBluetoothLEDeviceDisplay.Add(new BluetoothLEDeviceDisplay(deviceInfo));
+
+                            }
+
+                        }
+
                     }
-                    else
-                    {
-
-                        bluetoothLEDeviceDisplay.Paired = "No";
-                    }
-
-                    if (!FindBluetoothDevice(bluetoothLEDeviceDisplay.Id))
-                    {
-
-                        listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
-                    }
-
                 }
 
             });
@@ -197,12 +191,25 @@ namespace Microbit
         private async void Watcher_DeviceUpdated(DeviceWatcher sender, DeviceInformationUpdate deviceInfoUpdate)
         {
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
 
-
-                if (isWatcherStarted)
+                lock (this)
                 {
+
+                    if (sender == watcher)
+                    {
+
+                        BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay = FindBluetoothLEDeviceDisplay(deviceInfoUpdate.Id);
+
+                        if (bluetoothLEDeviceDisplay != null)
+                        {
+
+                            bluetoothLEDeviceDisplay.Update(deviceInfoUpdate);
+                            return;
+                        }
+
+                    }
 
                 }
 
@@ -213,26 +220,27 @@ namespace Microbit
         private async void Watcher_DeviceRemoved(DeviceWatcher sender, DeviceInformationUpdate deviceInfoUpdate)
         {
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
 
-                /*
-                // Watcher may have stopped while we were waiting for our chance to run.
-                if (IsWatcherStarted(sender))
+                lock (this)
                 {
-                    // Find the corresponding DeviceInformation in the collection and remove it
-                    foreach (DeviceInformationDisplay deviceInfoDisp in resultCollection)
+
+                    if (sender == watcher)
                     {
-                        if (deviceInfoDisp.Id == deviceInfoUpdate.Id)
+
+                        BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay = FindBluetoothLEDeviceDisplay(deviceInfoUpdate.Id);
+
+                        if (bluetoothLEDeviceDisplay != null)
                         {
-                            resultCollection.Remove(deviceInfoDisp);
-                            break;
+
+                            listBluetoothLEDeviceDisplay.Remove(bluetoothLEDeviceDisplay);
+
                         }
+
                     }
 
-                    RaiseDeviceChanged(sender, deviceInfoUpdate.Id);
                 }
-                */
 
             });
 
@@ -241,8 +249,15 @@ namespace Microbit
         private async void Watcher_EnumerationCompleted(DeviceWatcher sender, object obj)
         {
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+
+                if (sender == watcher)
+                {
+
+                    rootPage.NotifyUser($"{listBluetoothLEDeviceDisplay.Count} devices found. Enumeration completed.", NotifyType.StatusMessage);
+
+                }
 
             });
 
@@ -251,8 +266,13 @@ namespace Microbit
         private async void Watcher_Stopped(DeviceWatcher sender, object obj)
         {
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+
+                if (sender == watcher)
+                {
+                    rootPage.NotifyUser($"No longer watching for devices.", sender.Status == DeviceWatcherStatus.Aborted ? NotifyType.ErrorMessage : NotifyType.StatusMessage);
+                }
 
             });
 
@@ -265,6 +285,49 @@ namespace Microbit
             {
 
 
+            }
+
+        }
+
+        public class BluetoothLEDeviceDisplay : INotifyPropertyChanged
+        {
+
+            public BluetoothLEDeviceDisplay(DeviceInformation deviceInfoIn)
+            {
+
+                DeviceInformation = deviceInfoIn;
+
+            }
+
+            public DeviceInformation DeviceInformation { get; private set; }
+
+            public string Id => DeviceInformation.Id;
+            public string Name => DeviceInformation.Name;
+            public bool IsPaired => DeviceInformation.Pairing.IsPaired;
+            public bool IsConnected => (bool?)DeviceInformation.Properties["System.Devices.Aep.IsConnected"] == true;
+            public bool IsConnectable => (bool?)DeviceInformation.Properties["System.Devices.Aep.Bluetooth.Le.IsConnectable"] == true;
+
+            public IReadOnlyDictionary<string, object> Properties => DeviceInformation.Properties;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public void Update(DeviceInformationUpdate deviceInfoUpdate)
+            {
+                DeviceInformation.Update(deviceInfoUpdate);
+
+                OnPropertyChanged("Id");
+                OnPropertyChanged("Name");
+                OnPropertyChanged("DeviceInformation");
+                OnPropertyChanged("IsPaired");
+                OnPropertyChanged("IsConnected");
+                OnPropertyChanged("Properties");
+                OnPropertyChanged("IsConnectable");
+
+            }
+
+            protected void OnPropertyChanged(string name)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
 
         }
