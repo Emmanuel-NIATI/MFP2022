@@ -51,6 +51,13 @@
                         </StackPanel>
                     </ListBoxItem>
 
+                    <ListBoxItem Name="TextToSpeechListBoxItem">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="30" Text="&#xE767;" />
+                            <TextBlock FontFamily="Segoe UI" Text="Test de synthèse vocale" FontSize="12" Margin="20,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </ListBoxItem>
+
                 </ListBox>
                 
             </SplitView.Pane>

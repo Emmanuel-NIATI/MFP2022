@@ -109,6 +109,13 @@ namespace Monorail
 
                 MyFrame.Navigate(typeof(MicrobitPage));
             }
+            else if (TextToSpeechListBoxItem.IsSelected)
+            {
+
+                MyFrame.Navigate(typeof(TextToSpeechPage));
+            }
+
+
 
         }
 
