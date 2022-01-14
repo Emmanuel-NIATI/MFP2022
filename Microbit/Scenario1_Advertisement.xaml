@@ -10,7 +10,7 @@
 
     <Page.Resources>
 
-        <DataTemplate x:Key="ResultsListViewTemplate" x:DataType="local:">
+        <DataTemplate x:Key="ResultsListViewTemplate" x:DataType="local:BluetoothLEDeviceDisplay">
 
             <StackPanel Orientation="Vertical">
                 <TextBlock>Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontWeight="Bold"/></TextBlock>

@@ -115,7 +115,16 @@ namespace Microbit
                 {
                     Splitter.IsPaneOpen = false;
                 }
+
             }
+
+        }
+
+        public void Navigate(Type sourcePageType)
+        {
+
+            ScenarioFrame.Navigate(sourcePageType);
+
         }
 
         public List<Scenario> Scenarios

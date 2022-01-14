@@ -15,7 +15,7 @@ namespace Microbit
 {
 
     public sealed partial class Scenario1_Advertisement : Page
-    {        
+    {
 
         BluetoothLEAdvertisementWatcher watcher;
 
@@ -25,8 +25,7 @@ namespace Microbit
 
         BluetoothLEDeviceDisplay bluetoothLEDeviceDisplay;
         BluetoothLEDevice bluetoothLEDevice;
-        BluetoothDevice bluetoothDevice;
-
+        
         private MainPage rootPage;
 
         // https://github.com/lzhengwei/UWP_Nordic_Uart_Transmitter
@@ -160,7 +159,7 @@ namespace Microbit
                         bluetoothLEDeviceDisplay.Name = args.Advertisement.LocalName;
                         bluetoothLEDeviceDisplay.Strength = args.RawSignalStrengthInDBm + "";
 
-                        if( bluetoothLEDevice.DeviceInformation.Pairing.IsPaired )
+                        if (bluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
                         {
 
                             bluetoothLEDeviceDisplay.Paired = "Yes";
@@ -209,11 +208,11 @@ namespace Microbit
             if (e.AddedItems.Count > 0)
             {
 
-                bluetoothLEDeviceDisplay = (BluetoothLEDeviceDisplay) ResultsListView.SelectedItem;
+                bluetoothLEDeviceDisplay = (BluetoothLEDeviceDisplay)ResultsListView.SelectedItem;
 
                 bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothLEDeviceDisplay.Address));
 
-                if ( !bluetoothLEDevice.DeviceInformation.Pairing.IsPaired )
+                if (!bluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
                 {
 
                     if (bluetoothLEDevice.DeviceInformation.Pairing.CanPair)
@@ -231,22 +230,24 @@ namespace Microbit
 
         }
 
-        public class BluetoothLEDeviceDisplay : INotifyPropertyChanged
+    }
+
+    public class BluetoothLEDeviceDisplay : INotifyPropertyChanged
+    {
+
+        public string _Id { get; set; }
+        public string Id
         {
 
-            public string _Id { get; set; }
-            public string Id
+            get { return _Id; }
+            set
             {
 
-                get { return _Id; }
-                set
-                {
-
-                    _Id = value;
-                    OnPropertyChanged(new PropertyChangedEventArgs("Id"));
-                }
-
+                _Id = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("Id"));
             }
+
+        }
 
             public string _Address { get; set; }
             public string Address
@@ -315,7 +316,5 @@ namespace Microbit
             }
 
         }
-
-    }
 
 }

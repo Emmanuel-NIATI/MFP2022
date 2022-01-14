@@ -10,12 +10,11 @@
 
     <Page.Resources>
 
-        <DataTemplate x:Key="ResultsListViewTemplate" x:DataType="local:BluetoothLEDeviceDisplay">
+        <DataTemplate x:Key="ResultsListViewTemplate" x:DataType="local:DeviceInformationDisplay">
 
             <StackPanel Orientation="Vertical">
                 <TextBlock>Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontWeight="Bold"/></TextBlock>
-                <TextBlock>Address : <Run Text="{x:Bind Address, Mode=OneWay}"/></TextBlock>
-                <TextBlock>Paired : <Run Text="{x:Bind Paired, Mode=OneWay}"/></TextBlock>
+                <TextBlock>IsPaired: <Run Text="{x:Bind IsPaired, Mode=OneWay}"/>, IsConnected: <Run Text="{x:Bind IsConnected, Mode=OneWay}"/>, IsConnectable:<Run Text="{x:Bind IsConnectable, Mode=OneWay}"/></TextBlock>
             </StackPanel>
 
         </DataTemplate>
@@ -40,7 +39,7 @@
         </StackPanel>
 
         <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="0,0,0,5" BorderBrush="AntiqueWhite" BorderThickness="1">
-            <ListView x:Name="ResultsListView" ItemTemplate="{StaticResource ResultsListViewTemplate}" ItemsSource="{x:Bind listBluetoothLEDeviceDisplay, Mode=OneWay}" SelectionChanged="ResultsListView_SelectionChanged" />
+            <ListView x:Name="ResultsListView" ItemTemplate="{StaticResource ResultsListViewTemplate}" ItemsSource="{x:Bind listDeviceInformationDisplay, Mode=OneWay}" SelectionChanged="ResultsListView_SelectionChanged" />
         </ScrollViewer>
 
     </Grid>

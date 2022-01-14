@@ -9,8 +9,21 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
+        
         <local:ScenarioLogoBindingConverter x:Key="ScenarioLogoConverter"></local:ScenarioLogoBindingConverter>
+        
         <local:ScenarioBindingConverter x:Key="ScenarioConverter"></local:ScenarioBindingConverter>
+                    
+        <DataTemplate x:Key="ScenarioControlTemplate">
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="30" Text="{Binding Converter={StaticResource ScenarioLogoConverter}}" Width="50" />
+                <TextBlock FontFamily="Segoe UI" FontSize="12" Text=" " VerticalAlignment="Center" />
+                <TextBlock FontFamily="Segoe UI" FontSize="12" Text="{Binding Converter={StaticResource ScenarioConverter}}" VerticalAlignment="Center" />
+            </StackPanel>
+            
+        </DataTemplate>
+
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -24,11 +37,11 @@
             <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
                 <ToggleButton Style="{StaticResource SymbolButtonStyle}" Click="Button_Click" VerticalAlignment="Top" Width="50" Foreground="{ThemeResource ApplicationForegroundThemeBrush}">
                     <ToggleButton.Content>
-                        <FontIcon x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" FontSize="30" Glyph="&#xE700;" Margin="0,0,0,0"/>
+                        <FontIcon x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" FontSize="30" Glyph="&#xE700;" />
                     </ToggleButton.Content>
                 </ToggleButton>
             </Border>
-            <Image x:Name="WindowsLogo" Stretch="None" Source="Assets/windows-sdk.png" Margin="0,0,0,0" AutomationProperties.AccessibilityView="Raw" />
+            <Image x:Name="WindowsLogo" Stretch="None" Source="Assets/windows-sdk.png" AutomationProperties.AccessibilityView="Raw" />
             <TextBlock x:Name="App_Title" FontFamily="Segoe UI" FontSize="12" Text="Application title" Style="{StaticResource PageHeaderTextStyle}" TextWrapping="Wrap" Margin="0,10,0,0" />
         </StackPanel>
         
@@ -36,22 +49,10 @@
 
             <SplitView.Pane>
                 
-                <RelativePanel Margin="0,0,0,0">
+                <RelativePanel HorizontalAlignment="Left">
 
-                    <ListBox x:Name="ScenarioControl" SelectionChanged="ScenarioControl_SelectionChanged" AutomationProperties.Name="Scenarios" SelectionMode="Single" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0" VerticalAlignment="Top" Margin="0,10,0,0" RelativePanel.AlignTopWithPanel="True">
-                        
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="30" Glyph="{Binding Converter={StaticResource ScenarioLogoConverter}}" Margin="0,0,0,0" Width="50" />
-                                    <TextBlock FontFamily="Segoe UI" FontSize="12" Text=" " VerticalAlignment="Center" />
-                                    <TextBlock FontFamily="Segoe UI" FontSize="12" Text="{Binding Converter={StaticResource ScenarioConverter}}" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        
-                    </ListBox>
-                    
+                    <ListBox x:Name="ScenarioControl" SelectionChanged="ScenarioControl_SelectionChanged" AutomationProperties.Name="Scenarios" SelectionMode="Single" ItemTemplate="{StaticResource ScenarioControlTemplate}" Background="Transparent" BorderThickness="0" VerticalAlignment="Top" RelativePanel.AlignTopWithPanel="True"/>
+
                     <StackPanel x:Name="FooterPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True">
 
                         <Image Source="Assets/microsoft-sdk.png" AutomationProperties.Name="Microsoft Logo" Stretch="None" HorizontalAlignment="Left" Margin="10,0,0,0"/>
@@ -62,7 +63,7 @@
                             
                             <HyperlinkButton Content="Trademarks" Tag="http://go.microsoft.com/fwlink/?LinkID=623755" Click="Footer_Click" FontSize="12" Style="{StaticResource HyperlinkStyle}" />
                             
-                            <TextBlock Text="|"  Style="{StaticResource SeparatorStyle}" VerticalAlignment="Center" />
+                            <TextBlock Text="|" Style="{StaticResource SeparatorStyle}" VerticalAlignment="Center" />
                             
                             <HyperlinkButton x:Name="PrivacyLink" Content="Privacy" Tag="http://privacy.microsoft.com" Click="Footer_Click" FontSize="12" Style="{StaticResource HyperlinkStyle}"/>
                             
@@ -74,18 +75,28 @@
                 
             </SplitView.Pane>
             
-            <RelativePanel>
-                <Frame x:Name="ScenarioFrame" Margin="0,5,0,0" RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="StatusPanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
-                <StackPanel x:Name="StatusPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
-                    <TextBlock x:Name="StatusLabel" Margin="10,0,0,10" TextWrapping="Wrap" Text="Status:" />
-                    <Border x:Name="StatusBorder" Margin="0,0,0,0">
-                        <ScrollViewer VerticalScrollMode="Auto"  VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                            <TextBlock x:Name="StatusBlock" FontWeight="Bold" AutomationProperties.LiveSetting="Assertive" MaxWidth="{Binding ElementName=Splitter, Path=ActualWidth}" Margin="10,10,10,20" TextWrapping="Wrap" />
-                        </ScrollViewer>
-                    </Border>
-                </StackPanel>
-            </RelativePanel>
-            
+            <SplitView.Content>
+
+                <RelativePanel>
+
+                    <Frame x:Name="ScenarioFrame" RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="StatusPanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
+                    
+                    <StackPanel x:Name="StatusPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
+                        
+                        <TextBlock x:Name="StatusLabel" Margin="10,0,0,10" TextWrapping="Wrap" Text="Status:" />
+                        
+                        <Border x:Name="StatusBorder" Margin="0,0,0,0">
+                            <ScrollViewer VerticalScrollMode="Auto"  VerticalScrollBarVisibility="Auto" MaxHeight="200">
+                                <TextBlock x:Name="StatusBlock" FontWeight="Bold" AutomationProperties.LiveSetting="Assertive" MaxWidth="{Binding ElementName=Splitter, Path=ActualWidth}" Margin="10,10,10,20" TextWrapping="Wrap" />
+                            </ScrollViewer>
+                        </Border>
+                        
+                    </StackPanel>
+                    
+                </RelativePanel>
+
+            </SplitView.Content>
+
         </SplitView>
        
     </Grid>
