@@ -34,8 +34,12 @@ namespace Microbit
 
         /*
 
-                BBC micro:bit [vuzov]
-                243311091039748
+            BBC micro:bit [vuzov]
+            243311091039748
+
+            UARTSERVICE_SERVICE_UUID = "6E400001B5A3F393E0A9E50E24DCCA9E";
+            UART_RX_CHARACTERISTIC_UUID = "6E400002B5A3F393E0A9E50E24DCCA9E";
+            UART_TX_CHARACTERISTIC_UUID = "6E400003B5A3F393E0A9E50E24DCCA9E";
 
         */
 
@@ -43,7 +47,9 @@ namespace Microbit
 
         private ulong SelectedBleDeviceAddr;
         private string SelectedBleDeviceName = "No device selected";
-        private string SelectedUUID;
+        private string SelectedServiceUUID;
+        private string SelectedRxCharacteristicUUID;
+        private string SelectedTxCharacteristicUUID;
 
         private IReadOnlyList<GattDeviceService> listGattDeviceService;
         private IReadOnlyList<GattCharacteristic> listGattCharacteristic;
@@ -53,10 +59,8 @@ namespace Microbit
 
         private BluetoothLEDevice bluetoothLeDevice = null;
         private GattDeviceService selectedService;
-        private GattCharacteristic selectedCharacteristic;
-
-        private GattCharacteristic registeredCharacteristic;
-        private GattPresentationFormat presentationFormat;
+        private GattCharacteristic selectedRxCharacteristic;
+        private GattCharacteristic selectedTxCharacteristic;
 
         readonly int E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED = unchecked((int)0x80650003);
         readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
@@ -72,6 +76,49 @@ namespace Microbit
 
         }
 
+
+
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+
+            App.Current.Suspending += App_Suspending;
+            App.Current.Resuming += App_Resuming;
+
+            rootPage.NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
+
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+
+            App.Current.Suspending -= App_Suspending;
+            App.Current.Resuming -= App_Resuming;
+
+            rootPage.NotifyUser("Navigating away. Watcher stopped.", NotifyType.StatusMessage);
+
+        }
+
+
+        protected void App_Suspending(object sender, object e)
+        {
+
+            bluetoothLeDevice = null;
+            selectedService = null;
+            selectedRxCharacteristic = null;
+            selectedTxCharacteristic = null;
+
+            rootPage.NotifyUser("App suspending. Watcher stopped.", NotifyType.StatusMessage);
+
+        }
+
+        private void App_Resuming(object sender, object e)
+        {
+
+            rootPage.NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
+
+        }
+
         private async void ConnectMicrobit_Click(object sender, RoutedEventArgs e)
         {
 
@@ -80,7 +127,10 @@ namespace Microbit
 
                 SelectedBleDeviceAddr = 243311091039748;
                 SelectedBleDeviceName = "BBC micro: bit[vuzov]";
-                SelectedUUID = "e97dd91d-251d-470a-a062-fa1922dfa9a8";
+                                       
+                SelectedServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+                SelectedRxCharacteristicUUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+                SelectedTxCharacteristicUUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
             }
             else if (MyComboBox.SelectedItem.Equals("Local FO"))
@@ -88,7 +138,10 @@ namespace Microbit
 
                 SelectedBleDeviceAddr = 243311091039748;
                 SelectedBleDeviceName = "BBC micro: bit[vuzov]";
-                SelectedUUID = "e97dd91d-251d-470a-a062-fa1922dfa9a8";
+
+                SelectedServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+                SelectedRxCharacteristicUUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+                SelectedTxCharacteristicUUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
             }
 
@@ -127,7 +180,7 @@ namespace Microbit
 
                     rootPage.NotifyUser(String.Format("Found {0} services", services.Count), NotifyType.StatusMessage);
 
-                    if(services.Count > 0)
+                    if (services.Count > 0)
                     {
 
                         ServiceList.Visibility = Visibility.Visible;
@@ -135,6 +188,77 @@ namespace Microbit
                         foreach (var service in services)
                         {
                             ServiceCollection.Add(new BluetoothLEAttributeDisplay(service));
+
+                            if( service.Uuid.ToString().Equals( SelectedServiceUUID ) )
+                            {
+
+                                selectedService = service;
+                                                                                                                                                                                                                                    
+                                IReadOnlyList<GattCharacteristic> characteristics = null;
+                                                                                                                                                                                                                                                                                   
+                                try
+                                {
+                                    // Ensure we have access to the device.
+                                    var accessStatus = await service.RequestAccessAsync();
+                                    if (accessStatus == DeviceAccessStatus.Allowed)
+                                    {
+                                        // BT_Code: Get all the child characteristics of a service. Use the cache mode to specify uncached characterstics only 
+                                        // and the new Async functions to get the characteristics of unpaired devices as well. 
+                                        var resultCharacteristic = await service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
+                                        if (resultCharacteristic.Status == GattCommunicationStatus.Success)
+                                        {
+                                            characteristics = resultCharacteristic.Characteristics;
+                                        }
+                                        else
+                                        {
+                                            rootPage.NotifyUser("Error accessing service.", NotifyType.ErrorMessage);
+
+                                            // On error, act as if there are no characteristics.
+                                            characteristics = new List<GattCharacteristic>();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Not granted access
+                                        rootPage.NotifyUser("Error accessing service.", NotifyType.ErrorMessage);
+
+                                        // On error, act as if there are no characteristics.
+                                        characteristics = new List<GattCharacteristic>();
+
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    rootPage.NotifyUser("Restricted service. Can't read characteristics: " + ex.Message,
+                                        NotifyType.ErrorMessage);
+                                    // On error, act as if there are no characteristics.
+                                    characteristics = new List<GattCharacteristic>();
+                                }
+
+                                foreach (GattCharacteristic c in characteristics)
+                                {
+                                    CharacteristicCollection.Add(new BluetoothLEAttributeDisplay(c));
+
+                                    if (c.Uuid.ToString().Equals(SelectedRxCharacteristicUUID))
+                                    {
+
+                                        selectedRxCharacteristic = c;
+
+                                    }
+
+                                    if (c.Uuid.ToString().Equals(SelectedTxCharacteristicUUID))
+                                    {
+
+                                        selectedTxCharacteristic = c;
+
+                                    }
+
+
+                                }
+
+                            }
+
+
                         }
 
                     }
@@ -144,6 +268,7 @@ namespace Microbit
                 {
                     rootPage.NotifyUser("Device unreachable", NotifyType.ErrorMessage);
                 }
+
             }
 
         }
@@ -200,15 +325,6 @@ namespace Microbit
             {
                 CharacteristicCollection.Add(new BluetoothLEAttributeDisplay(c));
 
-                if ( c.Uuid.ToString().Equals(SelectedUUID))
-                {
-
-                    selectedCharacteristic = c;
-
-                }
-
-                Debug.WriteLine(c.Service.Uuid);
-
             }
             CharacteristicList.Visibility = Visibility.Visible;
         }
@@ -223,12 +339,12 @@ namespace Microbit
         private async void AButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("A", BinaryStringEncoding.Utf8);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("Pauline#", BinaryStringEncoding.Utf8);
 
             try
             {
                 // BT_Code: Writes the value from the buffer to the characteristic.
-                var result = await selectedCharacteristic.WriteValueWithResultAsync(buffer);
+                var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
 
                 if (result.Status == GattCommunicationStatus.Success)
                 {
@@ -252,18 +368,67 @@ namespace Microbit
 
         }
 
-        private void BButton_Click(object sender, RoutedEventArgs e)
+        private async void BButton_Click(object sender, RoutedEventArgs e)
         {
 
-            rootPage.NotifyUser("Envoi B.", NotifyType.StatusMessage);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("B#", BinaryStringEncoding.Utf8);
+
+            try
+            {
+                // BT_Code: Writes the value from the buffer to the characteristic.
+                var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
+
+                if (result.Status == GattCommunicationStatus.Success)
+                {
+                    rootPage.NotifyUser("Successfully wrote value B to device", NotifyType.StatusMessage);
+                }
+                else
+                {
+                    rootPage.NotifyUser($"Write failed: {result.Status}", NotifyType.ErrorMessage);
+                }
+            }
+            catch (Exception ex) when (ex.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
+            {
+                rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception ex) when (ex.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED || ex.HResult == E_ACCESSDENIED)
+            {
+                // This usually happens when a device reports that it support writing, but it actually doesn't.
+                rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
+            }
+
         }
 
-        private void ABButton_Click(object sender, RoutedEventArgs e)
+        private async void ABButton_Click(object sender, RoutedEventArgs e)
         {
 
-            rootPage.NotifyUser("Envoi A+B.", NotifyType.StatusMessage);
-        }
+            var buffer = CryptographicBuffer.ConvertStringToBinary("AB#", BinaryStringEncoding.Utf8);
 
+            try
+            {
+                // BT_Code: Writes the value from the buffer to the characteristic.
+                var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
+
+                if (result.Status == GattCommunicationStatus.Success)
+                {
+                    rootPage.NotifyUser("Successfully wrote value A+B to device", NotifyType.StatusMessage);
+                }
+                else
+                {
+                    rootPage.NotifyUser($"Write failed: {result.Status}", NotifyType.ErrorMessage);
+                }
+            }
+            catch (Exception ex) when (ex.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
+            {
+                rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception ex) when (ex.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED || ex.HResult == E_ACCESSDENIED)
+            {
+                // This usually happens when a device reports that it support writing, but it actually doesn't.
+                rootPage.NotifyUser(ex.Message, NotifyType.ErrorMessage);
+            }
+
+        }
 
         public class BluetoothLEAttributeDisplay
         {
