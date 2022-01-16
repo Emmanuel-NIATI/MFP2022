@@ -18,7 +18,6 @@
             
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="30" Text="{Binding Converter={StaticResource ScenarioLogoConverter}}" Width="50" />
-                <TextBlock FontFamily="Segoe UI" FontSize="12" Text=" " VerticalAlignment="Center" />
                 <TextBlock FontFamily="Segoe UI" FontSize="12" Text="{Binding Converter={StaticResource ScenarioConverter}}" VerticalAlignment="Center" />
             </StackPanel>
             
@@ -34,6 +33,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="HeaderPanel" Orientation="Horizontal" Grid.Row="0">
+            
             <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
                 <ToggleButton Style="{StaticResource SymbolButtonStyle}" Click="Button_Click" VerticalAlignment="Top" Width="50" Foreground="{ThemeResource ApplicationForegroundThemeBrush}">
                     <ToggleButton.Content>
@@ -41,8 +41,11 @@
                     </ToggleButton.Content>
                 </ToggleButton>
             </Border>
+            
             <Image x:Name="WindowsLogo" Stretch="None" Source="Assets/windows-sdk.png" AutomationProperties.AccessibilityView="Raw" />
+            
             <TextBlock x:Name="App_Title" FontFamily="Segoe UI" FontSize="12" Text="Application title" Style="{StaticResource PageHeaderTextStyle}" TextWrapping="Wrap" Margin="0,10,0,0" />
+            
         </StackPanel>
         
         <SplitView x:Name="Splitter" Grid.Row="1" IsPaneOpen="False" DisplayMode="CompactOverlay" CompactPaneLength="50">

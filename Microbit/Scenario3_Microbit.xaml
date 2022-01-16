@@ -10,10 +10,13 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         
-        <Grid x:Name="RootGrid" Margin="12,20,12,12">
+        <Grid x:Name="RootGrid">
             
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
@@ -21,7 +24,50 @@
                 <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">Dialogue avec la carte micro:bit</TextBlock>
             </StackPanel>
 
-            <ScrollViewer Grid.Row="1" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+                <Grid>
+                    
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">Localisation : </TextBlock>
+
+                    <ComboBox Grid.Row="0" Grid.Column="1" x:Name="MyComboBox" Width="100" Margin="25,0,0,0">
+                        <x:String>Domicile</x:String>
+                        <x:String>Local FO</x:String>
+                    </ComboBox>
+
+                    <Button Grid.Row="0" Grid.Column="2" x:Name="ConnectMicrobit" Content="BLE" Width="50" Height="35" Margin="25,0,0,0" Click="ConnectMicrobit_Click" />
+                    
+                </Grid>
+
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+
+                <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">Liste des services :</TextBlock>
+
+                <ComboBox x:Name="ServiceList" Margin="0,10,0,0" PlaceholderText="Choose a service" Visibility="Collapsed" ItemsSource="{x:Bind ServiceCollection}" DisplayMemberPath="Name" SelectionChanged="{x:Bind ServiceList_SelectionChanged}" />
+
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal">
+
+                <TextBlock Style="{StaticResource ScenarioDescriptionTextStyle}" TextWrapping="Wrap">Liste des services :</TextBlock>
+
+                <ComboBox x:Name="CharacteristicList" Margin="0,10,0,0" PlaceholderText="Choose a characteristic" Visibility="Collapsed" ItemsSource="{x:Bind CharacteristicCollection}"  DisplayMemberPath="Name" SelectionChanged="{x:Bind CharacteristicList_SelectionChanged}" />
+
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="4" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
                 <StackPanel x:Name="ReceivedAdvertisementPanel" HorizontalAlignment="Left" VerticalAlignment="Top">
                     <Grid>
                         <Grid.ColumnDefinitions>
