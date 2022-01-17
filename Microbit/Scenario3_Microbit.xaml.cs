@@ -372,15 +372,14 @@ namespace Microbit
         private async void AButton_Click(object sender, RoutedEventArgs e)
         {
 
-            IBuffer buffer = ("ordre" + "2" + "A").AsBuffer();
-            //var buffer = CryptographicBuffer.ConvertStringToBinary("ordre" + "2" + "A" , BinaryStringEncoding.Utf8);
-
-            Debug.WriteLine(buffer.Length);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("ordre\0string\0A\0" , BinaryStringEncoding.Utf8);
 
             try
             {
                 // BT_Code: Writes the value from the buffer to the characteristic.
                 var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
+                
+
 
                 if (result.Status == GattCommunicationStatus.Success)
                 {
@@ -389,7 +388,7 @@ namespace Microbit
                 }
                 else
                 {
-                    rootPage.NotifyUser($"Write failed: {result.Status}", NotifyType.ErrorMessage);
+                    rootPage.NotifyUser($"Write failed: {result.Status} {result.ProtocolError}", NotifyType.ErrorMessage);
                 }
             }
             catch (Exception ex) when (ex.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
