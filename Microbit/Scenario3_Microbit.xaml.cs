@@ -36,10 +36,13 @@ namespace Microbit
 
             BBC micro:bit [vuzov]
             243311091039748
+            
+            BBC micro:bit [pogat]
+            235861686816099
 
-            UARTSERVICE_SERVICE_UUID = "6E400001B5A3F393E0A9E50E24DCCA9E";
-            UART_RX_CHARACTERISTIC_UUID = "6E400002B5A3F393E0A9E50E24DCCA9E";
-            UART_TX_CHARACTERISTIC_UUID = "6E400003B5A3F393E0A9E50E24DCCA9E";
+            BLOCKY_TALKY_SERVICE = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d6"
+            TX_CHARACTERISTIC = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d7"
+            RX_CHARACTERISTIC = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d8"
 
         */
 
@@ -48,9 +51,9 @@ namespace Microbit
         private ulong SelectedBleDeviceAddr;
         private string SelectedBleDeviceName = "No device selected";
         private string SelectedServiceUUID;
-        private string SelectedRxCharacteristicUUID;
         private string SelectedTxCharacteristicUUID;
-
+        private string SelectedRxCharacteristicUUID;
+        
         private IReadOnlyList<GattDeviceService> listGattDeviceService;
         private IReadOnlyList<GattCharacteristic> listGattCharacteristic;
 
@@ -59,9 +62,9 @@ namespace Microbit
 
         private BluetoothLEDevice bluetoothLeDevice = null;
         private GattDeviceService selectedService;
-        private GattCharacteristic selectedRxCharacteristic;
         private GattCharacteristic selectedTxCharacteristic;
-
+        private GattCharacteristic selectedRxCharacteristic;
+        
         readonly int E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED = unchecked((int)0x80650003);
         readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
         readonly int E_ACCESSDENIED = unchecked((int)0x80070005);
@@ -75,9 +78,6 @@ namespace Microbit
             rootPage = MainPage.Current;
 
         }
-
-
-
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -126,22 +126,24 @@ namespace Microbit
             {
 
                 SelectedBleDeviceAddr = 243311091039748;
-                SelectedBleDeviceName = "BBC micro: bit[vuzov]";
-                                       
-                SelectedServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-                SelectedRxCharacteristicUUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-                SelectedTxCharacteristicUUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+                SelectedBleDeviceName = "BBC micro:bit[vuzov]";
+
+                // BLOCKY_TALKY
+                SelectedServiceUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d6";
+                SelectedTxCharacteristicUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d7";
+                SelectedRxCharacteristicUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d8";
 
             }
             else if (MyComboBox.SelectedItem.Equals("Local FO"))
             {
 
-                SelectedBleDeviceAddr = 243311091039748;
-                SelectedBleDeviceName = "BBC micro: bit[vuzov]";
+                SelectedBleDeviceAddr = 235861686816099;
+                SelectedBleDeviceName = "BBC micro:bit[pogat]";
 
-                SelectedServiceUUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-                SelectedRxCharacteristicUUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
-                SelectedTxCharacteristicUUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+                // BLOCKY_TALKY
+                SelectedServiceUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d6";
+                SelectedTxCharacteristicUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d7";
+                SelectedRxCharacteristicUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d8";
 
             }
 
@@ -192,8 +194,10 @@ namespace Microbit
                             if( service.Uuid.ToString().Equals( SelectedServiceUUID ) )
                             {
 
+                                Debug.WriteLine("Service BLOCKY_TALKY : " + service.Uuid.ToString());
+
                                 selectedService = service;
-                                                                                                                                                                                                                                    
+                                
                                 IReadOnlyList<GattCharacteristic> characteristics = null;
                                                                                                                                                                                                                                                                                    
                                 try
@@ -229,8 +233,7 @@ namespace Microbit
                                 }
                                 catch (Exception ex)
                                 {
-                                    rootPage.NotifyUser("Restricted service. Can't read characteristics: " + ex.Message,
-                                        NotifyType.ErrorMessage);
+                                    rootPage.NotifyUser("Restricted service. Can't read characteristics: " + ex.Message, NotifyType.ErrorMessage);
                                     // On error, act as if there are no characteristics.
                                     characteristics = new List<GattCharacteristic>();
                                 }
@@ -239,25 +242,55 @@ namespace Microbit
                                 {
                                     CharacteristicCollection.Add(new BluetoothLEAttributeDisplay(c));
 
-                                    if (c.Uuid.ToString().Equals(SelectedRxCharacteristicUUID))
-                                    {
-
-                                        selectedRxCharacteristic = c;
-
-                                    }
-
                                     if (c.Uuid.ToString().Equals(SelectedTxCharacteristicUUID))
                                     {
 
+                                        Debug.WriteLine("Tx Characteristic BLOCKY_TALKY : " + c.Uuid.ToString());
+
                                         selectedTxCharacteristic = c;
+
+                                        GattDescriptorsResult gattDescriptorsResult = await c.GetDescriptorsAsync();
+
+                                        IReadOnlyList<GattDescriptor> descriptors = gattDescriptorsResult.Descriptors;
+
+                                        foreach(GattDescriptor gattDescriptor in descriptors)
+                                        {
+                                            Debug.WriteLine("Description : " + gattDescriptor.ToString() );
+                                        }
+
+
+                                        IReadOnlyList<GattPresentationFormat> PresentationFormats = c.PresentationFormats;
+
+                                        foreach (GattPresentationFormat g in PresentationFormats)
+                                        {
+
+                                            Debug.WriteLine("Description : " + g.Description);
+
+                                        }
 
                                     }
 
+                                    if (c.Uuid.ToString().Equals(SelectedRxCharacteristicUUID))
+                                    {
+
+                                        Debug.WriteLine("Rx Characteristic BLOCKY_TALKY : " + c.Uuid.ToString());
+
+                                        selectedRxCharacteristic = c;
+
+                                        IReadOnlyList<GattPresentationFormat> PresentationFormats = c.PresentationFormats;
+
+                                        foreach (GattPresentationFormat g in PresentationFormats)
+                                        {
+
+                                            Debug.WriteLine("Description : " + g.Description);
+
+                                        }
+
+                                    }
 
                                 }
 
                             }
-
 
                         }
 
@@ -339,7 +372,10 @@ namespace Microbit
         private async void AButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("Pauline#", BinaryStringEncoding.Utf8);
+            IBuffer buffer = ("ordre" + "2" + "A").AsBuffer();
+            //var buffer = CryptographicBuffer.ConvertStringToBinary("ordre" + "2" + "A" , BinaryStringEncoding.Utf8);
+
+            Debug.WriteLine(buffer.Length);
 
             try
             {
@@ -348,7 +384,7 @@ namespace Microbit
 
                 if (result.Status == GattCommunicationStatus.Success)
                 {
-                    rootPage.NotifyUser("Successfully wrote value A to device", NotifyType.StatusMessage);
+                    rootPage.NotifyUser("Successfully wrote key=ordre et value=A to device", NotifyType.StatusMessage);
 
                 }
                 else
@@ -371,7 +407,7 @@ namespace Microbit
         private async void BButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("B#", BinaryStringEncoding.Utf8);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("B", BinaryStringEncoding.Utf8);
 
             try
             {
@@ -402,7 +438,7 @@ namespace Microbit
         private async void ABButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("AB#", BinaryStringEncoding.Utf8);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("AB", BinaryStringEncoding.Utf8);
 
             try
             {
