@@ -44,6 +44,14 @@ namespace Microbit
             TX_CHARACTERISTIC = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d7"
             RX_CHARACTERISTIC = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d8"
 
+            LED_SERVICE = "E95DD91D251D470AA062FA1922DFA9A8";
+            LED_MATRIX = "E95D7B77251D470AA062FA1922DFA9A8";
+            LED_TEXT = "E95D93EE251D470AA062FA1922DFA9A8";
+
+
+
+
+
         */
 
         private MainPage rootPage;
@@ -372,14 +380,16 @@ namespace Microbit
         private async void AButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("ordre\0string\0A\0" , BinaryStringEncoding.Utf8);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("ordre 2 A " , BinaryStringEncoding.Utf8);
 
             try
             {
+
+                await selectedTxCharacteristic.WriteValueAsync(buffer);
+
+                /*
                 // BT_Code: Writes the value from the buffer to the characteristic.
                 var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
-                
-
 
                 if (result.Status == GattCommunicationStatus.Success)
                 {
@@ -390,6 +400,8 @@ namespace Microbit
                 {
                     rootPage.NotifyUser($"Write failed: {result.Status} {result.ProtocolError}", NotifyType.ErrorMessage);
                 }
+                */
+
             }
             catch (Exception ex) when (ex.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
             {
