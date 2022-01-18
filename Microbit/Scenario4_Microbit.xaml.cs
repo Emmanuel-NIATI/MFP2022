@@ -61,7 +61,6 @@ namespace Microbit
         private IReadOnlyList<GattDeviceService> listGattDeviceService;
         private IReadOnlyList<GattCharacteristic> listGattCharacteristic;
 
-
         private BluetoothLEDevice bluetoothLeDevice = null;
 
         private GattDeviceService selectedService;
@@ -75,10 +74,12 @@ namespace Microbit
 
         public Scenario4_Microbit()
         {
+
             this.InitializeComponent();
+
+            rootPage = MainPage.Current;
+
         }
-
-
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -249,6 +250,12 @@ namespace Microbit
                                         var gattCharacteristicsResult = await selectedService.GetCharacteristicsForUuidAsync(characteristic.Uuid);
                                         selectedTxCharacteristic = gattCharacteristicsResult.Characteristics[0];
 
+                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedTxCharacteristic :");
+                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Description : " + selectedTxCharacteristic.UserDescription);
+
+                                        await selectedTxCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+
+                                        selectedTxCharacteristic.ValueChanged += TxCharacteristic_ValueChanged;
                                     }
 
                                     if (characteristic.Uuid.ToString().Equals(SelectedRxCharacteristicUUID))
@@ -259,7 +266,8 @@ namespace Microbit
                                         var gattCharacteristicsResult = await selectedService.GetCharacteristicsForUuidAsync(characteristic.Uuid);
                                         selectedRxCharacteristic = gattCharacteristicsResult.Characteristics[0];
 
-                                        selectedRxCharacteristic.ValueChanged += RxCharacteristic_ValueChanged;
+                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedRxCharacteristic :");
+                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Description : " + selectedRxCharacteristic.UserDescription);
 
                                     }
 
@@ -281,7 +289,9 @@ namespace Microbit
 
         }
 
-        void RxCharacteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
+
+
+        void TxCharacteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
         {
 
             var reader = DataReader.FromBuffer(args.CharacteristicValue);
@@ -296,27 +306,27 @@ namespace Microbit
 
         }
 
+
+
+
         private async void AButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("S^ordre^A#", BinaryStringEncoding.Utf8);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
 
             try
             {
-
                 // BT_Code: Writes the value from the buffer to the characteristic.
-                var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
+                var result = await selectedRxCharacteristic.WriteValueWithResultAsync(buffer);
 
                 if (result.Status == GattCommunicationStatus.Success)
                 {
-                    rootPage.NotifyUser("Successfully wrote key=ordre et value=A to device", NotifyType.StatusMessage);
-
+                    rootPage.NotifyUser("Successfully wrote value A to device", NotifyType.StatusMessage);
                 }
                 else
                 {
-                    rootPage.NotifyUser($"Write failed: {result.Status} {result.ProtocolError}", NotifyType.ErrorMessage);
+                    rootPage.NotifyUser($"Write failed: {result.Status}", NotifyType.ErrorMessage);
                 }
-
             }
             catch (Exception ex) when (ex.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
             {
@@ -333,12 +343,12 @@ namespace Microbit
         private async void BButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("B", BinaryStringEncoding.Utf8);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("B#", BinaryStringEncoding.Utf8);
 
             try
             {
                 // BT_Code: Writes the value from the buffer to the characteristic.
-                var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
+                var result = await selectedRxCharacteristic.WriteValueWithResultAsync(buffer);
 
                 if (result.Status == GattCommunicationStatus.Success)
                 {
@@ -364,12 +374,12 @@ namespace Microbit
         private async void ABButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("AB", BinaryStringEncoding.Utf8);
+            var buffer = CryptographicBuffer.ConvertStringToBinary("AB#", BinaryStringEncoding.Utf8);
 
             try
             {
                 // BT_Code: Writes the value from the buffer to the characteristic.
-                var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
+                var result = await selectedRxCharacteristic.WriteValueWithResultAsync(buffer);
 
                 if (result.Status == GattCommunicationStatus.Success)
                 {
