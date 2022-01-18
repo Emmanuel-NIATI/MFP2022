@@ -135,6 +135,9 @@
     <Compile Include="Scenario3_Microbit.xaml.cs">
       <DependentUpon>Scenario3_Microbit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scenario4_Microbit.xaml.cs">
+      <DependentUpon>Scenario4_Microbit.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -172,6 +175,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Scenario3_Microbit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenario4_Microbit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

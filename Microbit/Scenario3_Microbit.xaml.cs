@@ -21,9 +21,6 @@ using System.Diagnostics;
 using Windows.Devices.Enumeration;
 using Windows.Security.Cryptography;
 
-
-
-
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Microbit
@@ -39,6 +36,10 @@ namespace Microbit
             
             BBC micro:bit [pogat]
             235861686816099
+
+            UART_SERVICE = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+            TX_CHARACTERISTIC = "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+            RX_CHARACTERISTIC = "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
 
             BLOCKY_TALKY_SERVICE = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d6"
             TX_CHARACTERISTIC = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d7"
@@ -204,19 +205,21 @@ namespace Microbit
 
                                 Debug.WriteLine("Service BLOCKY_TALKY : " + service.Uuid.ToString());
 
-                                selectedService = service;
-                                
+                                var gattServiceResult = await bluetoothLeDevice.GetGattServicesForUuidAsync(service.Uuid);
+
+                                selectedService = gattServiceResult.Services[0];
+
                                 IReadOnlyList<GattCharacteristic> characteristics = null;
                                                                                                                                                                                                                                                                                    
                                 try
                                 {
                                     // Ensure we have access to the device.
-                                    var accessStatus = await service.RequestAccessAsync();
+                                    var accessStatus = await selectedService.RequestAccessAsync();
                                     if (accessStatus == DeviceAccessStatus.Allowed)
                                     {
                                         // BT_Code: Get all the child characteristics of a service. Use the cache mode to specify uncached characterstics only 
                                         // and the new Async functions to get the characteristics of unpaired devices as well. 
-                                        var resultCharacteristic = await service.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
+                                        var resultCharacteristic = await selectedService.GetCharacteristicsAsync(BluetoothCacheMode.Uncached);
                                         if (resultCharacteristic.Status == GattCommunicationStatus.Success)
                                         {
                                             characteristics = resultCharacteristic.Characteristics;
@@ -246,53 +249,29 @@ namespace Microbit
                                     characteristics = new List<GattCharacteristic>();
                                 }
 
-                                foreach (GattCharacteristic c in characteristics)
+                                foreach (GattCharacteristic characteristic in characteristics)
                                 {
-                                    CharacteristicCollection.Add(new BluetoothLEAttributeDisplay(c));
+                                    CharacteristicCollection.Add(new BluetoothLEAttributeDisplay(characteristic));
 
-                                    if (c.Uuid.ToString().Equals(SelectedTxCharacteristicUUID))
+                                    if (characteristic.Uuid.ToString().Equals(SelectedTxCharacteristicUUID))
                                     {
 
-                                        Debug.WriteLine("Tx Characteristic BLOCKY_TALKY : " + c.Uuid.ToString());
+                                        Debug.WriteLine("Tx Characteristic BLOCKY_TALKY : " + characteristic.Uuid.ToString());
 
-                                        selectedTxCharacteristic = c;
-
-                                        GattDescriptorsResult gattDescriptorsResult = await c.GetDescriptorsAsync();
-
-                                        IReadOnlyList<GattDescriptor> descriptors = gattDescriptorsResult.Descriptors;
-
-                                        foreach(GattDescriptor gattDescriptor in descriptors)
-                                        {
-                                            Debug.WriteLine("Description : " + gattDescriptor.ToString() );
-                                        }
-
-
-                                        IReadOnlyList<GattPresentationFormat> PresentationFormats = c.PresentationFormats;
-
-                                        foreach (GattPresentationFormat g in PresentationFormats)
-                                        {
-
-                                            Debug.WriteLine("Description : " + g.Description);
-
-                                        }
+                                        var gattCharacteristicsResult = await selectedService.GetCharacteristicsForUuidAsync(characteristic.Uuid);
+                                        selectedTxCharacteristic = gattCharacteristicsResult.Characteristics[0];
 
                                     }
 
-                                    if (c.Uuid.ToString().Equals(SelectedRxCharacteristicUUID))
+                                    if (characteristic.Uuid.ToString().Equals(SelectedRxCharacteristicUUID))
                                     {
 
-                                        Debug.WriteLine("Rx Characteristic BLOCKY_TALKY : " + c.Uuid.ToString());
+                                        Debug.WriteLine("Rx Characteristic BLOCKY_TALKY : " + characteristic.Uuid.ToString());
 
-                                        selectedRxCharacteristic = c;
-
-                                        IReadOnlyList<GattPresentationFormat> PresentationFormats = c.PresentationFormats;
-
-                                        foreach (GattPresentationFormat g in PresentationFormats)
-                                        {
-
-                                            Debug.WriteLine("Description : " + g.Description);
-
-                                        }
+                                        var gattCharacteristicsResult = await selectedService.GetCharacteristicsForUuidAsync(characteristic.Uuid);
+                                        selectedRxCharacteristic = gattCharacteristicsResult.Characteristics[0];
+                                                                                
+                                        selectedRxCharacteristic.ValueChanged += RxCharacteristic_ValueChanged;
 
                                     }
 
@@ -313,6 +292,24 @@ namespace Microbit
             }
 
         }
+
+        void RxCharacteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
+        {
+
+            var reader = DataReader.FromBuffer(args.CharacteristicValue);
+            byte[] input = new byte[reader.UnconsumedBufferLength];
+            reader.ReadBytes(input);
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                Debug.WriteLine(input[i]);
+            }
+
+
+        }
+
+
+
 
         private async void ServiceList_SelectionChanged()
         {
@@ -380,14 +377,11 @@ namespace Microbit
         private async void AButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var buffer = CryptographicBuffer.ConvertStringToBinary("ordre 2 A " , BinaryStringEncoding.Utf8);
-
+            var buffer = CryptographicBuffer.ConvertStringToBinary("S^ordre^A#" , BinaryStringEncoding.Utf8);
+    
             try
             {
 
-                await selectedTxCharacteristic.WriteValueAsync(buffer);
-
-                /*
                 // BT_Code: Writes the value from the buffer to the characteristic.
                 var result = await selectedTxCharacteristic.WriteValueWithResultAsync(buffer);
 
@@ -400,7 +394,6 @@ namespace Microbit
                 {
                     rootPage.NotifyUser($"Write failed: {result.Status} {result.ProtocolError}", NotifyType.ErrorMessage);
                 }
-                */
 
             }
             catch (Exception ex) when (ex.HResult == E_BLUETOOTH_ATT_INVALID_PDU)

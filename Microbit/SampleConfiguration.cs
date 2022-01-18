@@ -17,7 +17,8 @@ namespace Microbit
 
             new Scenario() { Logo="\xE702", Title="Nearby BLE Advertisement", ClassType=typeof(Scenario1_Advertisement) },
             new Scenario() { Logo="\xE702", Title="BLE Paired Device", ClassType=typeof(Scenario2_Device) },
-            new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit", ClassType=typeof(Scenario3_Microbit) }
+            new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit", ClassType=typeof(Scenario3_Microbit) },
+            new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit UART", ClassType=typeof(Scenario4_Microbit) }
 
         };
 
