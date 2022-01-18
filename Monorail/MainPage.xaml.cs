@@ -1,32 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel;
 using Windows.Devices.Bluetooth;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Devices.Enumeration;
+using Windows.UI.Core;
+
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace Monorail
 {
-    /// <summary>
-    /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
-    /// </summary>
+
     public sealed partial class MainPage : Page
     {
 
         public static MainPage Current;
+
+        public MainPage()
+        {
+
+            this.InitializeComponent();
+
+            Current = this;
+
+            App_Title.Text = FEATURE_NAME;
+
+        }
 
         public BluetoothLEDevice _BluetoothLEDevice { get; set; }
         public BluetoothLEDevice BluetoothLEDevice
@@ -36,33 +39,43 @@ namespace Monorail
             set
             {
 
-                _BluetoothLEDevice = value;                
+                _BluetoothLEDevice = value;
             }
 
         }
 
-        public BluetoothLEDevice bluetoothLEDevice;
+        public const string FEATURE_NAME = "Gestion de la carte micro:bit";
 
-        public MainPage()
+        public List<Scenario> Scenarios
+        {
+            get { return this.scenarios; }
+        }
+
+        List<Scenario> scenarios = new List<Scenario>
         {
 
-            this.InitializeComponent();
+            new Scenario() { Logo="\xE702", Title="Nearby BLE Advertisement", ClassType=typeof(Scenario1_PairingDevice) },
+            //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit", ClassType=typeof(Scenario3_Microbit) },
+            //new Scenario() { Logo="\xE702", Title="Nearby BLE Advertisement", ClassType=typeof(Scenario1_Advertisement) },
+            //new Scenario() { Logo="\xE702", Title="BLE Paired Device", ClassType=typeof(Scenario2_Device) },
+            //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit", ClassType=typeof(Scenario3_Microbit) },
+            //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit UART", ClassType=typeof(Scenario4_Microbit) }
 
-            Current = this;
-
-            MyFrame.Navigate(typeof(BLEPairedDevicePage));
-
-        }
+        };
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+
+            ScenarioControl.ItemsSource = scenarios;
+
+            ScenarioControl.SelectedIndex = 0;
 
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
 
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
 
             App.Current.Suspending -= App_Suspending;
@@ -70,58 +83,167 @@ namespace Monorail
 
         }
 
-        private void App_Suspending(object sender, object e)
+        protected async void App_Suspending(object sender, object e)
         {
 
+            if (_BluetoothLEDevice != null)
+            {
 
+                _BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(_BluetoothLEDevice.BluetoothAddress);
+
+                if (_BluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
+                {
+
+                    DeviceUnpairingResult deviceUnpairingResult = await _BluetoothLEDevice.DeviceInformation.Pairing.UnpairAsync();
+
+                }
+
+            }
+
+            NotifyUser("App suspending.", NotifyType.StatusMessage);
 
         }
 
-        private void App_Resuming(object sender, object e)
+        protected void App_Resuming(object sender, object e)
         {
 
-
+            NotifyUser("App resuming.", NotifyType.StatusMessage);
 
         }
 
-        private void HamburgerButton_Click(object sender, RoutedEventArgs e)
+        private void ScenarioControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            MySplitView.IsPaneOpen = !MySplitView.IsPaneOpen;
-        }
+            NotifyUser(String.Empty, NotifyType.StatusMessage);
 
-        private void IconsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
+            ListBox scenarioListBox = sender as ListBox;
+            Scenario s = scenarioListBox.SelectedItem as Scenario;
 
-            if (BLEPairedDeviceListBoxItem.IsSelected)
+            if (s != null)
             {
 
-                MyFrame.Navigate(typeof(BLEPairedDevicePage));
+                ScenarioFrame.Navigate(s.ClassType);
+
+                if (Window.Current.Bounds.Width < 640)
+                {
+                    Splitter.IsPaneOpen = false;
+                }
+
             }
-            else if (BLEAdvertisementWatcherListBoxItem.IsSelected)
-            {
-
-                MyFrame.Navigate(typeof(BLEAdvertisementWatcherPage));
-            }
-            else if (MicrobitListBoxItem.IsSelected)
-            {
-
-                MyFrame.Navigate(typeof(MicrobitPage));
-            }
-            else if (TextToSpeechListBoxItem.IsSelected)
-            {
-
-                MyFrame.Navigate(typeof(TextToSpeechPage));
-            }
-
-
 
         }
 
         public void Navigate(Type sourcePageType)
         {
-            MyFrame.Navigate(sourcePageType);
+
+            ScenarioFrame.Navigate(sourcePageType);
+
+        }
+
+        public void NotifyUser(string strMessage, NotifyType type)
+        {
+
+            if (Dispatcher.HasThreadAccess)
+            {
+                UpdateStatus(strMessage, type);
+            }
+            else
+            {
+                var task = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => UpdateStatus(strMessage, type));
+            }
+
+        }
+
+        private void UpdateStatus(string strMessage, NotifyType type)
+        {
+            switch (type)
+            {
+                case NotifyType.StatusMessage:
+                    StatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Green);
+                    break;
+                case NotifyType.ErrorMessage:
+                    StatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Red);
+                    break;
+            }
+
+            StatusBlock.Text = strMessage;
+
+            StatusBorder.Visibility = (StatusBlock.Text != String.Empty) ? Visibility.Visible : Visibility.Collapsed;
+
+            if (StatusBlock.Text != String.Empty)
+            {
+                StatusBorder.Visibility = Visibility.Visible;
+                StatusPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                StatusBorder.Visibility = Visibility.Collapsed;
+                StatusPanel.Visibility = Visibility.Collapsed;
+            }
+
+            var peer = FrameworkElementAutomationPeer.FromElement(StatusBlock);
+
+            if (peer != null)
+            {
+                peer.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
+            }
+
+        }
+
+        async void Footer_Click(object sender, RoutedEventArgs e)
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(((HyperlinkButton)sender).Tag.ToString()));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Splitter.IsPaneOpen = !Splitter.IsPaneOpen;
+        }
+
+    }
+
+    public enum NotifyType
+    {
+        StatusMessage,
+        ErrorMessage
+    };
+
+    public class Scenario
+    {
+        public string Logo { get; set; }
+        public string Title { get; set; }
+        public Type ClassType { get; set; }
+    }
+
+    public class ScenarioLogoBindingConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            Scenario s = value as Scenario;
+
+            return s.Logo;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return true;
+        }
+
+    }
+
+    public class ScenarioBindingConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            Scenario s = value as Scenario;
+            return (MainPage.Current.Scenarios.IndexOf(s) + 1) + ") " + s.Title;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            return true;
         }
 
     }
