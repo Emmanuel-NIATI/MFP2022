@@ -13,8 +13,9 @@
         <DataTemplate x:Key="ResultsListViewAdvertisementTemplate" x:DataType="local:BluetoothLEDeviceDisplay">
 
             <StackPanel Orientation="Vertical">
-                <TextBlock FontStyle="Italic">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
-                <TextBlock>Address : <Run Text="{x:Bind Address, Mode=OneWay}"/>, Strength : <Run Text="{x:Bind Strength, Mode=OneWay}"/> dbm, Paired : <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
+                <TextBlock FontStyle="Italic" FontSize="12">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
+                <TextBlock FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run Text="{x:Bind Address, Mode=OneWay}"/></TextBlock>
+                <TextBlock FontStyle="Italic" FontWeight="Normal" FontSize="10">Strength : <Run Text="{x:Bind Strength, Mode=OneWay}"/> dbm, Paired : <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
             </StackPanel>
 
         </DataTemplate>
@@ -22,8 +23,8 @@
         <DataTemplate x:Key="ResultsListViewDeviceTemplate" x:DataType="local:DeviceInformationDisplay">
 
             <StackPanel Orientation="Vertical">
-                <TextBlock FontStyle="Italic">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
-                <TextBlock FontStyle="Italic">Paired: <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
+                <TextBlock FontStyle="Italic" FontSize="12">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
+                <TextBlock FontStyle="Italic" FontWeight="Normal" FontSize="10">Paired: <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
             </StackPanel>
 
         </DataTemplate>
@@ -39,6 +40,21 @@
         </Grid.RowDefinitions>
 
         <Grid x:Name="Microbit" Grid.Row="0">
+
+            <StackPanel Orientation="Vertical" Padding="5,5,5,5">
+
+                <StackPanel Orientation="Vertical" Padding="5,5,5,5">
+                    <Image x:Name="ImageMicrobit" Width="80" Height="60" Source="Assets/microbit.png" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,5,0" />
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Button x:Name="ButtonRed" FontSize="10" Content="Rouge" Click="{x:Bind ButtonRed_Click}" Width="50" Height="30" Margin="0,0,5,0" />
+                    <Button x:Name="ButtonBlue" FontSize="10" Content="Bleu" Click="{x:Bind ButtonBlue_Click}" Width="50" Height="30" Margin="0,0,5,0" />
+                    <Button x:Name="ButtonYellow" FontSize="10" Content="Jaune" Click="{x:Bind ButtonYellow_Click}" Width="50" Height="30" Margin="0,0,5,0" />
+                    <Button x:Name="ButtonGreen" FontSize="10" Content="Vert" Click="{x:Bind ButtonGreen_Click}" Width="50" Height="30" Margin="0,0,5,0" />
+                </StackPanel>
+            
+            </StackPanel>
 
         </Grid>
         

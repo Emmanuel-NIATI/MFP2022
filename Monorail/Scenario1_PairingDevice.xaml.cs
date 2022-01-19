@@ -11,6 +11,7 @@ using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 namespace Monorail
@@ -174,6 +175,35 @@ namespace Monorail
 
             rootPage.NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
 
+        }
+
+
+        // Zone Microbit
+
+        private void ButtonRed_Click(object sender, RoutedEventArgs e)
+        {
+
+            ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png"));
+
+        }
+
+        private void ButtonBlue_Click(object sender, RoutedEventArgs e)
+        {
+
+            ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png"));
+
+        }
+
+        private void ButtonYellow_Click(object sender, RoutedEventArgs e)
+        {
+
+            ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png"));
+
+        }
+
+        private void ButtonGreen_Click(object sender, RoutedEventArgs e)
+        {
+            ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png"));
         }
 
         // Zone Advertisement
