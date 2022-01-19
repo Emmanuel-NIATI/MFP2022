@@ -10,49 +10,70 @@
 
     <Page.Resources>
 
-        <DataTemplate x:Key="ResultsListViewTemplate" x:DataType="local:BluetoothLEDeviceDisplay">
+        <DataTemplate x:Key="ResultsListViewAdvertisementTemplate" x:DataType="local:BluetoothLEDeviceDisplay">
 
             <StackPanel Orientation="Vertical">
-                <TextBlock>Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontWeight="Bold"/></TextBlock>
-                <TextBlock>Address : <Run Text="{x:Bind Address, Mode=OneWay}"/>, Strength : <Run Text="{x:Bind Strength, Mode=OneWay}"/> dbm</TextBlock>
-                <TextBlock>Paired : <Run Text="{x:Bind Paired, Mode=OneWay}"/></TextBlock>
+                <TextBlock FontStyle="Italic">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
+                <TextBlock>Address : <Run Text="{x:Bind Address, Mode=OneWay}"/>, Strength : <Run Text="{x:Bind Strength, Mode=OneWay}"/> dbm, Paired : <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
+            </StackPanel>
+
+        </DataTemplate>
+
+        <DataTemplate x:Key="ResultsListViewDeviceTemplate" x:DataType="local:DeviceInformationDisplay">
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock FontStyle="Italic">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
+                <TextBlock FontStyle="Italic">Paired: <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
             </StackPanel>
 
         </DataTemplate>
 
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="5,5,5,5">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Margin="0,0,0,0" Grid.Row="0">
+        <Grid x:Name="Microbit" Grid.Row="0">
 
-            <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Enumerate nearby BLE Advertisement.</TextBlock>
+        </Grid>
+        
+        <Grid x:Name="Advertisement" Grid.Row="1">
 
-            <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
-                <Button x:Name="EnumerateButton" Content="Run" Click="{x:Bind EnumerateButton_Click}" Width="50" Height="40" />
+            <StackPanel Grid.Row="0" Orientation="Vertical" Padding="5,5,5,5">
+
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Enumerate nearby BLE Advertisement.</TextBlock>
+
+                <Button x:Name="EnumerateButtonAdvertisement" Content="Run" Click="{x:Bind EnumerateButtonAdvertisement_Click}" Width="50" Height="40" Margin="0,0,0,5" />
+
+                <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible" Grid.Row="1" Margin="0,0,0,5" BorderBrush="White" BorderThickness="1" Height="50">
+                    <ListView x:Name="ResultsListViewAdvertisement" ItemTemplate="{StaticResource ResultsListViewAdvertisementTemplate}" ItemsSource="{x:Bind listBluetoothLEDeviceDisplay, Mode=OneWay}" SelectionChanged="ResultsListViewAdvertisement_SelectionChanged" />
+                </ScrollViewer>
+
             </StackPanel>
 
-        </StackPanel>
+        </Grid>
 
-        <ScrollViewer VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="0,0,0,5" BorderBrush="AntiqueWhite" BorderThickness="1">
-            <ListView x:Name="ResultsListView" ItemTemplate="{StaticResource ResultsListViewTemplate}" ItemsSource="{x:Bind listBluetoothLEDeviceDisplay, Mode=OneWay}" SelectionChanged="ResultsListView_SelectionChanged" />
-        </ScrollViewer>
+        <Grid x:Name="Device" Grid.Row="2">
+
+            <StackPanel Grid.Row="0" Orientation="Vertical" Padding="5,5,5,5">
+
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Enumerate Paired BLE Device.</TextBlock>
+
+                <Button x:Name="EnumerateButtonDevice" Content="Run" Click="{x:Bind EnumerateButtonDevice_Click}" Width="50" Height="40" Margin="0,0,0,5" />
+
+                <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible" Grid.Row="1" Margin="0,0,0,5" BorderBrush="White" BorderThickness="1" Height="50">
+                    <ListView x:Name="ResultsListViewDevice" ItemTemplate="{StaticResource ResultsListViewDeviceTemplate}" ItemsSource="{x:Bind listDeviceInformationDisplay, Mode=OneWay}" SelectionMode="Single" SelectionChanged="ResultsListViewDevice_SelectionChanged" />
+                </ScrollViewer>
+
+            </StackPanel>
+
+        </Grid>
 
     </Grid>
-
-
-
-
-
-
-
-
-
-
 
 </Page>
