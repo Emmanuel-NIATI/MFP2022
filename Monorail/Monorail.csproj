@@ -134,6 +134,9 @@
     <Compile Include="Scenario1_PairingDevice.xaml.cs">
       <DependentUpon>Scenario1_PairingDevice.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scenario2_ManagingMicrobit.xaml.cs">
+      <DependentUpon>Scenario2_ManagingMicrobit.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -208,6 +211,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Scenario1_PairingDevice.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenario2_ManagingMicrobit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

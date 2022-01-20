@@ -22,6 +22,11 @@ namespace Monorail
 
         // Zone commune
         private MainPage rootPage;
+
+        // Zone Microbit
+        String LocalSettingName;
+        String LocalSettingAddress;
+        String LocalSettingColor;
         BluetoothLEDevice bluetoothLEDevice;
 
         // Zone Advertisement
@@ -36,22 +41,16 @@ namespace Monorail
         private ObservableCollection<DeviceInformationDisplay> listDeviceInformationDisplay = new ObservableCollection<DeviceInformationDisplay>();
         DeviceInformationDisplay deviceInformationDisplay;
 
-
         public Scenario1_PairingDevice()
         {
 
             this.InitializeComponent();
 
             // Zone commune
-            rootPage = MainPage.Current;
+            this.rootPage = MainPage.Current;
 
             // Zone Microbit
-
-            // load a setting that is local to the device
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            String Name = localSettings.Values["Name"] as string;
-            
-
+            this.MicrobitTimer();
 
             // Zone Advertisement
             bluetoothLEAdvertisementWatcher = new BluetoothLEAdvertisementWatcher();
@@ -180,10 +179,64 @@ namespace Monorail
 
         // Zone Microbit
 
+        private void MicrobitTimer()
+        {
+
+            // Configuration du Timer
+            DispatcherTimer dispatcherMicrobitTimer = new DispatcherTimer();
+            dispatcherMicrobitTimer.Tick += DispatcherMicrobitTimer_Tick;
+            dispatcherMicrobitTimer.Interval = new TimeSpan(0, 0, 0, 0, 200);
+            dispatcherMicrobitTimer.Start();
+
+        }
+
+        private void DispatcherMicrobitTimer_Tick(object sender, object e)
+        {
+
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+            LocalSettingName = localSettings.Values["Name"] as string;
+            LocalSettingAddress = localSettings.Values["Address"] as string;
+            LocalSettingColor = localSettings.Values["Color"] as string;
+
+            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            {
+
+                if (!LocalSettingName.Equals(""))
+                {
+
+                    localSettingName.Text = LocalSettingName;
+
+                }
+
+                if (!LocalSettingAddress.Equals(""))
+                {
+
+                    localSettingAddress.Text = LocalSettingAddress;
+
+                }
+
+                if (!LocalSettingColor.Equals(""))
+                {
+
+                    if (LocalSettingColor.Equals("bleu")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png")); }
+                    if (LocalSettingColor.Equals("jaune")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png")); }
+                    if (LocalSettingColor.Equals("rouge")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png")); }
+                    if (LocalSettingColor.Equals("vert")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png")); }
+
+                }
+
+            }
+
+        }
+
         private void ButtonRed_Click(object sender, RoutedEventArgs e)
         {
 
             ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png"));
+
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["Color"] = "rouge";
 
         }
 
@@ -192,6 +245,9 @@ namespace Monorail
 
             ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png"));
 
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["Color"] = "bleu";
+
         }
 
         private void ButtonYellow_Click(object sender, RoutedEventArgs e)
@@ -199,11 +255,19 @@ namespace Monorail
 
             ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png"));
 
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["Color"] = "jaune";
+
         }
 
         private void ButtonGreen_Click(object sender, RoutedEventArgs e)
         {
+
             ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png"));
+
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["Color"] = "vert";
+
         }
 
         // Zone Advertisement
@@ -284,7 +348,21 @@ namespace Monorail
                             if (!FindBluetoothLEDeviceDisplay(bluetoothLEDeviceDisplay.Id))
                             {
 
-                                listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
+                                if (LocalSettingName != null && !LocalSettingName.Equals(""))
+                                {
+
+                                    if( LocalSettingName.Equals(bluetoothLEDeviceDisplay.Name))
+                                    {
+
+                                        listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
+                                    }
+
+                                }
+                                else
+                                {
+                                    listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
+                                }
+
                             }
 
                         }
@@ -337,6 +415,16 @@ namespace Monorail
                     {
 
                         DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
+
+                        if( devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired) )
+                        {
+
+                            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+                            localSettings.Values["Name"] = bluetoothLEDevice.Name;
+                            localSettings.Values["Address"] = bluetoothLEDeviceDisplay.Address;
+                            
+                        }
 
                     }
 
@@ -405,10 +493,11 @@ namespace Monorail
                             if (deviceInformation.Name != string.Empty)
                             {
 
-                                
-                                if(    deviceInformation.Pairing.IsPaired)
+                                if (deviceInformation.Pairing.IsPaired)
                                 {
+
                                     listDeviceInformationDisplay.Add(new DeviceInformationDisplay(deviceInformation));
+
                                 }
 
                             }
