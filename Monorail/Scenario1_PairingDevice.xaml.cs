@@ -199,6 +199,16 @@ namespace Monorail
             LocalSettingAddress = localSettings.Values["Address"] as string;
             LocalSettingColor = localSettings.Values["Color"] as string;
 
+            if( LocalSettingName == null )
+            {
+                localSettingName.Text = "";
+            }
+
+            if (LocalSettingAddress == null)
+            {
+                localSettingAddress.Text = "";
+            }
+
             if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
             {
 
@@ -225,6 +235,14 @@ namespace Monorail
                     if (LocalSettingColor.Equals("vert")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png")); }
 
                 }
+
+            }
+            else
+            {
+
+                localSettings.Values["Name"] = null;
+                localSettings.Values["Address"] = null;
+                localSettings.Values["Color"] = null;
 
             }
 
@@ -324,7 +342,7 @@ namespace Monorail
                         try
                         {
 
-                            BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress);
+                            bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress);
 
                             bluetoothLEDeviceDisplay = new BluetoothLEDeviceDisplay();
 
@@ -342,7 +360,9 @@ namespace Monorail
                             }
                             else
                             {
+
                                 bluetoothLEDeviceDisplay.IsPaired = "No";
+
                             }
 
                             if (!FindBluetoothLEDeviceDisplay(bluetoothLEDeviceDisplay.Id))
@@ -374,6 +394,8 @@ namespace Monorail
                         }
 
                     }
+
+                    rootPage.NotifyUser("Watcher stopped or aborted: ", NotifyType.StatusMessage);
 
                 }
 
@@ -423,7 +445,8 @@ namespace Monorail
 
                             localSettings.Values["Name"] = bluetoothLEDevice.Name;
                             localSettings.Values["Address"] = bluetoothLEDeviceDisplay.Address;
-                            
+                            localSettings.Values["Color"] = "rouge";
+
                         }
 
                     }
@@ -607,6 +630,25 @@ namespace Monorail
             if (e.AddedItems.Count > 0)
             {
 
+                deviceInformationDisplay = (DeviceInformationDisplay) ResultsListViewDevice.SelectedItem;
+
+                if ( deviceInformationDisplay.DeviceInformation.Pairing.IsPaired )
+                {
+
+                    DeviceUnpairingResult deviceUnpairingResult = await deviceInformationDisplay.DeviceInformation.Pairing.UnpairAsync();
+
+                    if (deviceUnpairingResult.Status.Equals(DeviceUnpairingResultStatus.Unpaired))
+                    {
+
+                        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+                        localSettings.Values["Name"] = null;
+                        localSettings.Values["Address"] = null;
+                        localSettings.Values["Color"] = null;
+
+                    }
+
+                }
 
             }
 
