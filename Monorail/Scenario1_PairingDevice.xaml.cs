@@ -80,7 +80,7 @@ namespace Monorail
             deviceWatcher.Stopped += DeviceWatcher_Stopped;
 
             // Zone commune
-            rootPage.NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Appairage de la carte micro:bit.", NotifyType.StatusMessage);
 
         }
 
@@ -117,7 +117,7 @@ namespace Monorail
             deviceWatcher.Stopped -= DeviceWatcher_Stopped;
 
             // Zone commune
-            rootPage.NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("A bientôt !", NotifyType.StatusMessage);
 
         }
 
@@ -150,7 +150,7 @@ namespace Monorail
             deviceWatcher.Stopped -= DeviceWatcher_Stopped;
 
             // Zone commune
-            rootPage.NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("A bientôt !", NotifyType.StatusMessage);
 
         }
 
@@ -172,7 +172,7 @@ namespace Monorail
 
             // Zone commune
 
-            rootPage.NotifyUser("Press Run to start watcher.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Appairage de la carte micro:bit.", NotifyType.StatusMessage);
 
         }
 
@@ -251,40 +251,79 @@ namespace Monorail
         private void ButtonRed_Click(object sender, RoutedEventArgs e)
         {
 
-            ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png"));
+            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            {
 
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            localSettings.Values["Color"] = "rouge";
+                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                {
+
+                    ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png"));
+                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                    localSettings.Values["Color"] = "rouge";
+
+                }
+
+            }
 
         }
 
         private void ButtonBlue_Click(object sender, RoutedEventArgs e)
         {
 
-            ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png"));
+            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            {
 
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            localSettings.Values["Color"] = "bleu";
+                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                {
+
+                    ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png"));
+
+                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                    localSettings.Values["Color"] = "bleu";
+
+                }
+
+            }
 
         }
 
         private void ButtonYellow_Click(object sender, RoutedEventArgs e)
         {
 
-            ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png"));
+            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            {
 
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            localSettings.Values["Color"] = "jaune";
+                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                {
+
+                    ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png"));
+
+                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                    localSettings.Values["Color"] = "jaune";
+
+                }
+
+            }
 
         }
 
         private void ButtonGreen_Click(object sender, RoutedEventArgs e)
         {
 
-            ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png"));
+            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            {
 
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-            localSettings.Values["Color"] = "vert";
+                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                {
+
+                    ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png"));
+
+                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                    localSettings.Values["Color"] = "vert";
+
+                }
+
+            }
 
         }
 
@@ -441,6 +480,8 @@ namespace Monorail
                         if( devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired) )
                         {
 
+                            rootPage.BluetoothLEDevice = bluetoothLEDevice;
+
                             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
                             localSettings.Values["Name"] = bluetoothLEDevice.Name;
@@ -452,8 +493,6 @@ namespace Monorail
                     }
 
                 }
-
-                rootPage.BluetoothLEDevice = bluetoothLEDevice;
 
             }
 
