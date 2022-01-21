@@ -27,7 +27,6 @@ namespace Monorail
         String LocalSettingName;
         String LocalSettingAddress;
         String LocalSettingColor;
-        BluetoothLEDevice bluetoothLEDevice;
 
         // Zone Advertisement
         BluetoothLEAdvertisementWatcher bluetoothLEAdvertisementWatcher;
@@ -67,7 +66,9 @@ namespace Monorail
             // Zone commune
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
-            
+
+            // Zone Microbit
+
             // Zone Advertisement
             bluetoothLEAdvertisementWatcher.Received += BluetoothLEAdvertisementWatcher_Received;
             bluetoothLEAdvertisementWatcher.Stopped += BluetoothLEAdvertisementWatcher_Stopped;
@@ -79,7 +80,7 @@ namespace Monorail
             deviceWatcher.EnumerationCompleted += DeviceWatcher_EnumerationCompleted;
             deviceWatcher.Stopped += DeviceWatcher_Stopped;
 
-            // Zone commune
+            // Zone notification
             rootPage.NotifyUser("Appairage de la carte micro:bit.", NotifyType.StatusMessage);
 
         }
@@ -90,6 +91,8 @@ namespace Monorail
             // Zone commune
             App.Current.Suspending -= App_Suspending;
             App.Current.Resuming -= App_Resuming;
+
+            // Zone Microbit
 
             // Zone Advertisement
 
@@ -116,7 +119,7 @@ namespace Monorail
             deviceWatcher.EnumerationCompleted -= DeviceWatcher_EnumerationCompleted;
             deviceWatcher.Stopped -= DeviceWatcher_Stopped;
 
-            // Zone commune
+            // Zone notification
             rootPage.NotifyUser("A bientôt !", NotifyType.StatusMessage);
 
         }
@@ -135,6 +138,8 @@ namespace Monorail
             bluetoothLEAdvertisementWatcher.Received -= BluetoothLEAdvertisementWatcher_Received;
             bluetoothLEAdvertisementWatcher.Stopped -= BluetoothLEAdvertisementWatcher_Stopped;
 
+            // Zone Microbit
+
             // Zone Device
 
             if (isDeviceWatcherStarted)
@@ -149,7 +154,7 @@ namespace Monorail
             deviceWatcher.EnumerationCompleted -= DeviceWatcher_EnumerationCompleted;
             deviceWatcher.Stopped -= DeviceWatcher_Stopped;
 
-            // Zone commune
+            // Zone notification
             rootPage.NotifyUser("A bientôt !", NotifyType.StatusMessage);
 
         }
@@ -162,6 +167,8 @@ namespace Monorail
             bluetoothLEAdvertisementWatcher.Received += BluetoothLEAdvertisementWatcher_Received;
             bluetoothLEAdvertisementWatcher.Stopped += BluetoothLEAdvertisementWatcher_Stopped;
 
+            // Zone Microbit
+
             // Zone Device
 
             deviceWatcher.Added += DeviceWatcher_DeviceAdded;
@@ -170,8 +177,7 @@ namespace Monorail
             deviceWatcher.EnumerationCompleted += DeviceWatcher_EnumerationCompleted;
             deviceWatcher.Stopped += DeviceWatcher_Stopped;
 
-            // Zone commune
-
+            // Zone notification
             rootPage.NotifyUser("Appairage de la carte micro:bit.", NotifyType.StatusMessage);
 
         }
@@ -212,22 +218,12 @@ namespace Monorail
             if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
             {
 
-                if (!LocalSettingName.Equals(""))
+                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
                 {
 
                     localSettingName.Text = LocalSettingName;
 
-                }
-
-                if (!LocalSettingAddress.Equals(""))
-                {
-
                     localSettingAddress.Text = LocalSettingAddress;
-
-                }
-
-                if (!LocalSettingColor.Equals(""))
-                {
 
                     if (LocalSettingColor.Equals("bleu")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png")); }
                     if (LocalSettingColor.Equals("jaune")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png")); }
@@ -341,7 +337,7 @@ namespace Monorail
 
                 listBluetoothLEDeviceDisplay.Clear();
 
-                rootPage.NotifyUser("Running... Watcher started.", NotifyType.StatusMessage);
+                rootPage.NotifyUser("Running... Advertisement Watcher started.", NotifyType.StatusMessage);
 
             }
 
@@ -381,7 +377,7 @@ namespace Monorail
                         try
                         {
 
-                            bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress);
+                            BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(args.BluetoothAddress);
 
                             bluetoothLEDeviceDisplay = new BluetoothLEDeviceDisplay();
 
@@ -422,6 +418,8 @@ namespace Monorail
                                     listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
                                 }
 
+                                rootPage.NotifyUser("Advertisement Watcher received.", NotifyType.StatusMessage);
+
                             }
 
                         }
@@ -433,8 +431,6 @@ namespace Monorail
                         }
 
                     }
-
-                    rootPage.NotifyUser("Watcher stopped or aborted: ", NotifyType.StatusMessage);
 
                 }
 
@@ -451,7 +447,7 @@ namespace Monorail
                 if (sender == bluetoothLEAdvertisementWatcher)
                 {
 
-                    rootPage.NotifyUser(string.Format("Watcher stopped or aborted: {0}", args.Error.ToString()), NotifyType.StatusMessage);
+                    rootPage.NotifyUser(string.Format("Advertisement Watcher stopped or aborted: {0}", args.Error.ToString()), NotifyType.StatusMessage);
 
                 }
 
@@ -467,7 +463,7 @@ namespace Monorail
 
                 bluetoothLEDeviceDisplay = (BluetoothLEDeviceDisplay)ResultsListViewAdvertisement.SelectedItem;
 
-                bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothLEDeviceDisplay.Address));
+                BluetoothLEDevice bluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(bluetoothLEDeviceDisplay.Address));
 
                 if (!bluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
                 {
@@ -480,13 +476,41 @@ namespace Monorail
                         if( devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired) )
                         {
 
+                            // Zone commune
                             rootPage.BluetoothLEDevice = bluetoothLEDevice;
+
+                            // Zone Microbit
 
                             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
                             localSettings.Values["Name"] = bluetoothLEDevice.Name;
                             localSettings.Values["Address"] = bluetoothLEDeviceDisplay.Address;
                             localSettings.Values["Color"] = "rouge";
+
+                            // Zone Advertisement
+                            if( isBluetoothLEAdvertisementWatcherStarted  )
+                            {
+
+                                bluetoothLEAdvertisementWatcher.Stop();
+                                listBluetoothLEDeviceDisplay.Clear();
+                                ResultsListViewAdvertisement.ItemsSource = listBluetoothLEDeviceDisplay;
+                                isBluetoothLEAdvertisementWatcherStarted = false;
+
+                            }
+
+                            // Zone Device
+                            if( isDeviceWatcherStarted )
+                            {
+
+                                deviceWatcher.Stop();
+                                listDeviceInformationDisplay.Clear();
+                                ResultsListViewDevice.ItemsSource = listDeviceInformationDisplay;
+                                isDeviceWatcherStarted = false;
+
+                            }
+
+                            // Zone notification
+                            rootPage.NotifyUser( "Device paired.", NotifyType.StatusMessage);
 
                         }
 
@@ -512,7 +536,7 @@ namespace Monorail
 
                 listDeviceInformationDisplay.Clear();
 
-                rootPage.NotifyUser("Running... Watcher started.", NotifyType.StatusMessage);
+                rootPage.NotifyUser("Running... device Watcher started.", NotifyType.StatusMessage);
 
             }
 
@@ -560,6 +584,8 @@ namespace Monorail
 
                                     listDeviceInformationDisplay.Add(new DeviceInformationDisplay(deviceInformation));
 
+                                    rootPage.NotifyUser("Device Watcher added.", NotifyType.StatusMessage);
+
                                 }
 
                             }
@@ -591,6 +617,7 @@ namespace Monorail
                         {
 
                             deviceInformationDisplay.Update(deviceInformationUpdate);
+                            rootPage.NotifyUser("Device Watcher updated.", NotifyType.StatusMessage);
                             return;
                         }
 
@@ -620,7 +647,7 @@ namespace Monorail
                         {
 
                             listDeviceInformationDisplay.Remove(deviceInformationDisplay);
-
+                            rootPage.NotifyUser("Device Watcher removed.", NotifyType.StatusMessage);
                         }
 
                     }
@@ -679,11 +706,40 @@ namespace Monorail
                     if (deviceUnpairingResult.Status.Equals(DeviceUnpairingResultStatus.Unpaired))
                     {
 
+                        // Zone commune
+                        rootPage.BluetoothLEDevice = null;
+
+                        // Zone Microbit
+
                         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
                         localSettings.Values["Name"] = null;
                         localSettings.Values["Address"] = null;
                         localSettings.Values["Color"] = null;
+
+                        // Zone Advertisement
+                        if (isBluetoothLEAdvertisementWatcherStarted)
+                        {
+
+                            bluetoothLEAdvertisementWatcher.Stop();
+                            listBluetoothLEDeviceDisplay.Clear();
+                            ResultsListViewAdvertisement.ItemsSource = listBluetoothLEDeviceDisplay;
+                            isBluetoothLEAdvertisementWatcherStarted = false;
+
+                        }
+
+                        // Zone Device
+                        if (isDeviceWatcherStarted)
+                        {
+
+                            deviceWatcher.Stop();
+                            listDeviceInformationDisplay.Clear();
+                            ResultsListViewDevice.ItemsSource = listDeviceInformationDisplay;
+                            isDeviceWatcherStarted = false;
+
+                        }
+
+                        rootPage.NotifyUser("Device unpaired.", NotifyType.StatusMessage);
 
                     }
 

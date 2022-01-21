@@ -13,20 +13,60 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace Monorail
 {
-    /// <summary>
-    /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
-    /// </summary>
+
     public sealed partial class Scenario2_ManagingMicrobit : Page
     {
+
+        // Zone commune
+        private MainPage rootPage;
+
+        // Zone Microbit
+        String LocalSettingName;
+        String LocalSettingAddress;
+        String LocalSettingColor;
 
         public Scenario2_ManagingMicrobit()
         {
             this.InitializeComponent();
+
+            // Zone commune
+            this.rootPage = MainPage.Current;
+
+            // Zone Microbit
+            if( this.rootPage.BluetoothLEDevice != null )
+            {
+
+
+
+            }
+
+
+
+
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private async void ButtonA_Click(object sender, RoutedEventArgs e)
         {
