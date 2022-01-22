@@ -156,6 +156,10 @@
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />
     <Content Include="Assets\microbit.png" />
+    <Content Include="Assets\microbit_bleu.png" />
+    <Content Include="Assets\microbit_jaune.png" />
+    <Content Include="Assets\microbit_rouge.png" />
+    <Content Include="Assets\microbit_vert.png" />
     <Content Include="Assets\microsoft-sdk.png" />
     <Content Include="Assets\monorail_400x400.png" />
     <Content Include="Assets\SmallTile.scale-100.png" />
