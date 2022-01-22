@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Enumeration;
+using Windows.Storage;
 using Windows.UI.Core;
 
 using Windows.UI.Xaml;
@@ -18,31 +19,8 @@ namespace Monorail
     public sealed partial class MainPage : Page
     {
 
+        // Zone commune
         public static MainPage Current;
-
-        public MainPage()
-        {
-
-            this.InitializeComponent();
-
-            Current = this;
-
-            App_Title.Text = FEATURE_NAME;
-
-        }
-
-        public BluetoothLEDevice _BluetoothLEDevice { get; set; }
-        public BluetoothLEDevice BluetoothLEDevice
-        {
-
-            get { return _BluetoothLEDevice; }
-            set
-            {
-
-                _BluetoothLEDevice = value;
-            }
-
-        }
 
         public const string FEATURE_NAME = "Gestion de la carte micro:bit";
 
@@ -64,6 +42,41 @@ namespace Monorail
             //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit UART", ClassType=typeof(Scenario4_Microbit) }
 
         };
+
+        // Zone Microbit
+
+        String LocalSettingName;
+        String LocalSettingAddress;
+        String LocalSettingColor;
+
+        public BluetoothLEDevice _BluetoothLEDevice { get; set; }
+        public BluetoothLEDevice BluetoothLEDevice
+        {
+
+            get { return _BluetoothLEDevice; }
+            set
+            {
+
+                _BluetoothLEDevice = value;
+            }
+
+        }
+               
+        public MainPage()
+        {
+
+            this.InitializeComponent();
+
+            // Zone commune
+
+            Current = this;
+
+            App_Title.Text = FEATURE_NAME;
+
+            // Zone Microbit
+            this.ManageMicrobit();
+
+        }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -200,6 +213,50 @@ namespace Monorail
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Splitter.IsPaneOpen = !Splitter.IsPaneOpen;
+        }
+
+        // Zone Microbit
+        public async void ManageMicrobit()
+        {
+
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+            LocalSettingName = localSettings.Values["Name"] as string;
+            LocalSettingAddress = localSettings.Values["Address"] as string;
+            LocalSettingColor = localSettings.Values["Color"] as string;
+
+            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            {
+
+                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                {
+
+                    if( this.BluetoothLEDevice == null )
+                    {
+
+                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>> MainPage : BluetoothLEDevice == null au démarrage");
+
+                        this.BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync( Convert.ToUInt64(LocalSettingAddress) );
+
+                        if (this.BluetoothLEDevice != null)
+                        {
+
+                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>> MainPage : BluetoothLEDevice non null après initialisation");
+
+                        }
+                        else
+                        {
+
+                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>> MainPage : BluetoothLEDevice toujours null après initialisation");
+
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
     }
