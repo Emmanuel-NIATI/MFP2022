@@ -137,6 +137,9 @@
     <Compile Include="Scenario2_ManagingMicrobit.xaml.cs">
       <DependentUpon>Scenario2_ManagingMicrobit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scenario3_ManagingMicrobit.xaml.cs">
+      <DependentUpon>Scenario3_ManagingMicrobit.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -153,10 +156,6 @@
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />
     <Content Include="Assets\microbit.png" />
-    <Content Include="Assets\microbit_bleu.png" />
-    <Content Include="Assets\microbit_jaune.png" />
-    <Content Include="Assets\microbit_rouge.png" />
-    <Content Include="Assets\microbit_vert.png" />
     <Content Include="Assets\microsoft-sdk.png" />
     <Content Include="Assets\monorail_400x400.png" />
     <Content Include="Assets\SmallTile.scale-100.png" />
@@ -217,6 +216,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Scenario2_ManagingMicrobit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenario3_ManagingMicrobit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

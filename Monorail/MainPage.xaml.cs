@@ -33,7 +33,8 @@ namespace Monorail
         {
 
             new Scenario() { Logo="\xE702", Title="Pairing the device", ClassType=typeof(Scenario1_PairingDevice) },
-            new Scenario() { Logo="\xE702", Title="Managing micro:bit board", ClassType=typeof(Scenario2_ManagingMicrobit) }
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (UART)", ClassType=typeof(Scenario2_ManagingMicrobit) },
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (BlockyTalky)", ClassType=typeof(Scenario3_ManagingMicrobit) }
 
             //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit", ClassType=typeof(Scenario3_Microbit) },
             //new Scenario() { Logo="\xE702", Title="Nearby BLE Advertisement", ClassType=typeof(Scenario1_Advertisement) },
