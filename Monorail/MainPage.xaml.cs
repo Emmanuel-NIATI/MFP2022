@@ -74,6 +74,9 @@ namespace Monorail
 
             App_Title.Text = FEATURE_NAME;
 
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Largeur de l'écran : " + Window.Current.Bounds.Width);
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Hauteur de l'écran : " + Window.Current.Bounds.Height);
+
             // Zone Microbit
             this.ManageMicrobit();
 

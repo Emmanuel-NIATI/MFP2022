@@ -190,6 +190,17 @@ namespace Monorail
 
                                 selectedTxCharacteristic = listGattCharacteristicTx[0];
 
+                                GattCharacteristicProperties properties = selectedTxCharacteristic.CharacteristicProperties;
+
+                                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedTxCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
+
+                                if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started) )
+                                {
+
+                                    selectedTxCharacteristic.ValueChanged += SelectedTxCharacteristic_ValueChanged;
+
+                                }
+
                             }
 
                             if (gattCharacteristic.Uuid.ToString().Equals(SelectedRxCharacteristicUUID))
@@ -211,7 +222,19 @@ namespace Monorail
 
         }
 
-        private async void ButtonA_Click(object sender, RoutedEventArgs e)
+        private void SelectedTxCharacteristic_ValueChanged(GattCharacteristic characteristic, GattValueChangedEventArgs e)
+        {
+
+            Debug.WriteLine("UART Tx : donnée reçue !!!");
+
+            var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(e.CharacteristicValue);
+            var output = dataReader.ReadString(e.CharacteristicValue.Length);
+
+            Debug.WriteLine(output);
+
+        }
+
+        private void ButtonA_Click(object sender, RoutedEventArgs e)
         {
 
             IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
@@ -255,7 +278,7 @@ namespace Monorail
 
         }
 
-        private async void ButtonB_Click(object sender, RoutedEventArgs e)
+        private void ButtonB_Click(object sender, RoutedEventArgs e)
         {
 
             IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("B#", BinaryStringEncoding.Utf8);
@@ -299,7 +322,7 @@ namespace Monorail
 
         }
 
-        private async void ButtonAB_Click(object sender, RoutedEventArgs e)
+        private void ButtonAB_Click(object sender, RoutedEventArgs e)
         {
 
             IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("AB#", BinaryStringEncoding.Utf8);
@@ -317,6 +340,50 @@ namespace Monorail
                 else
                 {
                     rootPage.NotifyUser("Write value A + B to device failed", NotifyType.ErrorMessage);
+                }
+
+            }
+            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+
+        }
+
+        private void ButtonTest_Click(object sender, RoutedEventArgs e)
+        {
+
+            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("TEST#", BinaryStringEncoding.Utf8);
+
+            try
+            {
+
+                // BT_Code: Writes the value from the buffer to the characteristic.
+                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync(buffer);
+
+                if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
+                {
+                    Debug.WriteLine("Successfully wrote value TEST to device");
+                }
+                else
+                {
+                    Debug.WriteLine("Write value TEST to device failed");
                 }
 
             }
