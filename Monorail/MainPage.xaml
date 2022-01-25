@@ -86,12 +86,16 @@
 
                     <StackPanel x:Name="StatusPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
 
-                        <TextBlock x:Name="StatusLabel" Margin="10,0,0,10" TextWrapping="Wrap" Text="Status:" />
+                        <TextBlock x:Name="StatusLabel" Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap" Text="Status :" />
 
-                        <Border x:Name="StatusBorder" Margin="0,0,0,0">
-                            <ScrollViewer VerticalScrollMode="Auto"  VerticalScrollBarVisibility="Auto" MaxHeight="200">
-                                <TextBlock x:Name="StatusBlock" FontWeight="Bold" AutomationProperties.LiveSetting="Assertive" MaxWidth="{Binding ElementName=Splitter, Path=ActualWidth}" Margin="10,10,10,20" TextWrapping="Wrap" />
+                        <Border x:Name="StatusBorder" Margin="0,0,0,0" BorderBrush="White" BorderThickness="2">
+                            
+                            <ScrollViewer VerticalScrollMode="Auto"  VerticalScrollBarVisibility="Auto" Height="50">
+
+                                <TextBlock x:Name="StatusBlock" FontFamily="Segoe UI" FontWeight="Bold" FontSize="10" AutomationProperties.LiveSetting="Assertive" MaxWidth="{Binding ElementName=Splitter, Path=ActualWidth}" Margin="10,10,10,10" TextWrapping="Wrap" />
+                            
                             </ScrollViewer>
+                            
                         </Border>
 
                     </StackPanel>

@@ -191,7 +191,7 @@ namespace Monorail
                                 selectedTxCharacteristic = listGattCharacteristicTx[0];
 
                                 GattCharacteristicProperties properties = selectedTxCharacteristic.CharacteristicProperties;
-
+                                
                                 IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedTxCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
 
                                 if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started) )

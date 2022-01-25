@@ -13,9 +13,9 @@
         <DataTemplate x:Key="ResultsListViewAdvertisementTemplate" x:DataType="local:BluetoothLEDeviceDisplay">
 
             <StackPanel Orientation="Vertical">
-                <TextBlock FontStyle="Italic" FontSize="12">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
-                <TextBlock FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run Text="{x:Bind Address, Mode=OneWay}"/></TextBlock>
-                <TextBlock FontStyle="Italic" FontWeight="Normal" FontSize="10">Strength : <Run Text="{x:Bind Strength, Mode=OneWay}"/> dbm, Paired : <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
+                <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="12">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal" FontWeight="Bold"/></TextBlock>
+                <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run Text="{x:Bind Address, Mode=OneWay}"/></TextBlock>
+                <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Strength : <Run Text="{x:Bind Strength, Mode=OneWay}"/> dbm, Paired : <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
             </StackPanel>
 
         </DataTemplate>
@@ -23,8 +23,8 @@
         <DataTemplate x:Key="ResultsListViewDeviceTemplate" x:DataType="local:DeviceInformationDisplay">
 
             <StackPanel Orientation="Vertical">
-                <TextBlock FontStyle="Italic" FontSize="12">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
-                <TextBlock FontStyle="Italic" FontWeight="Normal" FontSize="10">Paired: <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
+                <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="12">Name : <Run Text="{x:Bind Name, Mode=OneWay}" FontStyle="Normal" FontWeight="Bold"/></TextBlock>
+                <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Paired: <Run Text="{x:Bind IsPaired, Mode=OneWay}"/></TextBlock>
             </StackPanel>
 
         </DataTemplate>
@@ -51,8 +51,8 @@
                                        
                     <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible" BorderBrush="White" BorderThickness="1" Height="60" Width="175">
                         <StackPanel Orientation="Vertical" Padding="5,5,5,5">
-                            <TextBlock FontStyle="Italic" FontSize="12">Name : <Run x:Name="localSettingName" Text="" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
-                            <TextBlock FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run x:Name="localSettingAddress" Text=""/></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="12">Name : <Run x:Name="localSettingName" Text="" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run x:Name="localSettingAddress" Text=""/></TextBlock>
                         </StackPanel>
                     </ScrollViewer>
                                        

@@ -46,10 +46,6 @@ namespace Monorail
 
         // Zone Microbit
 
-        String LocalSettingName;
-        String LocalSettingAddress;
-        String LocalSettingColor;
-
         public BluetoothLEDevice _BluetoothLEDevice { get; set; }
         public BluetoothLEDevice BluetoothLEDevice
         {
@@ -62,7 +58,7 @@ namespace Monorail
             }
 
         }
-               
+
         public MainPage()
         {
 
@@ -73,9 +69,6 @@ namespace Monorail
             Current = this;
 
             App_Title.Text = FEATURE_NAME;
-
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Largeur de l'écran : " + Window.Current.Bounds.Width);
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>> Hauteur de l'écran : " + Window.Current.Bounds.Height);
 
             // Zone Microbit
             this.ManageMicrobit();
@@ -178,10 +171,10 @@ namespace Monorail
             switch (type)
             {
                 case NotifyType.StatusMessage:
-                    StatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Green);
+                    StatusBorder.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Green);
                     break;
                 case NotifyType.ErrorMessage:
-                    StatusBorder.Background = new SolidColorBrush(Windows.UI.Colors.Red);
+                    StatusBorder.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
                     break;
             }
 
@@ -220,14 +213,15 @@ namespace Monorail
         }
 
         // Zone Microbit
-        public async void ManageMicrobit()
+
+        private async void ManageMicrobit()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-            LocalSettingName = localSettings.Values["Name"] as string;
-            LocalSettingAddress = localSettings.Values["Address"] as string;
-            LocalSettingColor = localSettings.Values["Color"] as string;
+            String LocalSettingName = localSettings.Values["Name"] as string;
+            String LocalSettingAddress = localSettings.Values["Address"] as string;
+            String LocalSettingColor = localSettings.Values["Color"] as string;
 
             if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
             {
@@ -235,25 +229,10 @@ namespace Monorail
                 if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
                 {
 
-                    if( this.BluetoothLEDevice == null )
+                    if (this.BluetoothLEDevice == null)
                     {
 
-                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>> MainPage : BluetoothLEDevice == null au démarrage");
-
-                        this.BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync( Convert.ToUInt64(LocalSettingAddress) );
-
-                        if (this.BluetoothLEDevice != null)
-                        {
-
-                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>> MainPage : BluetoothLEDevice non null après initialisation");
-
-                        }
-                        else
-                        {
-
-                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>> MainPage : BluetoothLEDevice toujours null après initialisation");
-
-                        }
+                        this.BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(LocalSettingAddress));
 
                     }
 

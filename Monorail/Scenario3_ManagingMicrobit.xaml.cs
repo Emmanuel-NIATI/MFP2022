@@ -190,7 +190,35 @@ namespace Monorail
 
                                 selectedTxCharacteristic = listGattCharacteristicTx[0];
 
-                                selectedTxCharacteristic.ValueChanged += SelectedTxCharacteristic_ValueChanged;
+                                GattCharacteristicProperties properties = selectedTxCharacteristic.CharacteristicProperties;
+
+                                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus;
+
+                                if (properties.HasFlag(GattCharacteristicProperties.Indicate))
+                                {
+                                    gattCommunicationStatus = selectedTxCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
+
+                                    if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
+                                    {
+
+                                        selectedTxCharacteristic.ValueChanged += SelectedTxCharacteristic_ValueChanged;
+
+                                    }
+
+                                }
+
+                                if (properties.HasFlag(GattCharacteristicProperties.Notify))
+                                {
+                                    gattCommunicationStatus = selectedTxCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+
+                                    if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
+                                    {
+
+                                        selectedTxCharacteristic.ValueChanged += SelectedTxCharacteristic_ValueChanged;
+
+                                    }
+
+                                }
 
                             }
 
@@ -218,25 +246,38 @@ namespace Monorail
 
             Debug.WriteLine("Blocky Talky Tx : donnée reçue !!!");
 
+            for(int i=0; i<e.CharacteristicValue.Length;i++  )
+            {
 
+                Debug.WriteLine("" + i);
 
-            var dataReader = Windows.Storage.Streams.DataReader.FromBuffer(e.CharacteristicValue);
-            var output = dataReader.ReadString(e.CharacteristicValue.Length);
+                byte b = e.CharacteristicValue.ToArray()[i];
 
-            Debug.WriteLine( output );
+                
+                char c = Convert.ToChar(b);
+
+                Debug.WriteLine(c);
+
+            }
 
         }
 
         private async void ButtonA_Click(object sender, RoutedEventArgs e)
         {
 
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
+            byte[] array = new byte[20];
+
+            string key = "key";
+
+            string message = "message";
+
+            CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
 
             try
             {
 
                 // BT_Code: Writes the value from the buffer to the characteristic.
-                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync(buffer);
+                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync();
 
                 if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
                 {
