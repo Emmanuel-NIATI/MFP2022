@@ -13,6 +13,14 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+// https://github.com/lzhengwei/UWP_Nordic_Uart_Transmitter
+
+// https://lancaster-university.github.io/microbit-docs/ble/profile/
+// https://www.bluetooth.com/blog/bbc-microbit-inspiring-generation-get-creative-coding/
+// https://www.bluetooth.com/blog/bluetooth-bbc-microbit/
+// https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html
+
+
 namespace Monorail
 {
 
@@ -34,7 +42,8 @@ namespace Monorail
 
             new Scenario() { Logo="\xE702", Title="Pairing the device", ClassType=typeof(Scenario1_PairingDevice) },
             new Scenario() { Logo="\xE702", Title="Managing micro:bit board (UART)", ClassType=typeof(Scenario2_ManagingMicrobit) },
-            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (BlockyTalky)", ClassType=typeof(Scenario3_ManagingMicrobit) }
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (BlockyTalky)", ClassType=typeof(Scenario3_ManagingMicrobit) },
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (Led)", ClassType=typeof(Scenario4_ManagingMicrobit) }
 
             //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit", ClassType=typeof(Scenario3_Microbit) },
             //new Scenario() { Logo="\xE702", Title="Nearby BLE Advertisement", ClassType=typeof(Scenario1_Advertisement) },
@@ -98,19 +107,6 @@ namespace Monorail
         protected async void App_Suspending(object sender, object e)
         {
 
-            if (_BluetoothLEDevice != null)
-            {
-
-                _BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(_BluetoothLEDevice.BluetoothAddress);
-
-                if (_BluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
-                {
-
-                    DeviceUnpairingResult deviceUnpairingResult = await _BluetoothLEDevice.DeviceInformation.Pairing.UnpairAsync();
-
-                }
-
-            }
 
             NotifyUser("App suspending.", NotifyType.StatusMessage);
 

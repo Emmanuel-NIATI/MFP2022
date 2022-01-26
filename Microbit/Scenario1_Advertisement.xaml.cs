@@ -28,8 +28,6 @@ namespace Microbit
         
         private MainPage rootPage;
 
-        // https://github.com/lzhengwei/UWP_Nordic_Uart_Transmitter
-
         public Scenario1_Advertisement()
         {
 

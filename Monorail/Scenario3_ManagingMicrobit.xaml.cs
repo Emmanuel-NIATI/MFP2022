@@ -53,6 +53,7 @@ namespace Monorail
 
         public Scenario3_ManagingMicrobit()
         {
+
             this.InitializeComponent();
 
             // Zone commune
@@ -271,13 +272,13 @@ namespace Monorail
 
             string message = "message";
 
-            CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
+            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
 
             try
             {
 
                 // BT_Code: Writes the value from the buffer to the characteristic.
-                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync();
+                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync(buffer);
 
                 if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
                 {
