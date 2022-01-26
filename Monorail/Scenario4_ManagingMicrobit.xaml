@@ -23,6 +23,8 @@
                 </StackPanel>
             </ScrollViewer>
 
+            <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Text)</TextBlock>
+            
             <StackPanel Orientation="Horizontal">
 
                 <ComboBox Grid.Row="0" Grid.Column="1" x:Name="ComboBox" Width="100" Margin="0,0,5,0">
@@ -33,6 +35,10 @@
                 <Button x:Name="Button" Style="{StaticResource ButtonStyle}" Content="Message" Click="{x:Bind Button_Click}" Width="80" Height="30" Margin="0,0,0,0" />
                 
             </StackPanel>
+
+            <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Scrolling Delay)</TextBlock>
+
+            <Button x:Name="ButtonScrollingDelay" Style="{StaticResource ButtonStyle}" Content="Lire" Click="{x:Bind ButtonScrollingDelay_Click}" Width="80" Height="30" Margin="0,0,0,0" />
 
         </StackPanel>
 

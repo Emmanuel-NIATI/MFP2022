@@ -41,10 +41,12 @@ namespace Monorail
         private string SelectedServiceLedUUID = "e95dd91d-251d-470a-a062-fa1922dfa9a8";
         private string SelectedCharacteristicLedMatrixUUID = "e95d7b77-251d-470a-a062-fa1922dfa9a8";
         private string SelectedCharacteristicLedTextUUID = "e95d93ee-251d-470a-a062-fa1922dfa9a8";
+        private string SelectedCharacteristicLedScrollingDelayUUID = "e95d0d2d-251d-470a-a062-fa1922dfa9a8";
 
         private GattDeviceService selectedServiceLed;
         private GattCharacteristic selectedCharacteristicLedMatrix;
         private GattCharacteristic selectedCharacteristicLedText;
+        private GattCharacteristic selectedCharacteristicLedScrollingDelay;
 
         readonly int E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED = unchecked((int)0x80650003);
         readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
@@ -239,6 +241,19 @@ namespace Monorail
 
                             }
 
+                            if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicLedScrollingDelayUUID))
+                            {
+
+                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedScrollingDelay OK !");
+
+                                IReadOnlyList<GattCharacteristic> listGattCharacteristicLedScrollingDelay = selectedServiceLed.GetCharacteristics(gattCharacteristic.Uuid);
+
+                                selectedCharacteristicLedScrollingDelay = listGattCharacteristicLedScrollingDelay[0];
+
+                                GattCharacteristicProperties properties = selectedCharacteristicLedScrollingDelay.CharacteristicProperties;
+
+                            }
+
                         }
 
                     }
@@ -315,14 +330,63 @@ namespace Monorail
 
         }
 
+        private async void ButtonScrollingDelay_Click(object sender, RoutedEventArgs e)
+        {
 
+            try
+            {
 
+                // BT_Code: Writes the value from the buffer to the characteristic.
+                IAsyncOperation<GattReadResult> gattReadResult = selectedCharacteristicLedScrollingDelay.ReadValueAsync();
 
+                IBuffer buffer = gattReadResult.GetResults().Value;
 
+                Debug.WriteLine(buffer.Capacity);
+                Debug.WriteLine(buffer.Length);
 
+                for (int i = 0; i < buffer.Length; i++)
+                {
 
+                    Debug.WriteLine("" + i);
 
+                    byte b = buffer.ToArray()[i];
 
+                    Debug.WriteLine("" + b);
+
+                }
+
+                if (gattReadResult.Status.Equals(AsyncStatus.Completed))
+                {
+                    rootPage.NotifyUser("Successfully read message to device", NotifyType.StatusMessage);
+                }
+                else
+                {
+                    rootPage.NotifyUser("Write message to device failed", NotifyType.ErrorMessage);
+                }
+
+            }
+            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+
+        }
 
 
 
