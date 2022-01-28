@@ -196,35 +196,34 @@ namespace Monorail
 
                                 selectedCharacteristicLedMatrix = listGattCharacteristicLedMatrix[0];
 
+
                                 GattCharacteristicProperties properties = selectedCharacteristicLedMatrix.CharacteristicProperties;
 
                                 IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus;
 
+
+                                if (properties.HasFlag(GattCharacteristicProperties.Read))
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedMatrix Read OK !");
+
+                                }
+
                                 if (properties.HasFlag(GattCharacteristicProperties.Indicate))
                                 {
 
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedMatrix Indicate OK !");
+
                                     gattCommunicationStatus = selectedCharacteristicLedMatrix.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
-
-                                    if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
-                                    {
-
-                                        selectedCharacteristicLedMatrix.ValueChanged += selectedCharacteristicLedMatrix_ValueChanged;
-
-                                    }
 
                                 }
 
                                 if (properties.HasFlag(GattCharacteristicProperties.Notify))
                                 {
 
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedMatrix Notify OK !");
+
                                     gattCommunicationStatus = selectedCharacteristicLedMatrix.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-
-                                    if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
-                                    {
-
-                                        selectedCharacteristicLedMatrix.ValueChanged += selectedCharacteristicLedMatrix_ValueChanged;
-
-                                    }
 
                                 }
 
@@ -264,17 +263,23 @@ namespace Monorail
 
         }
 
-        private void selectedCharacteristicLedMatrix_ValueChanged(GattCharacteristic characteristic, GattValueChangedEventArgs e)
+
+        // Octet 0
+        private async void Button_o0_b4_Click(object sender, RoutedEventArgs e)
         {
 
-            Debug.WriteLine("Led Matrix : donnée reçue !!!");
+            Debug.WriteLine("Led Matrix : donnée lues !!!");
 
-            for (int i = 0; i < e.CharacteristicValue.Length; i++)
+            IAsyncOperation<GattReadResult> gattReadResult = selectedCharacteristicLedMatrix.ReadValueAsync();
+
+            IBuffer buffer = gattReadResult.GetResults().Value;
+
+            for (int i = 0; i < buffer.Length; i++)
             {
 
                 Debug.WriteLine("" + i);
 
-                byte b = e.CharacteristicValue.ToArray()[i];
+                byte b = buffer.ToArray()[i];
 
                 char c = Convert.ToChar(b);
 
@@ -283,6 +288,133 @@ namespace Monorail
             }
 
         }
+
+        private async void Button_o0_b3_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o0_b2_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o0_b1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o0_b0_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        // Octet 1
+        private async void Button_o1_b4_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o1_b3_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o1_b2_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o1_b1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o1_b0_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        // Octet 2
+        private async void Button_o2_b4_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o2_b3_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o2_b2_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o2_b1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o2_b0_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        // Octet 3
+        private async void Button_o3_b4_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o3_b3_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o3_b2_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o3_b1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o3_b0_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        // Octet 4
+        private async void Button_o4_b4_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o4_b3_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o4_b2_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o4_b1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void Button_o4_b0_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {

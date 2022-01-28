@@ -213,26 +213,37 @@ namespace Monorail
         private async void ManageMicrobit()
         {
 
-            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-
-            String LocalSettingName = localSettings.Values["Name"] as string;
-            String LocalSettingAddress = localSettings.Values["Address"] as string;
-            String LocalSettingColor = localSettings.Values["Color"] as string;
-
-            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            try
             {
 
-                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+                String LocalSettingName = localSettings.Values["Name"] as string;
+                String LocalSettingAddress = localSettings.Values["Address"] as string;
+                String LocalSettingColor = localSettings.Values["Color"] as string;
+
+                if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
                 {
 
-                    if (this.BluetoothLEDevice == null)
+                    if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
                     {
 
-                        this.BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(LocalSettingAddress));
+                        if (this.BluetoothLEDevice == null)
+                        {
+
+                            this.BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(LocalSettingAddress));
+
+                        }
 
                     }
 
                 }
+
+            }
+            catch(Exception e)
+            {
+
+                Debug.WriteLine(">>>>>>>>>>>>> Exception : " + e.Message);
 
             }
 

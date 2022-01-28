@@ -25,16 +25,60 @@
 
             <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Matrix)</TextBlock>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical">
 
-                <Button x:Name="Button1" Click="{x:Bind Button_Click}" Width="20" Height="40" Margin="5,0,0,5" />
-                <Button x:Name="Button2" Click="{x:Bind Button_Click}" Width="20" Height="40" Margin="5,0,0,5" />
-                <Button x:Name="Button3" Click="{x:Bind Button_Click}" Width="20" Height="40" Margin="5,0,0,5" />
-                <Button x:Name="Button4" Click="{x:Bind Button_Click}" Width="20" Height="40" Margin="5,0,0,5" />
-                <Button x:Name="Button5" Click="{x:Bind Button_Click}" Width="20" Height="40" Margin="5,0,0,5" />
-                
+                <StackPanel Orientation="Horizontal">
+
+                    <Button x:Name="Button_o0_b4" Click="{x:Bind Button_o0_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o0_b3" Click="{x:Bind Button_o0_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o0_b2" Click="{x:Bind Button_o0_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o0_b1" Click="{x:Bind Button_o0_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o0_b0" Click="{x:Bind Button_o0_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <Button x:Name="Button_o1_b4" Click="{x:Bind Button_o1_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o1_b3" Click="{x:Bind Button_o1_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o1_b2" Click="{x:Bind Button_o1_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o1_b1" Click="{x:Bind Button_o1_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o1_b0" Click="{x:Bind Button_o1_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <Button x:Name="Button_o2_b4" Click="{x:Bind Button_o2_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o2_b3" Click="{x:Bind Button_o2_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o2_b2" Click="{x:Bind Button_o2_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o2_b1" Click="{x:Bind Button_o2_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o2_b0" Click="{x:Bind Button_o2_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <Button x:Name="Button_o3_b4" Click="{x:Bind Button_o3_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o3_b3" Click="{x:Bind Button_o3_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o3_b2" Click="{x:Bind Button_o3_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o3_b1" Click="{x:Bind Button_o3_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o3_b0" Click="{x:Bind Button_o3_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <Button x:Name="Button_o4_b4" Click="{x:Bind Button_o4_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o4_b3" Click="{x:Bind Button_o4_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o4_b2" Click="{x:Bind Button_o4_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o4_b1" Click="{x:Bind Button_o4_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o4_b0" Click="{x:Bind Button_o4_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+
+                </StackPanel>
+
             </StackPanel>
-
+            
             <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Text)</TextBlock>
             
             <StackPanel Orientation="Horizontal">
