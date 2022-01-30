@@ -38,13 +38,13 @@ namespace Monorail
         String LocalSettingColor;
 
         // BLOCKY TALKY
-        private string SelectedServiceUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d6";
-        private string SelectedTxCharacteristicUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d7";
-        private string SelectedRxCharacteristicUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d8";
+        private string SelectedServiceBTUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d6";
+        private string SelectedCharacteristicTxUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d7";
+        private string SelectedCharacteristicRxUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d8";
 
-        private GattDeviceService selectedService;
-        private GattCharacteristic selectedTxCharacteristic;
-        private GattCharacteristic selectedRxCharacteristic;
+        private GattDeviceService selectedServiceBT;
+        private GattCharacteristic selectedCharacteristicTx;
+        private GattCharacteristic selectedCharacteristicRx;
 
         readonly int E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED = unchecked((int)0x80650003);
         readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
@@ -120,7 +120,7 @@ namespace Monorail
         }
 
         // Zone Microbit
-        public void ManageMicrobit()
+        public async void ManageMicrobit()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -174,61 +174,33 @@ namespace Monorail
                 foreach (GattDeviceService gattDeviceService in listGattDeviceService)
                 {
 
-                    if (gattDeviceService.Uuid.ToString().Equals(SelectedServiceUUID))
+                    if (gattDeviceService.Uuid.ToString().Equals(SelectedServiceBTUUID))
                     {
 
-                        selectedService = this.rootPage.BluetoothLEDevice.GetGattService(gattDeviceService.Uuid);
+                        selectedServiceBT = this.rootPage.BluetoothLEDevice.GetGattService(gattDeviceService.Uuid);
 
-                        IReadOnlyList<GattCharacteristic> listGattCharacteristic = selectedService.GetAllCharacteristics();
+                        IReadOnlyList<GattCharacteristic> listGattCharacteristic = selectedServiceBT.GetAllCharacteristics();
 
                         foreach (GattCharacteristic gattCharacteristic in listGattCharacteristic)
                         {
 
-                            if (gattCharacteristic.Uuid.ToString().Equals(SelectedTxCharacteristicUUID))
+                            if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicTxUUID))
                             {
 
-                                IReadOnlyList<GattCharacteristic> listGattCharacteristicTx = selectedService.GetCharacteristics(gattCharacteristic.Uuid);
+                                IReadOnlyList<GattCharacteristic> listGattCharacteristicTx = selectedServiceBT.GetCharacteristics(gattCharacteristic.Uuid);
 
-                                selectedTxCharacteristic = listGattCharacteristicTx[0];
+                                selectedCharacteristicTx = listGattCharacteristicTx[0];
 
-                                GattCharacteristicProperties properties = selectedTxCharacteristic.CharacteristicProperties;
-
-                                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus;
-
-                                if (properties.HasFlag(GattCharacteristicProperties.Indicate))
-                                {
-                                    gattCommunicationStatus = selectedTxCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
-
-                                    if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
-                                    {
-
-                                        selectedTxCharacteristic.ValueChanged += SelectedTxCharacteristic_ValueChanged;
-
-                                    }
-
-                                }
-
-                                if (properties.HasFlag(GattCharacteristicProperties.Notify))
-                                {
-                                    gattCommunicationStatus = selectedTxCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-
-                                    if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
-                                    {
-
-                                        selectedTxCharacteristic.ValueChanged += SelectedTxCharacteristic_ValueChanged;
-
-                                    }
-
-                                }
+                                selectedCharacteristicTx.ValueChanged += SelectedTxCharacteristic_ValueChanged;
 
                             }
 
-                            if (gattCharacteristic.Uuid.ToString().Equals(SelectedRxCharacteristicUUID))
+                            if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicRxUUID))
                             {
 
-                                IReadOnlyList<GattCharacteristic> listGattCharacteristicRx = selectedService.GetCharacteristics(gattCharacteristic.Uuid);
+                                IReadOnlyList<GattCharacteristic> listGattCharacteristicRx = selectedServiceBT.GetCharacteristics(gattCharacteristic.Uuid);
 
-                                selectedRxCharacteristic = listGattCharacteristicRx[0];
+                                selectedCharacteristicRx = listGattCharacteristicRx[0];
 
                             }
 
@@ -247,40 +219,24 @@ namespace Monorail
 
             Debug.WriteLine("Blocky Talky Tx : donnée reçue !!!");
 
-            for(int i=0; i<e.CharacteristicValue.Length;i++  )
-            {
+            var dataReader = DataReader.FromBuffer(e.CharacteristicValue);
+            String information = dataReader.ReadString(e.CharacteristicValue.Length);
 
-                Debug.WriteLine("" + i);
-
-                byte b = e.CharacteristicValue.ToArray()[i];
-
-                
-                char c = Convert.ToChar(b);
-
-                Debug.WriteLine(c);
-
-            }
+            Debug.WriteLine(information);
 
         }
 
         private async void ButtonA_Click(object sender, RoutedEventArgs e)
         {
 
-            byte[] array = new byte[20];
-
-            string key = "key";
-
-            string message = "message";
-
             IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
 
             try
             {
 
-                // BT_Code: Writes the value from the buffer to the characteristic.
-                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync(buffer);
+                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicRx.WriteValueAsync(buffer);
 
-                if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
+                if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
                 {
                     rootPage.NotifyUser("Successfully wrote value A to device", NotifyType.StatusMessage);
                 }
@@ -292,22 +248,18 @@ namespace Monorail
             }
             catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
 
@@ -321,37 +273,32 @@ namespace Monorail
             try
             {
 
-                // BT_Code: Writes the value from the buffer to the characteristic.
-                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync(buffer);
+                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicRx.WriteValueAsync(buffer);
 
-                if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
+                if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
                 {
-                    rootPage.NotifyUser("Successfully wrote value B to device", NotifyType.StatusMessage);
+                    rootPage.NotifyUser("Successfully wrote value A to device", NotifyType.StatusMessage);
                 }
                 else
                 {
-                    rootPage.NotifyUser("Write value B to device failed", NotifyType.ErrorMessage);
+                    rootPage.NotifyUser("Write value A to device failed", NotifyType.ErrorMessage);
                 }
 
             }
             catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
 
@@ -365,98 +312,36 @@ namespace Monorail
             try
             {
 
-                // BT_Code: Writes the value from the buffer to the characteristic.
-                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync(buffer);
+                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicRx.WriteValueAsync(buffer);
 
-                if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
+                if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
                 {
-                    rootPage.NotifyUser("Successfully wrote value A + B to device", NotifyType.StatusMessage);
+                    rootPage.NotifyUser("Successfully wrote value A to device", NotifyType.StatusMessage);
                 }
                 else
                 {
-                    rootPage.NotifyUser("Write value A + B to device failed", NotifyType.ErrorMessage);
+                    rootPage.NotifyUser("Write value A to device failed", NotifyType.ErrorMessage);
                 }
 
             }
             catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
             {
-
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
 
         }
-
-        private async void ButtonAfficher_Click(object sender, RoutedEventArgs e)
-        {
-
-            String key = "message";
-
-            String value = "Toto à la plage";
-
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary( key + "^" + "S^" + value + "#", BinaryStringEncoding.Utf8);
-
-            try
-            {
-
-                // BT_Code: Writes the value from the buffer to the characteristic.
-                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedRxCharacteristic.WriteValueAsync(buffer);
-
-                if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
-                {
-                    rootPage.NotifyUser("Successfully wrote message to device", NotifyType.StatusMessage);
-                }
-                else
-                {
-                    rootPage.NotifyUser("Write message to device failed", NotifyType.ErrorMessage);
-                }
-
-            }
-            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-
-        }
-
-
-
-
-
-
-
-
-
 
     }
 

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Windows.Devices.Bluetooth;
+using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 
 using Windows.UI.Xaml;
@@ -67,6 +69,29 @@ namespace Monorail
             }
 
         }
+
+        String LocalSettingName;
+        String LocalSettingAddress;
+        String LocalSettingColor;
+
+        // Generic Access
+        private string SelectedServiceGenericAccessUUID = "00001800-0000-1000-8000-00805f9b34fb";
+        private string SelectedCharacteristicDeviceNameUUID = "00002a00-0000-1000-8000-00805f9b34fb";
+        private string SelectedCharacteristicAppearanceUUID = "00002a01-0000-1000-8000-00805f9b34fb";
+        private string SelectedCharacteristicPeripheralUUID = "00002a04-0000-1000-8000-00805f9b34fb";
+
+        // Generic Attribute
+        private string SelectedServiceGenericAttributeUUID = "00001801-0000-1000-8000-00805f9b34fb";
+        
+        private GattDeviceService SelectedServiceGenericAccess;
+        private GattCharacteristic SelectedCharacteristicDeviceName;
+        private GattCharacteristic SelectedCharacteristicAppearance;
+        private GattCharacteristic SelectedCharacteristicPeripheral;
+
+        readonly int E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED = unchecked((int)0x80650003);
+        readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
+        readonly int E_ACCESSDENIED = unchecked((int)0x80070005);
+        readonly int E_DEVICE_NOT_AVAILABLE = unchecked((int)0x800710df);
 
         public MainPage()
         {
@@ -218,9 +243,9 @@ namespace Monorail
 
                 ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-                String LocalSettingName = localSettings.Values["Name"] as string;
-                String LocalSettingAddress = localSettings.Values["Address"] as string;
-                String LocalSettingColor = localSettings.Values["Color"] as string;
+                LocalSettingName = localSettings.Values["Name"] as string;
+                LocalSettingAddress = localSettings.Values["Address"] as string;
+                LocalSettingColor = localSettings.Values["Color"] as string;
 
                 if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
                 {
@@ -232,6 +257,189 @@ namespace Monorail
                         {
 
                             this.BluetoothLEDevice = await BluetoothLEDevice.FromBluetoothAddressAsync(Convert.ToUInt64(LocalSettingAddress));
+
+                            if (this.BluetoothLEDevice != null)
+                            {
+
+
+                                if(this.BluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice : Paired");
+
+                                }
+                                else
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice : No paired");
+
+                                    DevicePairingResult devicePairingResult = await this.BluetoothLEDevice.DeviceInformation.Pairing.PairAsync();
+
+                                    if(devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired))
+                                    {
+
+                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice : Paired");
+
+                                    }
+                                    else
+                                    {
+
+                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice : Impossible to pair");
+
+                                    }
+
+                                }
+
+                                IReadOnlyList<GattDeviceService> listGattDeviceService = this.BluetoothLEDevice.GattServices;
+
+                                foreach (GattDeviceService gattDeviceService in listGattDeviceService)
+                                {
+
+                                    if (gattDeviceService.Uuid.ToString().Equals(SelectedServiceGenericAccessUUID))
+                                    {
+
+                                        SelectedServiceGenericAccess = this.BluetoothLEDevice.GetGattService(gattDeviceService.Uuid);
+
+                                        if(SelectedServiceGenericAccess != null)
+                                        {
+
+                                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedServiceGenericAccess : OK");
+
+                                        }
+
+                                        IReadOnlyList<GattCharacteristic> listGattCharacteristic = SelectedServiceGenericAccess.GetAllCharacteristics();
+
+                                        if (listGattCharacteristic.Count > 0)
+                                        {
+
+                                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattCharacteristic.Count : " + listGattCharacteristic.Count);
+
+                                        }
+
+                                        foreach (GattCharacteristic gattCharacteristic in listGattCharacteristic)
+                                        {
+
+                                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> gattCharacteristic : " + gattCharacteristic.Uuid);
+
+                                            if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicDeviceNameUUID))
+                                            {
+
+                                                IReadOnlyList<GattCharacteristic> listGattCharacteristicDeviceName = SelectedServiceGenericAccess.GetCharacteristics(gattCharacteristic.Uuid);
+
+                                                SelectedCharacteristicDeviceName = listGattCharacteristicDeviceName[0];
+
+                                                if(SelectedCharacteristicDeviceName != null)
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : OK");
+
+                                                }
+
+                                                GattCharacteristicProperties properties = SelectedCharacteristicDeviceName.CharacteristicProperties;
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.None))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : None");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.Broadcast))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Broadcast");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.Read))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Read");
+
+                                                    GattReadResult gattReadResult = await SelectedCharacteristicDeviceName.ReadValueAsync();
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GattReadResult : " + gattReadResult.Status);
+
+                                                    if( gattReadResult.Status.Equals(GattCommunicationStatus.Success) )
+                                                    {
+
+                                                        IBuffer buffer = gattReadResult.Value;
+
+                                                        var dataReader = DataReader.FromBuffer(buffer);
+
+                                                        String information = dataReader.ReadString(buffer.Length);
+
+                                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information : " + information);
+
+                                                    }
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.WriteWithoutResponse))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : WriteWithoutResponse");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.Write))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Write");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.Notify))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Notify");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.Indicate))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Indicate");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.AuthenticatedSignedWrites))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : AuthenticatedSignedWrites");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.ExtendedProperties))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : ExtendedProperties");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.ReliableWrites))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : ReliableWrites");
+
+                                                }
+
+                                                if (properties.HasFlag(GattCharacteristicProperties.WritableAuxiliaries))
+                                                {
+
+                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : WritableAuxiliaries");
+
+                                                }
+
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
 
                         }
 

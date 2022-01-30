@@ -190,12 +190,9 @@ namespace Monorail
                             if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicLedMatrixUUID))
                             {
 
-                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedMatrix OK !");
-
                                 IReadOnlyList<GattCharacteristic> listGattCharacteristicLedMatrix = selectedServiceLed.GetCharacteristics(gattCharacteristic.Uuid);
 
                                 selectedCharacteristicLedMatrix = listGattCharacteristicLedMatrix[0];
-
 
                                 GattCharacteristicProperties properties = selectedCharacteristicLedMatrix.CharacteristicProperties;
 
@@ -205,14 +202,14 @@ namespace Monorail
                                 if (properties.HasFlag(GattCharacteristicProperties.Read))
                                 {
 
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedMatrix Read OK !");
+
 
                                 }
 
                                 if (properties.HasFlag(GattCharacteristicProperties.Indicate))
                                 {
 
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedMatrix Indicate OK !");
+
 
                                     gattCommunicationStatus = selectedCharacteristicLedMatrix.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
 
@@ -220,8 +217,6 @@ namespace Monorail
 
                                 if (properties.HasFlag(GattCharacteristicProperties.Notify))
                                 {
-
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedMatrix Notify OK !");
 
                                     gattCommunicationStatus = selectedCharacteristicLedMatrix.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
 
@@ -232,8 +227,6 @@ namespace Monorail
                             if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicLedTextUUID))
                             {
 
-                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedText OK !");
-
                                 IReadOnlyList<GattCharacteristic> listGattCharacteristicLedText = selectedServiceLed.GetCharacteristics(gattCharacteristic.Uuid);
 
                                 selectedCharacteristicLedText = listGattCharacteristicLedText[0];
@@ -242,8 +235,6 @@ namespace Monorail
 
                             if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicLedScrollingDelayUUID))
                             {
-
-                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicLedScrollingDelay OK !");
 
                                 IReadOnlyList<GattCharacteristic> listGattCharacteristicLedScrollingDelay = selectedServiceLed.GetCharacteristics(gattCharacteristic.Uuid);
 
@@ -270,27 +261,45 @@ namespace Monorail
 
             Debug.WriteLine("Led Matrix : donnée lues !!!");
 
-            IAsyncOperation<GattReadResult> gattReadResult = selectedCharacteristicLedMatrix.ReadValueAsync();
+            GattReadResult gattReadResult = await selectedCharacteristicLedMatrix.ReadValueAsync();
 
-            IBuffer buffer = gattReadResult.GetResults().Value;
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (status) : " + gattReadResult.Status);
 
-            for (int i = 0; i < buffer.Length; i++)
+            var buffer = gattReadResult.Value;
+
+            var dataReader = DataReader.FromBuffer(buffer);
+
+            String information = dataReader.ReadString(buffer.Length);
+
+            for(int i=0; i<information.Length; i++)
             {
-
-                Debug.WriteLine("" + i);
-
-                byte b = buffer.ToArray()[i];
-
-                char c = Convert.ToChar(b);
-
-                Debug.WriteLine(c);
-
+                char c = information.ElementAt<char>(i);
+                int ic = Convert.ToInt16(c);
+                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + ic);
             }
 
         }
 
         private async void Button_o0_b3_Click(object sender, RoutedEventArgs e)
         {
+
+            byte[] o = new byte[] { 0x0F, 0x0C, 0x13, 0x16, 0x0F };
+                        
+            GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicLedMatrix.WriteValueAsync(o.AsBuffer());
+
+            Debug.WriteLine("Led Matrix : donnée écrites !!!");
+
+            int o1 = 0x0F;
+            int o2 = 0x0C;
+            int o3 = 0x13;
+            int o4 = 0x16;
+            int o5 = 0x0F;
+
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o1);
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o2);
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o3);
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o4);
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o5);
 
         }
 
