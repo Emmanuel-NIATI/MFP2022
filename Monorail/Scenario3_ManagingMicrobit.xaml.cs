@@ -262,6 +262,10 @@ namespace Monorail
             {
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
+            catch (Exception exception)
+            {
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
 
         }
 
@@ -301,6 +305,10 @@ namespace Monorail
             {
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
+            catch (Exception exception)
+            {
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
 
         }
 
@@ -337,6 +345,10 @@ namespace Monorail
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
+            {
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception)
             {
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }

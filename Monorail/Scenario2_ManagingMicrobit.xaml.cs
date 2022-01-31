@@ -168,15 +168,42 @@ namespace Monorail
             if (this.rootPage.BluetoothLEDevice != null)
             {
 
+                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice non null");
+
                 IReadOnlyList<GattDeviceService> listGattDeviceService = this.rootPage.BluetoothLEDevice.GattServices;
+
+                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattDeviceService : " + listGattDeviceService.Count);
+
+
+
+                
+
+                
+
+
 
                 foreach (GattDeviceService gattDeviceService in listGattDeviceService)
                 {
+
+                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> gattDeviceService : " + gattDeviceService.Uuid);
 
                     if (gattDeviceService.Uuid.ToString().Equals(SelectedServiceUARTUUID))
                     {
 
                         selectedServiceUART = this.rootPage.BluetoothLEDevice.GetGattService(gattDeviceService.Uuid);
+
+                        if (selectedServiceUART != null)
+                        {
+
+                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedServiceUART non null");
+
+                        }
+                        else
+                        {
+
+                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedServiceUART null !!!");
+
+                        }
 
                         IReadOnlyList<GattCharacteristic> listGattCharacteristic = selectedServiceUART.GetAllCharacteristics();
 
@@ -192,6 +219,19 @@ namespace Monorail
 
                                 selectedCharacteristicTx.ValueChanged += SelectedCharacteristicTx_ValueChanged;
 
+                                if(selectedCharacteristicTx != null)
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicTx non null...");
+
+                                }
+                                else
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicTx null !!!");
+
+                                }
+
                             }
 
                             if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicRxUUID))
@@ -201,6 +241,19 @@ namespace Monorail
 
                                 selectedCharacteristicRx = listGattCharacteristicRx[0];
 
+                                if (selectedCharacteristicRx != null)
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicRx non null");
+
+                                }
+                                else
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicRx null !!!");
+
+                                }
+
                             }
 
                         }
@@ -208,6 +261,12 @@ namespace Monorail
                     }
 
                 }
+
+            }
+            else
+            {
+
+                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice null !!!");
 
             }
 
@@ -303,6 +362,10 @@ namespace Monorail
             {
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
+            catch (Exception exception)
+            {
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
 
         }
 
@@ -338,6 +401,10 @@ namespace Monorail
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
             catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
+            {
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception)
             {
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }

@@ -468,6 +468,10 @@ namespace Monorail
 
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
+            catch (Exception exception)
+            {
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
 
         }
 
@@ -526,14 +530,12 @@ namespace Monorail
 
                 rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
             }
+            catch (Exception exception)
+            {
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
 
         }
-
-
-
-
-
-
 
     }
 

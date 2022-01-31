@@ -70,6 +70,19 @@ namespace Monorail
 
         }
 
+        public IReadOnlyList<GattDeviceService> _ListGattDeviceService { get; set; }
+        public IReadOnlyList<GattDeviceService> ListGattDeviceService
+        {
+
+            get { return _ListGattDeviceService; }
+            set
+            {
+
+                _ListGattDeviceService = value;
+            }
+
+        }
+
         String LocalSettingName;
         String LocalSettingAddress;
         String LocalSettingColor;
@@ -290,154 +303,13 @@ namespace Monorail
 
                                 }
 
-                                IReadOnlyList<GattDeviceService> listGattDeviceService = this.BluetoothLEDevice.GattServices;
+                                this.ListGattDeviceService = this.BluetoothLEDevice.GattServices;
 
-                                foreach (GattDeviceService gattDeviceService in listGattDeviceService)
-                                {
+                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattDeviceService : " + this.ListGattDeviceService.Count);
 
-                                    if (gattDeviceService.Uuid.ToString().Equals(SelectedServiceGenericAccessUUID))
-                                    {
+                                this.BluetoothLEDevice.ConnectionStatusChanged += BluetoothLEDevice_ConnectionStatusChanged;
 
-                                        SelectedServiceGenericAccess = this.BluetoothLEDevice.GetGattService(gattDeviceService.Uuid);
-
-                                        if(SelectedServiceGenericAccess != null)
-                                        {
-
-                                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedServiceGenericAccess : OK");
-
-                                        }
-
-                                        IReadOnlyList<GattCharacteristic> listGattCharacteristic = SelectedServiceGenericAccess.GetAllCharacteristics();
-
-                                        if (listGattCharacteristic.Count > 0)
-                                        {
-
-                                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattCharacteristic.Count : " + listGattCharacteristic.Count);
-
-                                        }
-
-                                        foreach (GattCharacteristic gattCharacteristic in listGattCharacteristic)
-                                        {
-
-                                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> gattCharacteristic : " + gattCharacteristic.Uuid);
-
-                                            if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicDeviceNameUUID))
-                                            {
-
-                                                IReadOnlyList<GattCharacteristic> listGattCharacteristicDeviceName = SelectedServiceGenericAccess.GetCharacteristics(gattCharacteristic.Uuid);
-
-                                                SelectedCharacteristicDeviceName = listGattCharacteristicDeviceName[0];
-
-                                                if(SelectedCharacteristicDeviceName != null)
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : OK");
-
-                                                }
-
-                                                GattCharacteristicProperties properties = SelectedCharacteristicDeviceName.CharacteristicProperties;
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.None))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : None");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.Broadcast))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Broadcast");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.Read))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Read");
-
-                                                    GattReadResult gattReadResult = await SelectedCharacteristicDeviceName.ReadValueAsync();
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> GattReadResult : " + gattReadResult.Status);
-
-                                                    if( gattReadResult.Status.Equals(GattCommunicationStatus.Success) )
-                                                    {
-
-                                                        IBuffer buffer = gattReadResult.Value;
-
-                                                        var dataReader = DataReader.FromBuffer(buffer);
-
-                                                        String information = dataReader.ReadString(buffer.Length);
-
-                                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information : " + information);
-
-                                                    }
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.WriteWithoutResponse))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : WriteWithoutResponse");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.Write))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Write");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.Notify))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Notify");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.Indicate))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : Indicate");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.AuthenticatedSignedWrites))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : AuthenticatedSignedWrites");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.ExtendedProperties))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : ExtendedProperties");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.ReliableWrites))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : ReliableWrites");
-
-                                                }
-
-                                                if (properties.HasFlag(GattCharacteristicProperties.WritableAuxiliaries))
-                                                {
-
-                                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SelectedCharacteristicDeviceName : WritableAuxiliaries");
-
-                                                }
-
-                                            }
-
-                                        }
-
-                                    }
-
-                                }
+                                this.BluetoothLEDevice.GattServicesChanged += BluetoothLEDevice_GattServicesChanged;
 
                             }
 
@@ -454,6 +326,26 @@ namespace Monorail
                 Debug.WriteLine(">>>>>>>>>>>>> Exception : " + e.Message);
 
             }
+
+        }
+
+        public void BluetoothLEDevice_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
+        {
+
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sender : " + sender.GetType());
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sender : " + sender.ConnectionStatus);
+
+            this.ListGattDeviceService = this.BluetoothLEDevice.GattServices;
+
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattDeviceService : " + this.ListGattDeviceService.Count);
+
+        }
+
+        public void BluetoothLEDevice_GattServicesChanged(BluetoothLEDevice sender, object args)
+        {
+
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sender : " + sender.GetType());
+            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> args : " + args.GetType());
 
         }
 
