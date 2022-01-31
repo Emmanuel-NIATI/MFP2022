@@ -53,6 +53,7 @@ namespace Monorail
 
         public Scenario2_ManagingMicrobit()
         {
+
             this.InitializeComponent();
 
             // Zone commune
@@ -168,42 +169,15 @@ namespace Monorail
             if (this.rootPage.BluetoothLEDevice != null)
             {
 
-                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice non null");
-
-                IReadOnlyList<GattDeviceService> listGattDeviceService = this.rootPage.BluetoothLEDevice.GattServices;
-
-                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattDeviceService : " + listGattDeviceService.Count);
-
-
-
-                
-
-                
-
-
+                IReadOnlyList<GattDeviceService> listGattDeviceService = this.rootPage.ListGattDeviceService;
 
                 foreach (GattDeviceService gattDeviceService in listGattDeviceService)
                 {
-
-                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> gattDeviceService : " + gattDeviceService.Uuid);
 
                     if (gattDeviceService.Uuid.ToString().Equals(SelectedServiceUARTUUID))
                     {
 
                         selectedServiceUART = this.rootPage.BluetoothLEDevice.GetGattService(gattDeviceService.Uuid);
-
-                        if (selectedServiceUART != null)
-                        {
-
-                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedServiceUART non null");
-
-                        }
-                        else
-                        {
-
-                            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedServiceUART null !!!");
-
-                        }
 
                         IReadOnlyList<GattCharacteristic> listGattCharacteristic = selectedServiceUART.GetAllCharacteristics();
 
@@ -216,19 +190,13 @@ namespace Monorail
                                 IReadOnlyList<GattCharacteristic> listGattCharacteristicTx = selectedServiceUART.GetCharacteristics(gattCharacteristic.Uuid);
 
                                 selectedCharacteristicTx = listGattCharacteristicTx[0];
+                                
+                                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicTx.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
 
-                                selectedCharacteristicTx.ValueChanged += SelectedCharacteristicTx_ValueChanged;
-
-                                if(selectedCharacteristicTx != null)
+                                if( gattCommunicationStatus.Equals(GattCommunicationStatus.Success)  )
                                 {
 
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicTx non null...");
-
-                                }
-                                else
-                                {
-
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicTx null !!!");
+                                    selectedCharacteristicTx.ValueChanged += SelectedCharacteristicTx_ValueChanged;
 
                                 }
 
@@ -241,19 +209,6 @@ namespace Monorail
 
                                 selectedCharacteristicRx = listGattCharacteristicRx[0];
 
-                                if (selectedCharacteristicRx != null)
-                                {
-
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicRx non null");
-
-                                }
-                                else
-                                {
-
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> selectedCharacteristicRx null !!!");
-
-                                }
-
                             }
 
                         }
@@ -263,24 +218,18 @@ namespace Monorail
                 }
 
             }
-            else
-            {
-
-                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice null !!!");
-
-            }
 
         }
 
         private void SelectedCharacteristicTx_ValueChanged(GattCharacteristic characteristic, GattValueChangedEventArgs e)
         {
 
-            Debug.WriteLine("UART : donnée reçue !!!");
+            Debug.WriteLine(">>>>>>>>>> UART : donnée reçue !!!");
 
             var dataReader = DataReader.FromBuffer(e.CharacteristicValue);
             String information = dataReader.ReadString(e.CharacteristicValue.Length);
 
-            Debug.WriteLine(information);
+            Debug.WriteLine(">>>>>>>>>> UART : information : " + information);
 
         }
 

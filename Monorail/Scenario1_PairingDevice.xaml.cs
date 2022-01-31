@@ -477,7 +477,8 @@ namespace Monorail
                         {
 
                             // Zone commune
-                            rootPage.BluetoothLEDevice = bluetoothLEDevice;
+                            this.rootPage.BluetoothLEDevice = bluetoothLEDevice;
+                            this.rootPage.ListGattDeviceService = bluetoothLEDevice.GattServices;
 
                             // Zone Microbit
 
@@ -707,7 +708,8 @@ namespace Monorail
                     {
 
                         // Zone commune
-                        rootPage.BluetoothLEDevice = null;
+                        this.rootPage.BluetoothLEDevice = null;
+                        this.rootPage.ListGattDeviceService = null;
 
                         // Zone Microbit
 

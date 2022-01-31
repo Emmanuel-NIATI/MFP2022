@@ -274,30 +274,29 @@ namespace Monorail
                             if (this.BluetoothLEDevice != null)
                             {
 
-
                                 if(this.BluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
                                 {
 
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice : Paired");
-
+                                    Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Paired");
+                                    
                                 }
                                 else
                                 {
 
-                                    Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice : No paired");
+                                    Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : No paired");
 
                                     DevicePairingResult devicePairingResult = await this.BluetoothLEDevice.DeviceInformation.Pairing.PairAsync();
 
                                     if(devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired))
                                     {
 
-                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice : Paired");
+                                        Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Paired");
 
                                     }
                                     else
                                     {
 
-                                        Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BluetoothLEDevice : Impossible to pair");
+                                        Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Impossible to pair");
 
                                     }
 
@@ -305,11 +304,7 @@ namespace Monorail
 
                                 this.ListGattDeviceService = this.BluetoothLEDevice.GattServices;
 
-                                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattDeviceService : " + this.ListGattDeviceService.Count);
-
-                                this.BluetoothLEDevice.ConnectionStatusChanged += BluetoothLEDevice_ConnectionStatusChanged;
-
-                                this.BluetoothLEDevice.GattServicesChanged += BluetoothLEDevice_GattServicesChanged;
+                                Debug.WriteLine(">>>>>>>>>> ListGattDeviceService : " + this.ListGattDeviceService.Count);
 
                             }
 
@@ -323,29 +318,9 @@ namespace Monorail
             catch(Exception e)
             {
 
-                Debug.WriteLine(">>>>>>>>>>>>> Exception : " + e.Message);
+                Debug.WriteLine(">>>>>>>>>> Exception : " + e.Message);
 
             }
-
-        }
-
-        public void BluetoothLEDevice_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
-        {
-
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sender : " + sender.GetType());
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sender : " + sender.ConnectionStatus);
-
-            this.ListGattDeviceService = this.BluetoothLEDevice.GattServices;
-
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> listGattDeviceService : " + this.ListGattDeviceService.Count);
-
-        }
-
-        public void BluetoothLEDevice_GattServicesChanged(BluetoothLEDevice sender, object args)
-        {
-
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> sender : " + sender.GetType());
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> args : " + args.GetType());
 
         }
 

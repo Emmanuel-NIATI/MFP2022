@@ -179,6 +179,13 @@ namespace Monorail
 
                         selectedServiceBT = this.rootPage.BluetoothLEDevice.GetGattService(gattDeviceService.Uuid);
 
+                        if( selectedServiceBT != null )
+                        {
+
+                            Debug.WriteLine(">>>>>>>>>> selectedServiceBT : non Null...");
+
+                        }
+
                         IReadOnlyList<GattCharacteristic> listGattCharacteristic = selectedServiceBT.GetAllCharacteristics();
 
                         foreach (GattCharacteristic gattCharacteristic in listGattCharacteristic)
@@ -190,6 +197,8 @@ namespace Monorail
                                 IReadOnlyList<GattCharacteristic> listGattCharacteristicTx = selectedServiceBT.GetCharacteristics(gattCharacteristic.Uuid);
 
                                 selectedCharacteristicTx = listGattCharacteristicTx[0];
+
+                                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicTx.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
 
                                 selectedCharacteristicTx.ValueChanged += SelectedTxCharacteristic_ValueChanged;
 
@@ -217,17 +226,19 @@ namespace Monorail
         private void SelectedTxCharacteristic_ValueChanged(GattCharacteristic characteristic, GattValueChangedEventArgs e)
         {
 
-            Debug.WriteLine("Blocky Talky Tx : donnée reçue !!!");
+            Debug.WriteLine(">>>>>>>>>> Blocky Talky : donnée reçue !!!");
 
             var dataReader = DataReader.FromBuffer(e.CharacteristicValue);
             String information = dataReader.ReadString(e.CharacteristicValue.Length);
 
-            Debug.WriteLine(information);
+            Debug.WriteLine(">>>>>>>>>> Blocky Talky : information : " + information);
 
         }
 
         private async void ButtonA_Click(object sender, RoutedEventArgs e)
         {
+
+            // S^key^A#
 
             IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
 
