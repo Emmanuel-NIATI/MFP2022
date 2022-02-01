@@ -123,7 +123,7 @@ namespace Monorail
 
 
         // Zone Microbit
-        public void ManageMicrobit()
+        public async void ManageMicrobit()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -182,6 +182,13 @@ namespace Monorail
 
                         selectedServiceLed = this.rootPage.BluetoothLEDevice.GetGattService(gattDeviceService.Uuid);
 
+                        if (selectedServiceLed != null)
+                        {
+
+                            Debug.WriteLine(">>>>>>>>>> selectedServiceLed :  Non null...");
+
+                        }
+
                         IReadOnlyList<GattCharacteristic> listGattCharacteristic = selectedServiceLed.GetAllCharacteristics();
 
                         foreach (GattCharacteristic gattCharacteristic in listGattCharacteristic)
@@ -194,31 +201,10 @@ namespace Monorail
 
                                 selectedCharacteristicLedMatrix = listGattCharacteristicLedMatrix[0];
 
-                                GattCharacteristicProperties properties = selectedCharacteristicLedMatrix.CharacteristicProperties;
-
-                                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus;
-
-
-                                if (properties.HasFlag(GattCharacteristicProperties.Read))
+                                if (selectedCharacteristicLedMatrix != null)
                                 {
 
-
-
-                                }
-
-                                if (properties.HasFlag(GattCharacteristicProperties.Indicate))
-                                {
-
-
-
-                                    gattCommunicationStatus = selectedCharacteristicLedMatrix.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
-
-                                }
-
-                                if (properties.HasFlag(GattCharacteristicProperties.Notify))
-                                {
-
-                                    gattCommunicationStatus = selectedCharacteristicLedMatrix.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                                    Debug.WriteLine(">>>>>>>>>> selectedCharacteristicLedMatrix :  Non null...");
 
                                 }
 
@@ -231,6 +217,13 @@ namespace Monorail
 
                                 selectedCharacteristicLedText = listGattCharacteristicLedText[0];
 
+                                if (selectedCharacteristicLedText != null)
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>> selectedCharacteristicLedText : non Null...");
+
+                                }
+
                             }
 
                             if (gattCharacteristic.Uuid.ToString().Equals(SelectedCharacteristicLedScrollingDelayUUID))
@@ -239,8 +232,13 @@ namespace Monorail
                                 IReadOnlyList<GattCharacteristic> listGattCharacteristicLedScrollingDelay = selectedServiceLed.GetCharacteristics(gattCharacteristic.Uuid);
 
                                 selectedCharacteristicLedScrollingDelay = listGattCharacteristicLedScrollingDelay[0];
+                                
+                                if (selectedCharacteristicLedScrollingDelay != null)
+                                {
 
-                                GattCharacteristicProperties properties = selectedCharacteristicLedScrollingDelay.CharacteristicProperties;
+                                    Debug.WriteLine(">>>>>>>>>> selectedCharacteristicLedScrollingDelay : non Null...");
+
+                                }
 
                             }
 
