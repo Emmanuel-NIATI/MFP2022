@@ -22,6 +22,7 @@ using Windows.Devices.Enumeration;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI;
 
 namespace Monorail
 {
@@ -52,6 +53,41 @@ namespace Monorail
         readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
         readonly int E_ACCESSDENIED = unchecked((int)0x80070005);
         readonly int E_DEVICE_NOT_AVAILABLE = unchecked((int)0x800710df);
+
+        // Octet 0
+        bool o0_b4 = false;
+        bool o0_b3 = false;
+        bool o0_b2 = false;
+        bool o0_b1 = false;
+        bool o0_b0 = false;
+
+        // Octet 1
+        bool o1_b4 = false;
+        bool o1_b3 = false;
+        bool o1_b2 = false;
+        bool o1_b1 = false;
+        bool o1_b0 = false;
+
+        // Octet 2
+        bool o2_b4 = false;
+        bool o2_b3 = false;
+        bool o2_b2 = false;
+        bool o2_b1 = false;
+        bool o2_b0 = false;
+
+        // Octet 3
+        bool o3_b4 = false;
+        bool o3_b3 = false;
+        bool o3_b2 = false;
+        bool o3_b1 = false;
+        bool o3_b0 = false;
+
+        // Octet 4
+        bool o4_b4 = false;
+        bool o4_b3 = false;
+        bool o4_b2 = false;
+        bool o4_b1 = false;
+        bool o4_b0 = false;
 
         public Scenario4_ManagingMicrobit()
         {
@@ -174,8 +210,12 @@ namespace Monorail
 
                 IReadOnlyList<GattDeviceService> listGattDeviceService = this.rootPage.BluetoothLEDevice.GattServices;
 
+                Debug.WriteLine(">>>>>>>>>> listGattDeviceService : " + listGattDeviceService.Count);
+
                 foreach (GattDeviceService gattDeviceService in listGattDeviceService)
                 {
+
+                    Debug.WriteLine(">>>>>>>>>> gattDeviceService : " + gattDeviceService.Uuid);
 
                     if (gattDeviceService.Uuid.ToString().Equals(SelectedServiceLedUUID))
                     {
@@ -200,6 +240,9 @@ namespace Monorail
                                 IReadOnlyList<GattCharacteristic> listGattCharacteristicLedMatrix = selectedServiceLed.GetCharacteristics(gattCharacteristic.Uuid);
 
                                 selectedCharacteristicLedMatrix = listGattCharacteristicLedMatrix[0];
+
+                                
+
 
                                 if (selectedCharacteristicLedMatrix != null)
                                 {
@@ -252,67 +295,149 @@ namespace Monorail
 
         }
 
+        // Mise à jour de la matrice de Led
+        private async void UpdateLedMatrix()
+        {
+
+            byte[] o = new byte[] { 0x1f, 0x00, 0x00, 0x00, 0x00 };
+
+            bool[] o0Tab = new bool[] { false, false, false, o0_b4, o0_b3, o0_b2, o0_b1, o0_b0 };
+            bool[] o1Tab = new bool[] { false, false, false, o1_b4, o1_b3, o1_b2, o1_b1, o1_b0 };
+            bool[] o2Tab = new bool[] { false, false, false, o2_b4, o2_b3, o2_b2, o2_b1, o2_b0 };
+            bool[] o3Tab = new bool[] { false, false, false, o3_b4, o3_b3, o3_b2, o3_b1, o3_b0 };
+            bool[] o4Tab = new bool[] { false, false, false, o4_b4, o4_b3, o4_b2, o4_b1, o4_b0 };
+
+            try
+            {
+
+                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicLedMatrix.WriteValueAsync(o.AsBuffer());
+
+                if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
+                {
+                    rootPage.NotifyUser("Successfully wrote Led Matrix to device", NotifyType.StatusMessage);
+                }
+                else
+                {
+                    rootPage.NotifyUser("Write Led Matrix to device failed", NotifyType.ErrorMessage);
+                }
+
+            }
+            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
+            {
+
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+            catch (Exception exception)
+            {
+                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
+            }
+
+        }
+
 
         // Octet 0
         private async void Button_o0_b4_Click(object sender, RoutedEventArgs e)
         {
 
-            Debug.WriteLine("Led Matrix : donnée lues !!!");
-
-            GattReadResult gattReadResult = await selectedCharacteristicLedMatrix.ReadValueAsync();
-
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (status) : " + gattReadResult.Status);
-
-            var buffer = gattReadResult.Value;
-
-            var dataReader = DataReader.FromBuffer(buffer);
-
-            String information = dataReader.ReadString(buffer.Length);
-
-            for(int i=0; i<information.Length; i++)
+            if (o0_b4)
             {
-                char c = information.ElementAt<char>(i);
-                int ic = Convert.ToInt16(c);
-                Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + ic);
+                o0_b4 = false;
+                Button_o0_b4.Background =  new SolidColorBrush( Colors.Gray );
             }
+            else
+            {
+                o0_b4 = true;
+                Button_o0_b4.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
         private async void Button_o0_b3_Click(object sender, RoutedEventArgs e)
         {
 
-            byte[] o = new byte[] { 0x0F, 0x0C, 0x13, 0x16, 0x0F };
-                        
-            GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicLedMatrix.WriteValueAsync(o.AsBuffer());
+            if (o0_b3)
+            {
+                o0_b4 = false;
+                Button_o0_b3.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o0_b3 = true;
+                Button_o0_b3.Background = new SolidColorBrush(Colors.Red);
+            }
 
-            Debug.WriteLine("Led Matrix : donnée écrites !!!");
-
-            int o1 = 0x0F;
-            int o2 = 0x0C;
-            int o3 = 0x13;
-            int o4 = 0x16;
-            int o5 = 0x0F;
-
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o1);
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o2);
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o3);
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o4);
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Information Led (valeur) : " + o5);
+            this.UpdateLedMatrix();
 
         }
 
         private async void Button_o0_b2_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o0_b2)
+            {
+                o0_b4 = false;
+                Button_o0_b2.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o0_b2 = true;
+                Button_o0_b2.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o0_b1_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o0_b1)
+            {
+                o0_b1 = false;
+                Button_o0_b1.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o0_b1 = true;
+                Button_o0_b1.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o0_b0_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o0_b0)
+            {
+                o0_b0 = false;
+                Button_o0_b0.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o0_b0 = true;
+                Button_o0_b0.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
@@ -320,25 +445,90 @@ namespace Monorail
         private async void Button_o1_b4_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o1_b4)
+            {
+                o1_b4 = false;
+                Button_o1_b4.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o1_b4 = true;
+                Button_o1_b4.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o1_b3_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o1_b3)
+            {
+                o1_b3 = false;
+                Button_o1_b3.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o1_b3 = true;
+                Button_o1_b3.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
         private async void Button_o1_b2_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o1_b2)
+            {
+                o1_b2 = false;
+                Button_o1_b2.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o1_b2 = true;
+                Button_o1_b2.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o1_b1_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o1_b1)
+            {
+                o1_b1 = false;
+                Button_o1_b1.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o1_b1 = true;
+                Button_o1_b1.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o1_b0_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o1_b0)
+            {
+                o1_b0 = false;
+                Button_o1_b0.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o1_b0 = true;
+                Button_o1_b0.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
@@ -346,25 +536,90 @@ namespace Monorail
         private async void Button_o2_b4_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o2_b4)
+            {
+                o2_b4 = false;
+                Button_o2_b4.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o2_b4 = true;
+                Button_o2_b4.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o2_b3_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o2_b3)
+            {
+                o2_b3 = false;
+                Button_o2_b3.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o2_b3 = true;
+                Button_o2_b3.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
         private async void Button_o2_b2_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o2_b2)
+            {
+                o2_b2 = false;
+                Button_o2_b2.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o2_b2 = true;
+                Button_o2_b2.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o2_b1_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o2_b1)
+            {
+                o2_b1 = false;
+                Button_o2_b1.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o2_b1 = true;
+                Button_o2_b1.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o2_b0_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o2_b0)
+            {
+                o2_b0 = false;
+                Button_o2_b0.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o2_b0 = true;
+                Button_o2_b0.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
@@ -372,25 +627,90 @@ namespace Monorail
         private async void Button_o3_b4_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o3_b4)
+            {
+                o3_b4 = false;
+                Button_o3_b4.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o3_b4 = true;
+                Button_o3_b4.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o3_b3_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o3_b3)
+            {
+                o3_b3 = false;
+                Button_o3_b3.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o3_b3 = true;
+                Button_o3_b3.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
         private async void Button_o3_b2_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o3_b2)
+            {
+                o3_b2 = false;
+                Button_o3_b2.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o3_b2 = true;
+                Button_o3_b2.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o3_b1_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o3_b1)
+            {
+                o3_b1 = false;
+                Button_o3_b1.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o3_b1 = true;
+                Button_o3_b1.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o3_b0_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o3_b0)
+            {
+                o3_b0 = false;
+                Button_o3_b0.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o3_b0 = true;
+                Button_o3_b0.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
@@ -398,29 +718,92 @@ namespace Monorail
         private async void Button_o4_b4_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o4_b4)
+            {
+                o4_b4 = false;
+                Button_o4_b4.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o4_b4 = true;
+                Button_o4_b4.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o4_b3_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o4_b3)
+            {
+                o4_b3 = false;
+                Button_o4_b3.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o4_b3 = true;
+                Button_o4_b3.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
         private async void Button_o4_b2_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o4_b2)
+            {
+                o4_b2 = false;
+                Button_o4_b2.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o4_b2 = true;
+                Button_o4_b2.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
 
         private async void Button_o4_b1_Click(object sender, RoutedEventArgs e)
         {
+
+            if (o4_b1)
+            {
+                o4_b1 = false;
+                Button_o4_b1.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o4_b1 = true;
+                Button_o4_b1.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
 
         }
 
         private async void Button_o4_b0_Click(object sender, RoutedEventArgs e)
         {
 
+            if (o4_b0)
+            {
+                o4_b0 = false;
+                Button_o4_b0.Background = new SolidColorBrush(Colors.Gray);
+            }
+            else
+            {
+                o4_b0 = true;
+                Button_o4_b0.Background = new SolidColorBrush(Colors.Red);
+            }
+
+            this.UpdateLedMatrix();
+
         }
-
-
 
 
         private async void ButtonLedText_Click(object sender, RoutedEventArgs e)
