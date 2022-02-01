@@ -425,88 +425,26 @@ namespace Monorail
 
 
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void ButtonLedText_Click(object sender, RoutedEventArgs e)
         {
 
-            string message = "Bonjour " + ComboBox.SelectedItem;
+            string LedText = "Bonjour " + ComboBoxLedText.SelectedItem;
 
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary( message, BinaryStringEncoding.Utf8);
+            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary(LedText, BinaryStringEncoding.Utf8);
 
             try
             {
 
                 // BT_Code: Writes the value from the buffer to the characteristic.
-                IAsyncOperation<GattCommunicationStatus> gattCommunicationStatus = selectedCharacteristicLedText.WriteValueAsync(buffer);
+                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicLedText.WriteValueAsync(buffer);
 
-                if (gattCommunicationStatus.Status.Equals(AsyncStatus.Started))
+                if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
                 {
-                    rootPage.NotifyUser("Successfully wrote message to device", NotifyType.StatusMessage);
+                    rootPage.NotifyUser("Successfully wrote Led Text to device", NotifyType.StatusMessage);
                 }
                 else
                 {
-                    rootPage.NotifyUser("Write message to device failed", NotifyType.ErrorMessage);
-                }
-
-            }
-            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception)
-            {
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-
-        }
-
-        private async void ButtonScrollingDelay_Click(object sender, RoutedEventArgs e)
-        {
-
-            try
-            {
-
-                // BT_Code: Writes the value from the buffer to the characteristic.
-                IAsyncOperation<GattReadResult> gattReadResult = selectedCharacteristicLedScrollingDelay.ReadValueAsync();
-
-                IBuffer buffer = gattReadResult.GetResults().Value;
-
-                Debug.WriteLine(buffer.Capacity);
-                Debug.WriteLine(buffer.Length);
-
-                for (int i = 0; i < buffer.Length; i++)
-                {
-
-                    Debug.WriteLine("" + i);
-
-                    byte b = buffer.ToArray()[i];
-
-                    Debug.WriteLine("" + b);
-
-                }
-
-                if (gattReadResult.Status.Equals(AsyncStatus.Completed))
-                {
-                    rootPage.NotifyUser("Successfully read message to device", NotifyType.StatusMessage);
-                }
-                else
-                {
-                    rootPage.NotifyUser("Write message to device failed", NotifyType.ErrorMessage);
+                    rootPage.NotifyUser("Write Led Text to device failed", NotifyType.ErrorMessage);
                 }
 
             }

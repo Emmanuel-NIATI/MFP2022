@@ -238,9 +238,7 @@ namespace Monorail
         private async void ButtonA_Click(object sender, RoutedEventArgs e)
         {
 
-            // S^key^A#
-
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("A#", BinaryStringEncoding.Utf8);
+            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("S^key^A#", BinaryStringEncoding.Utf8);
 
             try
             {
@@ -283,7 +281,7 @@ namespace Monorail
         private async void ButtonB_Click(object sender, RoutedEventArgs e)
         {
 
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("B#", BinaryStringEncoding.Utf8);
+            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("S^key^B#", BinaryStringEncoding.Utf8);
 
             try
             {
@@ -326,7 +324,7 @@ namespace Monorail
         private async void ButtonAB_Click(object sender, RoutedEventArgs e)
         {
 
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("AB#", BinaryStringEncoding.Utf8);
+            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("S^key^AB#", BinaryStringEncoding.Utf8);
 
             try
             {

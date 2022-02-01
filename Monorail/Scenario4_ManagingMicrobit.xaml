@@ -10,98 +10,126 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <StackPanel Orientation="Vertical" Padding="5,5,5,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led)</TextBlock>
+        <Grid x:Name="Microbit" Grid.Row="0">
 
-            <Image x:Name="ImageMicrobit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="148" Height="120" Source="Assets/microbit.png" Margin="0,0,0,5" />
+            <StackPanel Orientation="Vertical" Padding="5,5,5,5">
 
-            <ScrollViewer HorizontalAlignment="Left" VerticalAlignment="Top" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible" BorderBrush="White" BorderThickness="1" Height="60" Width="180" Margin="0,0,0,5">
-                <StackPanel Orientation="Vertical" Padding="5,5,5,5">
-                    <TextBlock FontStyle="Italic" FontSize="12">Name : <Run x:Name="localSettingName" Text="" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
-                    <TextBlock FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run x:Name="localSettingAddress" Text=""/></TextBlock>
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led)</TextBlock>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <Image x:Name="ImageMicrobit" Width="74" Height="60" Source="Assets/microbit.png" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,5,5" />
+
+                    <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible" BorderBrush="White" BorderThickness="1" Height="60" Width="175">
+                        <StackPanel Orientation="Vertical" Padding="5,5,5,5">
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="12">Name : <Run x:Name="localSettingName" Text="" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run x:Name="localSettingAddress" Text=""/></TextBlock>
+                        </StackPanel>
+                    </ScrollViewer>
+
                 </StackPanel>
-            </ScrollViewer>
 
-            <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Matrix)</TextBlock>
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Row="1">
 
             <StackPanel Orientation="Vertical">
 
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Matrix)</TextBlock>
+
                 <StackPanel Orientation="Horizontal">
 
-                    <Button x:Name="Button_o0_b4" Click="{x:Bind Button_o0_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o0_b3" Click="{x:Bind Button_o0_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o0_b2" Click="{x:Bind Button_o0_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o0_b1" Click="{x:Bind Button_o0_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o0_b0" Click="{x:Bind Button_o0_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o0_b4" Click="{x:Bind Button_o0_b4_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o0_b3" Click="{x:Bind Button_o0_b3_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o0_b2" Click="{x:Bind Button_o0_b2_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o0_b1" Click="{x:Bind Button_o0_b1_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o0_b0" Click="{x:Bind Button_o0_b0_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
 
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
 
-                    <Button x:Name="Button_o1_b4" Click="{x:Bind Button_o1_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o1_b3" Click="{x:Bind Button_o1_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o1_b2" Click="{x:Bind Button_o1_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o1_b1" Click="{x:Bind Button_o1_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o1_b0" Click="{x:Bind Button_o1_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o1_b4" Click="{x:Bind Button_o1_b4_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o1_b3" Click="{x:Bind Button_o1_b3_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o1_b2" Click="{x:Bind Button_o1_b2_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o1_b1" Click="{x:Bind Button_o1_b1_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o1_b0" Click="{x:Bind Button_o1_b0_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
 
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
 
-                    <Button x:Name="Button_o2_b4" Click="{x:Bind Button_o2_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o2_b3" Click="{x:Bind Button_o2_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o2_b2" Click="{x:Bind Button_o2_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o2_b1" Click="{x:Bind Button_o2_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o2_b0" Click="{x:Bind Button_o2_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o2_b4" Click="{x:Bind Button_o2_b4_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o2_b3" Click="{x:Bind Button_o2_b3_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o2_b2" Click="{x:Bind Button_o2_b2_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o2_b1" Click="{x:Bind Button_o2_b1_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o2_b0" Click="{x:Bind Button_o2_b0_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
 
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
 
-                    <Button x:Name="Button_o3_b4" Click="{x:Bind Button_o3_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o3_b3" Click="{x:Bind Button_o3_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o3_b2" Click="{x:Bind Button_o3_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o3_b1" Click="{x:Bind Button_o3_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o3_b0" Click="{x:Bind Button_o3_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o3_b4" Click="{x:Bind Button_o3_b4_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o3_b3" Click="{x:Bind Button_o3_b3_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o3_b2" Click="{x:Bind Button_o3_b2_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o3_b1" Click="{x:Bind Button_o3_b1_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o3_b0" Click="{x:Bind Button_o3_b0_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
 
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
 
-                    <Button x:Name="Button_o4_b4" Click="{x:Bind Button_o4_b4_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o4_b3" Click="{x:Bind Button_o4_b3_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o4_b2" Click="{x:Bind Button_o4_b2_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o4_b1" Click="{x:Bind Button_o4_b1_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
-                    <Button x:Name="Button_o4_b0" Click="{x:Bind Button_o4_b0_Click}" Background="Gray" Width="20" Height="20" Margin="0,0,10,10" />
+                    <Button x:Name="Button_o4_b4" Click="{x:Bind Button_o4_b4_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o4_b3" Click="{x:Bind Button_o4_b3_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o4_b2" Click="{x:Bind Button_o4_b2_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o4_b1" Click="{x:Bind Button_o4_b1_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
+                    <Button x:Name="Button_o4_b0" Click="{x:Bind Button_o4_b0_Click}" Background="Gray" Width="20" Height="20" Margin="10,0,10,10" />
 
                 </StackPanel>
 
             </StackPanel>
-            
-            <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Text)</TextBlock>
-            
-            <StackPanel Orientation="Horizontal">
 
-                <ComboBox Grid.Row="0" Grid.Column="1" x:Name="ComboBox" Width="100" Margin="0,0,5,0">
-                    <x:String>Justine</x:String>
-                    <x:String>Pauline</x:String>
-                </ComboBox>
+        </Grid>
 
-                <Button x:Name="Button" Style="{StaticResource ButtonStyle}" Content="Message" Click="{x:Bind Button_Click}" Width="80" Height="30" Margin="0,0,0,0" />
-                
+        <Grid Grid.Row="2">
+
+            <StackPanel Orientation="Vertical">
+
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Text)</TextBlock>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,5,10">
+                    
+                    <ComboBox Grid.Row="0" Grid.Column="1" x:Name="ComboBoxLedText" Width="100" Margin="0,0,5,0">
+                        <x:String>Justine</x:String>
+                        <x:String>Pauline</x:String>
+                    </ComboBox>
+
+                    <Button x:Name="ButtonLedText" Style="{StaticResource ButtonStyle}" Content="Led Text" Click="{x:Bind ButtonLedText_Click}" Width="80" Height="30" Margin="0,0,0,0" />
+
+                </StackPanel>
+
             </StackPanel>
 
-            <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Scrolling Delay)</TextBlock>
+        </Grid>
 
-            
-            
-            
-            
-            
-            <Button x:Name="ButtonScrollingDelay" Style="{StaticResource ButtonStyle}" Content="Lire" Click="{x:Bind ButtonScrollingDelay_Click}" Width="80" Height="30" Margin="0,0,0,0" />
+        <Grid Grid.Row="3">
 
-        </StackPanel>
+            <StackPanel Orientation="Vertical">
+
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Scrolling Delay)</TextBlock>
+
+            </StackPanel>
+
+        </Grid>
 
     </Grid>
 
