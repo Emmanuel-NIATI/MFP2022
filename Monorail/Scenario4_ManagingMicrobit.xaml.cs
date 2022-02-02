@@ -295,17 +295,52 @@ namespace Monorail
 
         }
 
+        // Conversion bool[] to int
+        private int ConvertBoolTabToInt(bool[] boolTab)
+        {
+            int resultat = 0;
+
+            for(int i=0; i < boolTab.Length; i++)
+            {
+
+                if( boolTab[i] )
+                {
+
+                    if (i == 0) { resultat = resultat + 1; }
+                    if (i == 1) { resultat = resultat + 2; }
+                    if (i == 2) { resultat = resultat + 4; }
+                    if (i == 3) { resultat = resultat + 8; }
+                    if (i == 4) { resultat = resultat + 16; }
+                }
+
+            }
+
+            return resultat;
+        }
+
         // Mise à jour de la matrice de Led
         private async void UpdateLedMatrix()
         {
 
-            byte[] o = new byte[] { 0x1f, 0x00, 0x00, 0x00, 0x00 };
+            byte[] o = new byte[5];
 
-            bool[] o0Tab = new bool[] { false, false, false, o0_b4, o0_b3, o0_b2, o0_b1, o0_b0 };
-            bool[] o1Tab = new bool[] { false, false, false, o1_b4, o1_b3, o1_b2, o1_b1, o1_b0 };
-            bool[] o2Tab = new bool[] { false, false, false, o2_b4, o2_b3, o2_b2, o2_b1, o2_b0 };
-            bool[] o3Tab = new bool[] { false, false, false, o3_b4, o3_b3, o3_b2, o3_b1, o3_b0 };
-            bool[] o4Tab = new bool[] { false, false, false, o4_b4, o4_b3, o4_b2, o4_b1, o4_b0 };
+            bool[] o0Tab = new bool[] { o0_b0, o0_b1, o0_b2, o0_b3, o0_b4, false, false, false };
+            bool[] o1Tab = new bool[] { o1_b0, o1_b1, o1_b2, o1_b3, o1_b4, false, false, false };
+            bool[] o2Tab = new bool[] { o2_b0, o2_b1, o2_b2, o2_b3, o2_b4, false, false, false };
+            bool[] o3Tab = new bool[] { o3_b0, o3_b1, o3_b2, o3_b3, o3_b4, false, false, false };
+            bool[] o4Tab = new bool[] { o4_b0, o4_b1, o4_b2, o4_b3, o4_b4, false, false, false };
+
+            int i0 = ConvertBoolTabToInt(o0Tab);
+            int i1 = ConvertBoolTabToInt(o1Tab);
+            int i2 = ConvertBoolTabToInt(o2Tab);
+            int i3 = ConvertBoolTabToInt(o3Tab);
+            int i4 = ConvertBoolTabToInt(o4Tab);
+
+            o[0] = (byte) i0;
+            o[1] = (byte) i1;
+            o[2] = (byte) i2;
+            o[3] = (byte) i3;
+            o[4] = (byte) i4;
 
             try
             {
@@ -374,7 +409,7 @@ namespace Monorail
 
             if (o0_b3)
             {
-                o0_b4 = false;
+                o0_b3 = false;
                 Button_o0_b3.Background = new SolidColorBrush(Colors.Gray);
             }
             else
@@ -392,7 +427,7 @@ namespace Monorail
 
             if (o0_b2)
             {
-                o0_b4 = false;
+                o0_b2 = false;
                 Button_o0_b2.Background = new SolidColorBrush(Colors.Gray);
             }
             else
