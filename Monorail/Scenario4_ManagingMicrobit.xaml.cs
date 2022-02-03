@@ -840,57 +840,6 @@ namespace Monorail
 
         }
 
-
-        private async void ButtonLedText_Click(object sender, RoutedEventArgs e)
-        {
-
-            string LedText = "Bonjour " + ComboBoxLedText.SelectedItem;
-
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary(LedText, BinaryStringEncoding.Utf8);
-
-            try
-            {
-
-                // BT_Code: Writes the value from the buffer to the characteristic.
-                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicLedText.WriteValueAsync(buffer);
-
-                if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
-                {
-                    rootPage.NotifyUser("Successfully wrote Led Text to device", NotifyType.StatusMessage);
-                }
-                else
-                {
-                    rootPage.NotifyUser("Write Led Text to device failed", NotifyType.ErrorMessage);
-                }
-
-            }
-            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
-            {
-
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception)
-            {
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-
-        }
-
     }
 
 }

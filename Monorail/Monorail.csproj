@@ -143,6 +143,9 @@
     <Compile Include="Scenario4_ManagingMicrobit.xaml.cs">
       <DependentUpon>Scenario4_ManagingMicrobit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Scenario5_ManagingMicrobit.xaml.cs">
+      <DependentUpon>Scenario5_ManagingMicrobit.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -235,6 +238,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Scenario4_ManagingMicrobit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Scenario5_ManagingMicrobit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

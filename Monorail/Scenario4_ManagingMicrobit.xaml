@@ -14,7 +14,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid x:Name="Microbit" Grid.Row="0">
@@ -104,33 +103,11 @@
 
             <StackPanel Orientation="Vertical">
 
-                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Text)</TextBlock>
-
-                <StackPanel Orientation="Horizontal" Margin="0,0,5,10">
-                    
-                    <ComboBox Grid.Row="0" Grid.Column="1" x:Name="ComboBoxLedText" Width="100" Margin="0,0,5,0">
-                        <x:String>Justine</x:String>
-                        <x:String>Pauline</x:String>
-                    </ComboBox>
-
-                    <Button x:Name="ButtonLedText" Style="{StaticResource ButtonStyle}" Content="Led Text" Click="{x:Bind ButtonLedText_Click}" Width="80" Height="30" Margin="0,0,0,0" />
-
-                </StackPanel>
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Matrix)</TextBlock>
 
             </StackPanel>
 
         </Grid>
-
-        <Grid Grid.Row="3">
-
-            <StackPanel Orientation="Vertical">
-
-                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Scrolling Delay)</TextBlock>
-
-            </StackPanel>
-
-        </Grid>
-
 
     </Grid>
 
