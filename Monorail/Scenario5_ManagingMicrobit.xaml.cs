@@ -261,6 +261,51 @@ namespace Monorail
         }
 
 
+        private void ReplaceTextAccent(string text)
+        {
+
+            /*
+           ç
+           Ç
+
+            Œ
+            œ
+
+            Æ
+            æ
+            
+           é
+           É
+
+           à
+           è
+           ù
+
+           â
+           ê
+           î
+           ô
+           û
+
+           ä
+           ë
+           ï
+           ü
+           ÿ
+
+                                  À	Â			È		Ê
+            Ë	Ï	Î	Ô		Ù	Ÿ
+
+
+
+
+           */
+
+
+            //text.Replace();
+        }
+
+
         private async void ButtonLedText_Click(object sender, RoutedEventArgs e)
         {
 

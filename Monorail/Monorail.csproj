@@ -152,8 +152,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="microbit\0249_microbit_firmware.hex" />
-    <None Include="microbit\microbit-BT.hex" />
-    <None Include="microbit\microbit-BTBLE.hex" />
     <None Include="microbit\microbit-LED.hex" />
     <None Include="microbit\microbit-Monorail.hex" />
     <None Include="microbit\microbit-UART.hex" />
