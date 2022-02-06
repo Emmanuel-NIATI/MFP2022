@@ -84,7 +84,7 @@ namespace Manege
 
             Current = this;
 
-            App_Title.Text = FEATURE_NAME;
+            ApplicationTitle.Text = APPLICATION_TITLE;
 
             // Zone Microbit
             this.ManageMicrobit();
@@ -244,37 +244,30 @@ namespace Manege
                             if (this.BluetoothLEDevice != null)
                             {
 
-                                if (this.BluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
+                                Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice not null");
+
+                                IReadOnlyList<GattDeviceService> ListGattDeviceService = this.BluetoothLEDevice.GattServices;
+
+                                Debug.WriteLine(">>>>>>>>>> ListGattDeviceService : " + ListGattDeviceService.Count);
+
+                                BluetoothConnectionStatus bluetoothConnectionStatus = this.BluetoothLEDevice.ConnectionStatus;
+
+                                if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
                                 {
 
-                                    Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Paired");
-
+                                    NotifyUser("BluetoothLEDevice connected.", NotifyType.ErrorMessage);
                                 }
-                                else
+                                else if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
                                 {
 
-                                    Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : No paired");
-
-                                    DevicePairingResult devicePairingResult = await this.BluetoothLEDevice.DeviceInformation.Pairing.PairAsync();
-
-                                    if (devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired))
-                                    {
-
-                                        Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Paired");
-
-                                    }
-                                    else
-                                    {
-
-                                        Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Impossible to pair");
-
-                                    }
-
+                                    NotifyUser("BluetoothLEDevice paired but disconnected.", NotifyType.ErrorMessage);
                                 }
 
-                                this.ListGattDeviceService = this.BluetoothLEDevice.GattServices;
+                            }
+                            else
+                            {
 
-                                Debug.WriteLine(">>>>>>>>>> ListGattDeviceService : " + this.ListGattDeviceService.Count);
+                                NotifyUser("Impossible to find the bluetooth device from the micro:bit board known.", NotifyType.ErrorMessage);
 
                             }
 
@@ -307,35 +300,41 @@ namespace Manege
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+
             Scenario s = value as Scenario;
 
             return s.Logo;
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
+
             return true;
+
         }
 
     }
 
-    public class ScenarioBindingConverter : IValueConverter
+    public class ScenarioTitleBindingConverter : IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+
             Scenario s = value as Scenario;
+
             return (MainPage.Current.Scenarios.IndexOf(s) + 1) + ") " + s.Title;
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
+
             return true;
+
         }
 
     }
-
-
-
 
 }

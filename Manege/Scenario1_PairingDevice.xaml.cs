@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
+using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -207,12 +208,12 @@ namespace Manege
 
             if (LocalSettingName == null)
             {
-                localSettingName.Text = "";
+                MicrobitName.Text = "";
             }
 
             if (LocalSettingAddress == null)
             {
-                localSettingAddress.Text = "";
+                MicrobitAddress.Text = "";
             }
 
             if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
@@ -221,14 +222,33 @@ namespace Manege
                 if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
                 {
 
-                    localSettingName.Text = LocalSettingName;
+                    MicrobitName.Text = LocalSettingName;
 
-                    localSettingAddress.Text = LocalSettingAddress;
+                    MicrobitAddress.Text = LocalSettingAddress;
 
                     if (LocalSettingColor.Equals("bleu")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png")); }
                     if (LocalSettingColor.Equals("jaune")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png")); }
                     if (LocalSettingColor.Equals("rouge")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png")); }
                     if (LocalSettingColor.Equals("vert")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png")); }
+
+                    if (this.rootPage.BluetoothLEDevice != null)
+                    {
+
+                        BluetoothConnectionStatus bluetoothConnectionStatus = this.rootPage.BluetoothLEDevice.ConnectionStatus;
+
+                        if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
+                        {
+
+                            MicrobitDeviceConnected.Text = "Connected";
+
+                        }
+                        else if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
+                        {
+
+                            MicrobitDeviceConnected.Text = "Disconnected";
+                        }
+
+                    }
 
                 }
 

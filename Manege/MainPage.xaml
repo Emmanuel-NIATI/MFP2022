@@ -12,13 +12,13 @@
 
         <local:ScenarioLogoBindingConverter x:Key="ScenarioLogoConverter"></local:ScenarioLogoBindingConverter>
 
-        <local:ScenarioBindingConverter x:Key="ScenarioConverter"></local:ScenarioBindingConverter>
+        <local:ScenarioTitleBindingConverter x:Key="ScenarioTitleConverter"></local:ScenarioTitleBindingConverter>
 
         <DataTemplate x:Key="ScenarioControlTemplate">
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="30" Text="{Binding Converter={StaticResource ScenarioLogoConverter}}" Width="50" />
-                <TextBlock FontFamily="Segoe UI" FontSize="12" Text="{Binding Converter={StaticResource ScenarioConverter}}" VerticalAlignment="Center" />
+                <TextBlock Style="{StaticResource ScenarioLogoStyle}" Text="{Binding Converter={StaticResource ScenarioLogoConverter}}" Width="50" />
+                <TextBlock Style="{StaticResource ScenarioTitleStyle}" Text="{Binding Converter={StaticResource ScenarioTitleConverter}}" VerticalAlignment="Center" />
             </StackPanel>
 
         </DataTemplate>
@@ -42,7 +42,7 @@
                 </ToggleButton>
             </Border>
 
-            <TextBlock x:Name="App_Title" FontFamily="Segoe UI" FontSize="12" Text="Application title" Style="{StaticResource PageHeaderTextStyle}" TextWrapping="Wrap" Margin="0,10,0,0" />
+            <TextBlock x:Name="ApplicationTitle" Text="Application title" Style="{StaticResource ApplicationHeaderTextStyle}" TextWrapping="Wrap" Margin="0,10,0,0" />
 
         </StackPanel>
 
@@ -54,21 +54,11 @@
 
                     <ListBox x:Name="ScenarioControl" SelectionChanged="ScenarioControl_SelectionChanged" AutomationProperties.Name="Scenarios" SelectionMode="Single" ItemTemplate="{StaticResource ScenarioControlTemplate}" Background="Transparent" BorderThickness="0" VerticalAlignment="Top" RelativePanel.AlignTopWithPanel="True"/>
 
-                    <StackPanel x:Name="FooterPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True">
+                    <StackPanel x:Name="FooterPanel" Orientation="Horizontal" RelativePanel.AlignBottomWithPanel="True">
+                        
+                        <Image Source="Assets/advitam.png" AutomationProperties.Name="Ad vitam Logo" Stretch="None" HorizontalAlignment="Left" />
 
-                        <Image Source="Assets/windows.png" AutomationProperties.Name="Microsoft Logo" Stretch="None" HorizontalAlignment="Left" Margin="10,0,0,0"/>
-
-                        <TextBlock x:Name="Copyright" Text="&#xA9; Microsoft Corporation. All rights reserved." Style="{StaticResource CopyrightTextStyle}" RelativePanel.Above="LinksPanel" Margin="10,10,0,0" TextWrapping="Wrap"/>
-
-                        <StackPanel x:Name="LinksPanel" Orientation="Horizontal" Margin="10,10,0,10">
-
-                            <HyperlinkButton Content="Trademarks" Tag="http://go.microsoft.com/fwlink/?LinkID=623755" Click="Footer_Click" FontSize="12" Style="{StaticResource HyperlinkStyle}" />
-
-                            <TextBlock Text="|" Style="{StaticResource SeparatorStyle}" VerticalAlignment="Center" />
-
-                            <HyperlinkButton x:Name="PrivacyLink" Content="Privacy" Tag="http://privacy.microsoft.com" Click="Footer_Click" FontSize="12" Style="{StaticResource HyperlinkStyle}"/>
-
-                        </StackPanel>
+                        <HyperlinkButton Content="https://github.com/" Tag="https://github.com/Emmanuel-NIATI/MFP2022" Click="Footer_Click" Style="{StaticResource HyperlinkStyle}" Margin="10,0,0,0" />
 
                     </StackPanel>
 

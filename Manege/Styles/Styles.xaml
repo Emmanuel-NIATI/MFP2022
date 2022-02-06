@@ -109,9 +109,16 @@
         </Setter>
     </Style>
 
-    <Style x:Key="BasicTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+    <Style x:Key="ApplicationHeaderTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="BasicTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontWeight" Value="Normal"/>
-        <Setter Property="Margin" Value="0,0,0,10"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
 
     <Style x:Key="TagLineTextStyle" TargetType="TextBlock">
@@ -135,8 +142,10 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
-    <Style x:Key="CopyrightTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+    <Style x:Key="CopyrightTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
 
     <Style x:Key="PageHeaderTextStyle" TargetType="TextBlock">
@@ -163,6 +172,17 @@
         <Setter Property="FontSize" Value="16"/>
     </Style>
 
+    <Style x:Key="ScenarioLogoStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+        <Setter Property="FontSize" Value="30"/>
+    </Style>
+
+    <Style x:Key="ScenarioTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
     <Style x:Key="StatusTextStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Segoe UI"/>
         <Setter Property="FontWeight" Value="Light"/>
@@ -183,7 +203,8 @@
     </Style>
 
     <Style x:Key="HyperlinkStyle" TargetType="HyperlinkButton">
-        <Setter Property="Padding" Value="1"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="12"/>
         <Setter Property="Foreground" Value="Gray"/>
     </Style>
 

@@ -11,7 +11,7 @@ namespace Manege
     public sealed partial class MainPage : Page
     {
 
-        public const string FEATURE_NAME = "Le manège de la fête foraine avec micro:bit";
+        public const string APPLICATION_TITLE = "Le manège de la fête foraine (micro:bit)";
 
         public List<Scenario> Scenarios
         {
