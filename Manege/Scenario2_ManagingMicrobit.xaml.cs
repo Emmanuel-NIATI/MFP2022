@@ -169,6 +169,8 @@ namespace Manege
             if (this.rootPage.BluetoothLEDevice != null)
             {
 
+                Debug.WriteLine(">>>>>>>>>> Scenario2_ManagingMicrobit : BluetoothLEDevice not null");
+
                 BluetoothConnectionStatus bluetoothConnectionStatus = this.rootPage.BluetoothLEDevice.ConnectionStatus;
 
                 if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
@@ -214,7 +216,33 @@ namespace Manege
 
                                 selectedCharacteristicTx = listGattCharacteristicTx[0];
 
-                                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicTx.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
+                                if (selectedCharacteristicTx != null)
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>> selectedCharacteristicTx : non Null...");
+
+                                }
+
+
+                                GattCharacteristicProperties gattCharacteristicProperties = selectedCharacteristicTx.CharacteristicProperties;
+
+                                GattCommunicationStatus gattCommunicationStatus;
+
+                                if (gattCharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify  )  )
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>> GattCharacteristicPropertie : Notify");
+
+                                    gattCommunicationStatus = await selectedCharacteristicTx.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
+                                }
+
+                                if (gattCharacteristicProperties.HasFlag(GattCharacteristicProperties.Indicate))
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>> GattCharacteristicPropertie : Indicate");
+
+                                    gattCommunicationStatus = await selectedCharacteristicTx.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Indicate);
+                                }
 
                                 selectedCharacteristicTx.ValueChanged += SelectedTxCharacteristic_ValueChanged;
 
@@ -226,6 +254,13 @@ namespace Manege
                                 IReadOnlyList<GattCharacteristic> listGattCharacteristicRx = selectedServiceBT.GetCharacteristics(gattCharacteristic.Uuid);
 
                                 selectedCharacteristicRx = listGattCharacteristicRx[0];
+
+                                if (selectedCharacteristicRx != null)
+                                {
+
+                                    Debug.WriteLine(">>>>>>>>>> selectedCharacteristicRx : non Null...");
+
+                                }
 
                             }
 
@@ -242,19 +277,56 @@ namespace Manege
         private void SelectedTxCharacteristic_ValueChanged(GattCharacteristic characteristic, GattValueChangedEventArgs e)
         {
 
-            Debug.WriteLine(">>>>>>>>>> Blocky Talky : donnée reçue !!!");
-
+            Debug.WriteLine(">>>>>>>>>> Blocky Talky : état reçu !!!");
+            Debug.WriteLine("");
+            
             var dataReader = DataReader.FromBuffer(e.CharacteristicValue);
-            String information = dataReader.ReadString(e.CharacteristicValue.Length);
+            byte[] input = new byte[dataReader.UnconsumedBufferLength];
 
-            Debug.WriteLine(">>>>>>>>>> Blocky Talky : information : " + information);
+            Debug.WriteLine(">>>>>>>>>> Blocky Talky : longueur : " + input.Length);
+            Debug.WriteLine("");
+
+            dataReader.ReadBytes(input);
+
+            for (int i = 0; i < input.Length; i++)
+            {
+
+                Debug.WriteLine(">>>>>>>>>> Blocky Talky : byte No " + i + input[i]);
+
+            }
 
         }
 
         private async void ButtonA_Click(object sender, RoutedEventArgs e)
         {
 
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("S^ordre^marche#", BinaryStringEncoding.Utf8);
+            byte[] output = new byte[20];
+
+            output[0] = 111;
+            output[1] = 114;
+            output[2] = 100;
+            output[3] = 114;
+            output[4] = 101;
+            output[5] = 0;
+            output[6] = 0;
+            output[7] = 3;
+            output[8] = 109;
+            output[9] = 97;
+            output[10] = 114;
+            output[11] = 99;
+            output[12] = 104;
+            output[13] = 101;
+            output[14] = 0;
+            output[15] = 0;
+            output[16] = 0;
+            output[17] = 0;
+            output[18] = 0;
+            output[19] = 0;
+
+            var dataWriter = new DataWriter();
+            dataWriter.WriteBytes(output);
+
+            IBuffer buffer = dataWriter.DetachBuffer();
 
             try
             {
@@ -263,11 +335,11 @@ namespace Manege
 
                 if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
                 {
-                    rootPage.NotifyUser("Successfully wrote value A to device", NotifyType.StatusMessage);
+                    rootPage.NotifyUser("Successfully wrote key=ordre and value=marche to device", NotifyType.StatusMessage);
                 }
                 else
                 {
-                    rootPage.NotifyUser("Write value A to device failed", NotifyType.ErrorMessage);
+                    rootPage.NotifyUser("Write key=ordre and value=marche to device failed", NotifyType.ErrorMessage);
                 }
 
             }
@@ -297,7 +369,33 @@ namespace Manege
         private async void ButtonB_Click(object sender, RoutedEventArgs e)
         {
 
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("S^ordre^arret#", BinaryStringEncoding.Utf8);
+            byte[] output = new byte[20];
+
+            output[0] = 111;
+            output[1] = 114;
+            output[2] = 100;
+            output[3] = 114;
+            output[4] = 101;
+            output[5] = 0;
+            output[6] = 0;
+            output[7] = 3;
+            output[8] = 97;
+            output[9] = 114;
+            output[10] = 114;
+            output[11] = 101;
+            output[12] = 116;
+            output[13] = 0;
+            output[14] = 0;
+            output[15] = 0;
+            output[16] = 0;
+            output[17] = 0;
+            output[18] = 0;
+            output[19] = 0;
+
+            var dataWriter = new DataWriter();
+            dataWriter.WriteBytes(output);
+
+            IBuffer buffer = dataWriter.DetachBuffer();
 
             try
             {
@@ -306,54 +404,11 @@ namespace Manege
 
                 if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
                 {
-                    rootPage.NotifyUser("Successfully wrote value A to device", NotifyType.StatusMessage);
+                    rootPage.NotifyUser("Successfully wrote key=ordre and value=arret to device", NotifyType.StatusMessage);
                 }
                 else
                 {
-                    rootPage.NotifyUser("Write value A to device failed", NotifyType.ErrorMessage);
-                }
-
-            }
-            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED)
-            {
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_BLUETOOTH_ATT_INVALID_PDU)
-            {
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_ACCESSDENIED)
-            {
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception) when (exception.HResult == E_DEVICE_NOT_AVAILABLE)
-            {
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-            catch (Exception exception)
-            {
-                rootPage.NotifyUser(exception.Message, NotifyType.ErrorMessage);
-            }
-
-        }
-
-        private async void ButtonAB_Click(object sender, RoutedEventArgs e)
-        {
-
-            IBuffer buffer = CryptographicBuffer.ConvertStringToBinary("S^message^AB#", BinaryStringEncoding.Utf8);
-
-            try
-            {
-
-                GattCommunicationStatus gattCommunicationStatus = await selectedCharacteristicRx.WriteValueAsync(buffer);
-
-                if (gattCommunicationStatus.Equals(GattCommunicationStatus.Success))
-                {
-                    rootPage.NotifyUser("Successfully wrote value A to device", NotifyType.StatusMessage);
-                }
-                else
-                {
-                    rootPage.NotifyUser("Write value A to device failed", NotifyType.ErrorMessage);
+                    rootPage.NotifyUser("Write key=ordre and value=arret to device failed", NotifyType.ErrorMessage);
                 }
 
             }

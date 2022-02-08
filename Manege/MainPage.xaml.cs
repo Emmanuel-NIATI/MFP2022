@@ -39,19 +39,6 @@ namespace Manege
 
         }
 
-        public IReadOnlyList<GattDeviceService> _ListGattDeviceService { get; set; }
-        public IReadOnlyList<GattDeviceService> ListGattDeviceService
-        {
-
-            get { return _ListGattDeviceService; }
-            set
-            {
-
-                _ListGattDeviceService = value;
-            }
-
-        }
-
         String LocalSettingName;
         String LocalSettingAddress;
         String LocalSettingColor;
@@ -244,24 +231,11 @@ namespace Manege
                             if (this.BluetoothLEDevice != null)
                             {
 
-                                Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice not null");
+                                Debug.WriteLine(">>>>>>>>>> MainPage : BluetoothLEDevice not null");
 
                                 IReadOnlyList<GattDeviceService> ListGattDeviceService = this.BluetoothLEDevice.GattServices;
 
                                 Debug.WriteLine(">>>>>>>>>> ListGattDeviceService : " + ListGattDeviceService.Count);
-
-                                BluetoothConnectionStatus bluetoothConnectionStatus = this.BluetoothLEDevice.ConnectionStatus;
-
-                                if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
-                                {
-
-                                    NotifyUser("BluetoothLEDevice connected.", NotifyType.ErrorMessage);
-                                }
-                                else if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
-                                {
-
-                                    NotifyUser("BluetoothLEDevice paired but disconnected.", NotifyType.ErrorMessage);
-                                }
 
                             }
                             else

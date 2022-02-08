@@ -50,7 +50,7 @@ namespace Manege
             this.rootPage = MainPage.Current;
 
             // Zone Microbit
-            this.MicrobitTimer();
+            this.ManageMicrobit();
 
             // Zone Advertisement
             bluetoothLEAdvertisementWatcher = new BluetoothLEAdvertisementWatcher();
@@ -186,18 +186,7 @@ namespace Manege
 
         // Zone Microbit
 
-        private void MicrobitTimer()
-        {
-
-            // Configuration du Timer
-            DispatcherTimer dispatcherMicrobitTimer = new DispatcherTimer();
-            dispatcherMicrobitTimer.Tick += DispatcherMicrobitTimer_Tick;
-            dispatcherMicrobitTimer.Interval = new TimeSpan(0, 0, 0, 0, 200);
-            dispatcherMicrobitTimer.Start();
-
-        }
-
-        private void DispatcherMicrobitTimer_Tick(object sender, object e)
+        private async void ManageMicrobit()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -498,8 +487,7 @@ namespace Manege
 
                             // Zone commune
                             this.rootPage.BluetoothLEDevice = bluetoothLEDevice;
-                            this.rootPage.ListGattDeviceService = bluetoothLEDevice.GattServices;
-
+                            
                             // Zone Microbit
 
                             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -507,6 +495,8 @@ namespace Manege
                             localSettings.Values["Name"] = bluetoothLEDevice.Name;
                             localSettings.Values["Address"] = bluetoothLEDeviceDisplay.Address;
                             localSettings.Values["Color"] = "rouge";
+
+                            this.ManageMicrobit();
 
                             // Zone Advertisement
                             if (isBluetoothLEAdvertisementWatcherStarted)
@@ -600,12 +590,17 @@ namespace Manege
                             if (deviceInformation.Name != string.Empty)
                             {
 
-                                if (deviceInformation.Pairing.IsPaired)
+                                if(deviceInformation.Name.Contains("micro:bit"))
                                 {
 
-                                    listDeviceInformationDisplay.Add(new DeviceInformationDisplay(deviceInformation));
+                                    if (deviceInformation.Pairing.IsPaired)
+                                    {
 
-                                    rootPage.NotifyUser("Device Watcher added.", NotifyType.StatusMessage);
+                                        listDeviceInformationDisplay.Add(new DeviceInformationDisplay(deviceInformation));
+
+                                        rootPage.NotifyUser("Device Watcher added.", NotifyType.StatusMessage);
+
+                                    }
 
                                 }
 
@@ -729,7 +724,6 @@ namespace Manege
 
                         // Zone commune
                         this.rootPage.BluetoothLEDevice = null;
-                        this.rootPage.ListGattDeviceService = null;
 
                         // Zone Microbit
 
@@ -738,6 +732,8 @@ namespace Manege
                         localSettings.Values["Name"] = null;
                         localSettings.Values["Address"] = null;
                         localSettings.Values["Color"] = null;
+
+                        this.ManageMicrobit();
 
                         // Zone Advertisement
                         if (isBluetoothLEAdvertisementWatcherStarted)
