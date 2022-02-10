@@ -8,7 +8,92 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Page.Resources>
+
+        <local:ScenarioLogoBindingConverter x:Key="ScenarioLogoConverter"></local:ScenarioLogoBindingConverter>
+
+        <local:ScenarioTitleBindingConverter x:Key="ScenarioTitleConverter"></local:ScenarioTitleBindingConverter>
+
+        <DataTemplate x:Key="ScenarioControlTemplate">
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <TextBlock Style="{StaticResource ScenarioLogoStyle}" Text="{Binding Converter={StaticResource ScenarioLogoConverter}}" Width="50" />
+                <TextBlock Style="{StaticResource ScenarioTitleStyle}" Text="{Binding Converter={StaticResource ScenarioTitleConverter}}" VerticalAlignment="Center" />
+            </StackPanel>
+
+        </DataTemplate>
+
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="HeaderPanel" Orientation="Horizontal" Grid.Row="0">
+
+            <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
+                <ToggleButton Style="{StaticResource SymbolButtonStyle}" Click="Button_Click" VerticalAlignment="Top" Width="50" Foreground="{ThemeResource ApplicationForegroundThemeBrush}">
+                    <ToggleButton.Content>
+                        <FontIcon x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" FontSize="30" Glyph="&#xE700;" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+            </Border>
+
+            <TextBlock x:Name="ApplicationTitle" Text="Application title" Style="{StaticResource ApplicationHeaderTextStyle}" TextWrapping="Wrap" Margin="10,10,0,0" />
+
+        </StackPanel>
+
+        <SplitView x:Name="Splitter" Grid.Row="1" IsPaneOpen="False" DisplayMode="CompactOverlay" CompactPaneLength="50">
+
+            <SplitView.Pane>
+
+                <RelativePanel HorizontalAlignment="Left">
+
+                    <ListBox x:Name="ScenarioControl" SelectionChanged="ScenarioControl_SelectionChanged" AutomationProperties.Name="Scenarios" SelectionMode="Single" ItemTemplate="{StaticResource ScenarioControlTemplate}" Background="Transparent" BorderThickness="0" VerticalAlignment="Top" RelativePanel.AlignTopWithPanel="True"/>
+
+                    <StackPanel x:Name="FooterPanel" Orientation="Horizontal" RelativePanel.AlignBottomWithPanel="True">
+
+                        <Image Source="Assets/advitam.png" AutomationProperties.Name="Ad vitam Logo" Stretch="None" HorizontalAlignment="Left" />
+
+                        <HyperlinkButton Content="https://github.com/" Tag="https://github.com/Emmanuel-NIATI/MFP2022" Click="Footer_Click" Style="{StaticResource HyperlinkStyle}" Margin="10,0,0,0" />
+
+                    </StackPanel>
+
+                </RelativePanel>
+
+            </SplitView.Pane>
+
+            <SplitView.Content>
+
+                <RelativePanel>
+
+                    <Frame x:Name="ScenarioFrame" RelativePanel.AlignTopWithPanel="True" RelativePanel.Above="StatusPanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
+
+                    <StackPanel x:Name="StatusPanel" Orientation="Vertical" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
+
+                        <TextBlock x:Name="StatusLabel" Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap" Text="Status :" />
+
+                        <Border x:Name="StatusBorder" Margin="0,0,0,0" BorderBrush="White" BorderThickness="2">
+
+                            <ScrollViewer VerticalScrollMode="Auto"  VerticalScrollBarVisibility="Auto" Height="50">
+
+                                <TextBlock x:Name="StatusBlock" FontFamily="Segoe UI" FontWeight="Bold" FontSize="10" AutomationProperties.LiveSetting="Assertive" MaxWidth="{Binding ElementName=Splitter, Path=ActualWidth}" Margin="10,10,10,10" TextWrapping="Wrap" />
+
+                            </ScrollViewer>
+
+                        </Border>
+
+                    </StackPanel>
+
+                </RelativePanel>
+
+            </SplitView.Content>
+
+        </SplitView>
 
     </Grid>
+
 </Page>

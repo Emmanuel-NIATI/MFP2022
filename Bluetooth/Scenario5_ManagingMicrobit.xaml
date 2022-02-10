@@ -1,0 +1,78 @@
+﻿<Page
+    x:Class="Bluetooth.Scenario5_ManagingMicrobit"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Bluetooth"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="Microbit" Grid.Row="0">
+
+            <StackPanel Orientation="Vertical" Padding="5,5,5,5">
+
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led)</TextBlock>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <Image x:Name="ImageMicrobit" Width="74" Height="60" Source="Assets/microbit.png" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,5,5" />
+
+                    <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible" BorderBrush="White" BorderThickness="1" Height="60" Width="175">
+                        <StackPanel Orientation="Vertical" Padding="5,5,5,5">
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="12">Name : <Run x:Name="localSettingName" Text="" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run x:Name="localSettingAddress" Text=""/></TextBlock>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                </StackPanel>
+
+            </StackPanel>
+
+        </Grid>
+
+
+        <Grid Grid.Row="1">
+
+            <StackPanel Orientation="Vertical">
+
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Text)</TextBlock>
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,5,10">
+
+                    <ComboBox Grid.Row="0" Grid.Column="1" x:Name="ComboBoxLedText" Width="150" Margin="0,0,5,0">
+                        <x:String>Marylene</x:String>
+                        <x:String>Justine</x:String>
+                        <x:String>Pauline</x:String>
+                    </ComboBox>
+
+                    <Button x:Name="ButtonLedText" Style="{StaticResource ButtonStyle}" Content="Led Text" Click="{x:Bind ButtonLedText_Click}" Width="80" Height="30" Margin="0,0,0,0" />
+
+                </StackPanel>
+
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+
+            <StackPanel Orientation="Vertical">
+
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (Led Scrolling Delay)</TextBlock>
+
+            </StackPanel>
+
+        </Grid>
+
+
+    </Grid>
+
+</Page>
