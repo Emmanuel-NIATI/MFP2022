@@ -22,8 +22,11 @@ namespace Bluetooth
         {
 
             new Scenario() { Logo="\xE702", Title="Pairing the device", ClassType=typeof(Scenario1_PairingDevice) },
-            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (BlockyTalky)", ClassType=typeof(Scenario2_ManagingMicrobit) }
-
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (UART)", ClassType=typeof(Scenario2_ManagingMicrobit) },
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (BlockyTalky)", ClassType=typeof(Scenario3_ManagingMicrobit) },
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (Led Matrix)", ClassType=typeof(Scenario4_ManagingMicrobit) },
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (Led)", ClassType=typeof(Scenario5_ManagingMicrobit) }
+ 
         };
 
     }
