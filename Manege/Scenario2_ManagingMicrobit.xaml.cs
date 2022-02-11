@@ -22,6 +22,8 @@ using Windows.Devices.Enumeration;
 using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
 namespace Manege
 {
@@ -277,23 +279,23 @@ namespace Manege
         private void SelectedTxCharacteristic_ValueChanged(GattCharacteristic characteristic, GattValueChangedEventArgs e)
         {
 
-            Debug.WriteLine(">>>>>>>>>> Blocky Talky : état reçu !!!");
-            Debug.WriteLine("");
-            
             var dataReader = DataReader.FromBuffer(e.CharacteristicValue);
             byte[] input = new byte[dataReader.UnconsumedBufferLength];
-
-            Debug.WriteLine(">>>>>>>>>> Blocky Talky : longueur : " + input.Length);
-            Debug.WriteLine("");
-
             dataReader.ReadBytes(input);
 
-            for (int i = 0; i < input.Length; i++)
+            CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
 
-                Debug.WriteLine(">>>>>>>>>> Blocky Talky : byte No " + i + input[i]);
+                if (input[8] == 1)
+                {
+                    ImageEtat.Source = new BitmapImage(new Uri("ms-appx:///Assets/SIG_V.png"));
+                }
+                else
+                {
+                    ImageEtat.Source = new BitmapImage(new Uri("ms-appx:///Assets/SIG_R.png"));
+                }
 
-            }
+            });
 
         }
 

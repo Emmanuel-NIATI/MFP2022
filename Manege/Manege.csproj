@@ -145,6 +145,8 @@
     <Content Include="Assets\microbit_jaune.png" />
     <Content Include="Assets\microbit_rouge.png" />
     <Content Include="Assets\microbit_vert.png" />
+    <Content Include="Assets\SIG_R.png" />
+    <Content Include="Assets\SIG_V.png" />
     <Content Include="Assets\SmallTile.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\Square150x150Logo.scale-100.png" />

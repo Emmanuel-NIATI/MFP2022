@@ -41,13 +41,15 @@
 
         <Grid x:Name="Button" Grid.Row="1">
 
-            <StackPanel Grid.Row="0" Orientation="Vertical" Padding="5,5,5,5">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Padding="5,5,5,5">
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <Button x:Name="ButtonA" Style="{StaticResource ButtonStyle}" Content="A" Click="{x:Bind ButtonA_Click}" Width="60" Height="30" Margin="0,0,5,0" />
-                    <Button x:Name="ButtonB" Style="{StaticResource ButtonStyle}" Content="B" Click="{x:Bind ButtonB_Click}" Width="60" Height="30" Margin="0,0,5,0" />
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Button x:Name="ButtonA" Style="{StaticResource ButtonStyle}" Content="Marche" Click="{x:Bind ButtonA_Click}" Width="60" Height="30" Margin="0,0,10,10" />
+                    <Button x:Name="ButtonB" Style="{StaticResource ButtonStyle}" Content="Arrêt" Click="{x:Bind ButtonB_Click}" Width="60" Height="30" Margin="0,0,10,10" />
                 </StackPanel>
 
+                <Image x:Name="ImageEtat" Width="100" Height="184" Source="Assets/SIG_R.png" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,5,5" />
+                
             </StackPanel>
 
         </Grid>
