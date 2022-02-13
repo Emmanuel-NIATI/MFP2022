@@ -154,6 +154,7 @@
     <Content Include="Assets\microbit_jaune.png" />
     <Content Include="Assets\microbit_rouge.png" />
     <Content Include="Assets\microbit_vert.png" />
+    <Content Include="Assets\monorail.png" />
     <Content Include="Assets\SmallTile.scale-100.png" />
     <Content Include="Assets\SmallTile.scale-125.png" />
     <Content Include="Assets\SmallTile.scale-150.png" />
