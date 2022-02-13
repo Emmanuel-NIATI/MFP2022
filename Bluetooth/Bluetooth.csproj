@@ -199,6 +199,13 @@
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Microbit\0249_microbit_firmware.hex" />
+    <None Include="Microbit\microbit-BT.hex" />
+    <None Include="Microbit\microbit-LED.hex" />
+    <None Include="Microbit\microbit-UART.hex" />
+    <None Include="Microbit\microbit-UART.pdf" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
