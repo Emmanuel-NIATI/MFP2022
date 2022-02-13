@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
+using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -49,7 +50,7 @@ namespace Monorail
             this.rootPage = MainPage.Current;
 
             // Zone Microbit
-            this.MicrobitTimer();
+            this.ManageMicrobit();
 
             // Zone Advertisement
             bluetoothLEAdvertisementWatcher = new BluetoothLEAdvertisementWatcher();
@@ -185,18 +186,7 @@ namespace Monorail
 
         // Zone Microbit
 
-        private void MicrobitTimer()
-        {
-
-            // Configuration du Timer
-            DispatcherTimer dispatcherMicrobitTimer = new DispatcherTimer();
-            dispatcherMicrobitTimer.Tick += DispatcherMicrobitTimer_Tick;
-            dispatcherMicrobitTimer.Interval = new TimeSpan(0, 0, 0, 0, 200);
-            dispatcherMicrobitTimer.Start();
-
-        }
-
-        private void DispatcherMicrobitTimer_Tick(object sender, object e)
+        private async void ManageMicrobit()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -205,14 +195,14 @@ namespace Monorail
             LocalSettingAddress = localSettings.Values["Address"] as string;
             LocalSettingColor = localSettings.Values["Color"] as string;
 
-            if( LocalSettingName == null )
+            if (LocalSettingName == null)
             {
-                localSettingName.Text = "";
+                MicrobitName.Text = "";
             }
 
             if (LocalSettingAddress == null)
             {
-                localSettingAddress.Text = "";
+                MicrobitAddress.Text = "";
             }
 
             if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
@@ -221,14 +211,33 @@ namespace Monorail
                 if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
                 {
 
-                    localSettingName.Text = LocalSettingName;
+                    MicrobitName.Text = LocalSettingName;
 
-                    localSettingAddress.Text = LocalSettingAddress;
+                    MicrobitAddress.Text = LocalSettingAddress;
 
                     if (LocalSettingColor.Equals("bleu")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png")); }
                     if (LocalSettingColor.Equals("jaune")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png")); }
                     if (LocalSettingColor.Equals("rouge")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png")); }
                     if (LocalSettingColor.Equals("vert")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png")); }
+
+                    if (this.rootPage.BluetoothLEDevice != null)
+                    {
+
+                        BluetoothConnectionStatus bluetoothConnectionStatus = this.rootPage.BluetoothLEDevice.ConnectionStatus;
+
+                        if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
+                        {
+
+                            MicrobitDeviceConnected.Text = "Connected";
+
+                        }
+                        else if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
+                        {
+
+                            MicrobitDeviceConnected.Text = "Disconnected";
+                        }
+
+                    }
 
                 }
 
@@ -368,7 +377,7 @@ namespace Monorail
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
 
-                if(sender == bluetoothLEAdvertisementWatcher)
+                if (sender == bluetoothLEAdvertisementWatcher)
                 {
 
                     if (args.Advertisement.LocalName != "")
@@ -406,7 +415,7 @@ namespace Monorail
                                 if (LocalSettingName != null && !LocalSettingName.Equals(""))
                                 {
 
-                                    if( LocalSettingName.Equals(bluetoothLEDeviceDisplay.Name))
+                                    if (LocalSettingName.Equals(bluetoothLEDeviceDisplay.Name))
                                     {
 
                                         listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
@@ -473,13 +482,12 @@ namespace Monorail
 
                         DevicePairingResult devicePairingResult = await bluetoothLEDevice.DeviceInformation.Pairing.PairAsync(DevicePairingProtectionLevel.None);
 
-                        if( devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired) )
+                        if (devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired))
                         {
 
                             // Zone commune
                             this.rootPage.BluetoothLEDevice = bluetoothLEDevice;
-                            this.rootPage.ListGattDeviceService = bluetoothLEDevice.GattServices;
-
+                            
                             // Zone Microbit
 
                             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
@@ -488,8 +496,10 @@ namespace Monorail
                             localSettings.Values["Address"] = bluetoothLEDeviceDisplay.Address;
                             localSettings.Values["Color"] = "rouge";
 
+                            this.ManageMicrobit();
+
                             // Zone Advertisement
-                            if( isBluetoothLEAdvertisementWatcherStarted  )
+                            if (isBluetoothLEAdvertisementWatcherStarted)
                             {
 
                                 bluetoothLEAdvertisementWatcher.Stop();
@@ -500,7 +510,7 @@ namespace Monorail
                             }
 
                             // Zone Device
-                            if( isDeviceWatcherStarted )
+                            if (isDeviceWatcherStarted)
                             {
 
                                 deviceWatcher.Stop();
@@ -511,7 +521,7 @@ namespace Monorail
                             }
 
                             // Zone notification
-                            rootPage.NotifyUser( "Device paired.", NotifyType.StatusMessage);
+                            rootPage.NotifyUser("Device paired.", NotifyType.StatusMessage);
 
                         }
 
@@ -580,12 +590,17 @@ namespace Monorail
                             if (deviceInformation.Name != string.Empty)
                             {
 
-                                if (deviceInformation.Pairing.IsPaired)
+                                if(deviceInformation.Name.Contains("micro:bit"))
                                 {
 
-                                    listDeviceInformationDisplay.Add(new DeviceInformationDisplay(deviceInformation));
+                                    if (deviceInformation.Pairing.IsPaired)
+                                    {
 
-                                    rootPage.NotifyUser("Device Watcher added.", NotifyType.StatusMessage);
+                                        listDeviceInformationDisplay.Add(new DeviceInformationDisplay(deviceInformation));
+
+                                        rootPage.NotifyUser("Device Watcher added.", NotifyType.StatusMessage);
+
+                                    }
 
                                 }
 
@@ -697,9 +712,9 @@ namespace Monorail
             if (e.AddedItems.Count > 0)
             {
 
-                deviceInformationDisplay = (DeviceInformationDisplay) ResultsListViewDevice.SelectedItem;
+                deviceInformationDisplay = (DeviceInformationDisplay)ResultsListViewDevice.SelectedItem;
 
-                if ( deviceInformationDisplay.DeviceInformation.Pairing.IsPaired )
+                if (deviceInformationDisplay.DeviceInformation.Pairing.IsPaired)
                 {
 
                     DeviceUnpairingResult deviceUnpairingResult = await deviceInformationDisplay.DeviceInformation.Pairing.UnpairAsync();
@@ -709,7 +724,6 @@ namespace Monorail
 
                         // Zone commune
                         this.rootPage.BluetoothLEDevice = null;
-                        this.rootPage.ListGattDeviceService = null;
 
                         // Zone Microbit
 
@@ -718,6 +732,8 @@ namespace Monorail
                         localSettings.Values["Name"] = null;
                         localSettings.Values["Address"] = null;
                         localSettings.Values["Color"] = null;
+
+                        this.ManageMicrobit();
 
                         // Zone Advertisement
                         if (isBluetoothLEAdvertisementWatcherStarted)

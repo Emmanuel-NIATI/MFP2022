@@ -21,8 +21,9 @@ namespace Monorail
         List<Scenario> scenarios = new List<Scenario>
         {
 
+            new Scenario() { Logo="\xE702", Title="Pairing the device", ClassType=typeof(Scenario1_PairingDevice) },
+            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (BlockyTalky)", ClassType=typeof(Scenario2_ManagingMicrobit) }
 
- 
         };
 
     }

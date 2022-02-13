@@ -15,12 +15,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// https://github.com/lzhengwei/UWP_Nordic_Uart_Transmitter
-// https://lancaster-university.github.io/microbit-docs/ble/profile/
-// https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html
-// https://www.bluetooth.com/blog/bbc-microbit-inspiring-generation-get-creative-coding/
-// https://www.bluetooth.com/blog/bluetooth-bbc-microbit/
-
 namespace Monorail
 {
     public sealed partial class MainPage : Page
@@ -47,20 +41,6 @@ namespace Monorail
         String LocalSettingName;
         String LocalSettingAddress;
         String LocalSettingColor;
-
-        // Generic Access
-        private string SelectedServiceGenericAccessUUID = "00001800-0000-1000-8000-00805f9b34fb";
-        private string SelectedCharacteristicDeviceNameUUID = "00002a00-0000-1000-8000-00805f9b34fb";
-        private string SelectedCharacteristicAppearanceUUID = "00002a01-0000-1000-8000-00805f9b34fb";
-        private string SelectedCharacteristicPeripheralUUID = "00002a04-0000-1000-8000-00805f9b34fb";
-
-        // Generic Attribute
-        private string SelectedServiceGenericAttributeUUID = "00001801-0000-1000-8000-00805f9b34fb";
-
-        private GattDeviceService SelectedServiceGenericAccess;
-        private GattCharacteristic SelectedCharacteristicDeviceName;
-        private GattCharacteristic SelectedCharacteristicAppearance;
-        private GattCharacteristic SelectedCharacteristicPeripheral;
 
         readonly int E_BLUETOOTH_ATT_WRITE_NOT_PERMITTED = unchecked((int)0x80650003);
         readonly int E_BLUETOOTH_ATT_INVALID_PDU = unchecked((int)0x80650004);
@@ -236,11 +216,7 @@ namespace Monorail
                             if (this.BluetoothLEDevice != null)
                             {
 
-                                Debug.WriteLine(">>>>>>>>>> MainPage : BluetoothLEDevice not null");
-
                                 IReadOnlyList<GattDeviceService> ListGattDeviceService = this.BluetoothLEDevice.GattServices;
-
-                                Debug.WriteLine(">>>>>>>>>> ListGattDeviceService : " + ListGattDeviceService.Count);
 
                             }
                             else
