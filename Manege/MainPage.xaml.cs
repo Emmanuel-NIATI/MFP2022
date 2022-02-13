@@ -15,6 +15,12 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+// https://github.com/lzhengwei/UWP_Nordic_Uart_Transmitter
+// https://lancaster-university.github.io/microbit-docs/ble/profile/
+// https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html
+// https://www.bluetooth.com/blog/bbc-microbit-inspiring-generation-get-creative-coding/
+// https://www.bluetooth.com/blog/bluetooth-bbc-microbit/
+
 namespace Manege
 {
 

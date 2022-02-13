@@ -16,45 +16,18 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://github.com/lzhengwei/UWP_Nordic_Uart_Transmitter
-
 // https://lancaster-university.github.io/microbit-docs/ble/profile/
+// https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html
 // https://www.bluetooth.com/blog/bbc-microbit-inspiring-generation-get-creative-coding/
 // https://www.bluetooth.com/blog/bluetooth-bbc-microbit/
-// https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html
-
 
 namespace Monorail
 {
-
     public sealed partial class MainPage : Page
     {
 
         // Zone commune
         public static MainPage Current;
-
-        public const string FEATURE_NAME = "Gestion de la carte micro:bit";
-
-        public List<Scenario> Scenarios
-        {
-            get { return this.scenarios; }
-        }
-
-        List<Scenario> scenarios = new List<Scenario>
-        {
-
-            new Scenario() { Logo="\xE702", Title="Pairing the device", ClassType=typeof(Scenario1_PairingDevice) },
-            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (UART)", ClassType=typeof(Scenario2_ManagingMicrobit) },
-            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (BlockyTalky)", ClassType=typeof(Scenario3_ManagingMicrobit) },
-            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (Led Matrix)", ClassType=typeof(Scenario4_ManagingMicrobit) },
-            new Scenario() { Logo="\xE702", Title="Managing micro:bit board (Led Text)", ClassType=typeof(Scenario5_ManagingMicrobit) }
-
-            //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit", ClassType=typeof(Scenario3_Microbit) },
-            //new Scenario() { Logo="\xE702", Title="Nearby BLE Advertisement", ClassType=typeof(Scenario1_Advertisement) },
-            //new Scenario() { Logo="\xE702", Title="BLE Paired Device", ClassType=typeof(Scenario2_Device) },
-            //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit", ClassType=typeof(Scenario3_Microbit) },
-            //new Scenario() { Logo="\xE787", Title="Gestion de la carte micro:bit UART", ClassType=typeof(Scenario4_Microbit) }
-
-        };
 
         // Zone Microbit
 
@@ -71,19 +44,6 @@ namespace Monorail
 
         }
 
-        public IReadOnlyList<GattDeviceService> _ListGattDeviceService { get; set; }
-        public IReadOnlyList<GattDeviceService> ListGattDeviceService
-        {
-
-            get { return _ListGattDeviceService; }
-            set
-            {
-
-                _ListGattDeviceService = value;
-            }
-
-        }
-
         String LocalSettingName;
         String LocalSettingAddress;
         String LocalSettingColor;
@@ -96,7 +56,7 @@ namespace Monorail
 
         // Generic Attribute
         private string SelectedServiceGenericAttributeUUID = "00001801-0000-1000-8000-00805f9b34fb";
-        
+
         private GattDeviceService SelectedServiceGenericAccess;
         private GattCharacteristic SelectedCharacteristicDeviceName;
         private GattCharacteristic SelectedCharacteristicAppearance;
@@ -116,7 +76,7 @@ namespace Monorail
 
             Current = this;
 
-            App_Title.Text = FEATURE_NAME;
+            ApplicationTitle.Text = APPLICATION_TITLE;
 
             // Zone Microbit
             this.ManageMicrobit();
@@ -247,6 +207,7 @@ namespace Monorail
             Splitter.IsPaneOpen = !Splitter.IsPaneOpen;
         }
 
+
         // Zone Microbit
 
         private async void ManageMicrobit()
@@ -275,37 +236,17 @@ namespace Monorail
                             if (this.BluetoothLEDevice != null)
                             {
 
-                                if(this.BluetoothLEDevice.DeviceInformation.Pairing.IsPaired)
-                                {
+                                Debug.WriteLine(">>>>>>>>>> MainPage : BluetoothLEDevice not null");
 
-                                    Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Paired");
-                                    
-                                }
-                                else
-                                {
+                                IReadOnlyList<GattDeviceService> ListGattDeviceService = this.BluetoothLEDevice.GattServices;
 
-                                    Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : No paired");
+                                Debug.WriteLine(">>>>>>>>>> ListGattDeviceService : " + ListGattDeviceService.Count);
 
-                                    DevicePairingResult devicePairingResult = await this.BluetoothLEDevice.DeviceInformation.Pairing.PairAsync();
+                            }
+                            else
+                            {
 
-                                    if(devicePairingResult.Status.Equals(DevicePairingResultStatus.Paired))
-                                    {
-
-                                        Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Paired");
-
-                                    }
-                                    else
-                                    {
-
-                                        Debug.WriteLine(">>>>>>>>>> BluetoothLEDevice : Impossible to pair");
-
-                                    }
-
-                                }
-
-                                this.ListGattDeviceService = this.BluetoothLEDevice.GattServices;
-
-                                Debug.WriteLine(">>>>>>>>>> ListGattDeviceService : " + this.ListGattDeviceService.Count);
+                                NotifyUser("Impossible to find the bluetooth device from the micro:bit board known.", NotifyType.ErrorMessage);
 
                             }
 
@@ -316,7 +257,7 @@ namespace Monorail
                 }
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
                 Debug.WriteLine(">>>>>>>>>> Exception : " + e.Message);
@@ -333,42 +274,44 @@ namespace Monorail
         ErrorMessage
     };
 
-    public class Scenario
-    {
-        public string Logo { get; set; }
-        public string Title { get; set; }
-        public Type ClassType { get; set; }
-    }
-
     public class ScenarioLogoBindingConverter : IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+
             Scenario s = value as Scenario;
 
             return s.Logo;
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
+
             return true;
+
         }
 
     }
 
-    public class ScenarioBindingConverter : IValueConverter
+    public class ScenarioTitleBindingConverter : IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+
             Scenario s = value as Scenario;
+
             return (MainPage.Current.Scenarios.IndexOf(s) + 1) + ") " + s.Title;
+
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
+
             return true;
+
         }
 
     }
