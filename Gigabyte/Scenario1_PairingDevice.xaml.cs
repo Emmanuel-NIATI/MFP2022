@@ -25,8 +25,8 @@ namespace Gigabyte
         private MainPage rootPage;
 
         // Zone Arduino
-        String LocalSettingName;
-        String LocalSettingAddress;
+        String LocalSettingArduinoName;
+        String LocalSettingArduinoAddress;
 
         // Zone Advertisement
         BluetoothLEAdvertisementWatcher bluetoothLEAdvertisementWatcher;
@@ -185,38 +185,33 @@ namespace Gigabyte
 
         // Zone Arduino
 
-        private async void ManageMicrobit()
+        private async void ManageArduino()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-            LocalSettingName = localSettings.Values["Name"] as string;
-            LocalSettingAddress = localSettings.Values["Address"] as string;
+            LocalSettingArduinoName = localSettings.Values["Name"] as string;
+            LocalSettingArduinoAddress = localSettings.Values["Address"] as string;
 
-            if (LocalSettingName == null)
+            if (LocalSettingArduinoName == null)
             {
                 ArduinoName.Text = "";
             }
 
-            if (LocalSettingAddress == null)
+            if (LocalSettingArduinoAddress == null)
             {
                 ArduinoAddress.Text = "";
             }
 
-            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            if (LocalSettingArduinoName != null && LocalSettingArduinoAddress != null)
             {
 
-                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                if (!LocalSettingArduinoName.Equals("") && !LocalSettingArduinoAddress.Equals(""))
                 {
 
-                    MicrobitName.Text = LocalSettingName;
+                    ArduinoName.Text = LocalSettingArduinoName;
 
-                    MicrobitAddress.Text = LocalSettingAddress;
-
-                    if (LocalSettingColor.Equals("bleu")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png")); }
-                    if (LocalSettingColor.Equals("jaune")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png")); }
-                    if (LocalSettingColor.Equals("rouge")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png")); }
-                    if (LocalSettingColor.Equals("vert")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png")); }
+                    ArduinoAddress.Text = LocalSettingArduinoAddress;
 
                     if (this.rootPage.BluetoothLEDevice != null)
                     {
@@ -226,13 +221,13 @@ namespace Gigabyte
                         if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
                         {
 
-                            MicrobitDeviceConnected.Text = "Connected";
+                            ArduinoConnected.Text = "Connected";
 
                         }
                         else if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
                         {
 
-                            MicrobitDeviceConnected.Text = "Disconnected";
+                            ArduinoConnected.Text = "Disconnected";
                         }
 
                     }
@@ -245,90 +240,11 @@ namespace Gigabyte
 
                 localSettings.Values["Name"] = null;
                 localSettings.Values["Address"] = null;
-                localSettings.Values["Color"] = null;
 
             }
 
         }
 
-        private void ButtonRed_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
-            {
-
-                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
-                {
-
-                    ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png"));
-                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                    localSettings.Values["Color"] = "rouge";
-
-                }
-
-            }
-
-        }
-
-        private void ButtonBlue_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
-            {
-
-                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
-                {
-
-                    ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png"));
-
-                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                    localSettings.Values["Color"] = "bleu";
-
-                }
-
-            }
-
-        }
-
-        private void ButtonYellow_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
-            {
-
-                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
-                {
-
-                    ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png"));
-
-                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                    localSettings.Values["Color"] = "jaune";
-
-                }
-
-            }
-
-        }
-
-        private void ButtonGreen_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
-            {
-
-                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
-                {
-
-                    ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png"));
-
-                    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-                    localSettings.Values["Color"] = "vert";
-
-                }
-
-            }
-
-        }
 
         // Zone Advertisement
 
@@ -409,11 +325,11 @@ namespace Gigabyte
 
                             if (!FindBluetoothLEDeviceDisplay(bluetoothLEDeviceDisplay.Id))
                             {
-
-                                if (LocalSettingName != null && !LocalSettingName.Equals(""))
+                                
+                                if (LocalSettingArduinoName != null && !LocalSettingArduinoName.Equals(""))
                                 {
 
-                                    if (LocalSettingName.Equals(bluetoothLEDeviceDisplay.Name))
+                                    if (LocalSettingArduinoName.Equals(bluetoothLEDeviceDisplay.Name))
                                     {
 
                                         listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
@@ -492,9 +408,8 @@ namespace Gigabyte
 
                             localSettings.Values["Name"] = bluetoothLEDevice.Name;
                             localSettings.Values["Address"] = bluetoothLEDeviceDisplay.Address;
-                            localSettings.Values["Color"] = "rouge";
 
-                            this.ManageMicrobit();
+                            this.ManageArduino();
 
                             // Zone Advertisement
                             if (isBluetoothLEAdvertisementWatcherStarted)
@@ -731,7 +646,7 @@ namespace Gigabyte
                         localSettings.Values["Address"] = null;
                         localSettings.Values["Color"] = null;
 
-                        this.ManageMicrobit();
+                        this.ManageArduino();
 
                         // Zone Advertisement
                         if (isBluetoothLEAdvertisementWatcherStarted)

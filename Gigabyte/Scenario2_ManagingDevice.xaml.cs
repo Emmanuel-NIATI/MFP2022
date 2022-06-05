@@ -35,9 +35,8 @@ namespace Gigabyte
         private MainPage rootPage;
 
         // Zone Microbit
-        String LocalSettingName;
-        String LocalSettingAddress;
-        String LocalSettingColor;
+        String LocalSettingArduinoName;
+        String LocalSettingArduinoAddress;
 
         // BLOCKY TALKY
         private string SelectedServiceBTUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d6";
@@ -61,8 +60,8 @@ namespace Gigabyte
             // Zone commune
             this.rootPage = MainPage.Current;
 
-            // Zone Microbit
-            this.ManageMicrobit();
+            // Zone Arduino
+            this.ManageArduino();
 
         }
 
@@ -74,11 +73,11 @@ namespace Gigabyte
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
 
-            // Zone Microbit
+            // Zone Arduino
 
 
             // Zone notification
-            rootPage.NotifyUser("Gestion de la carte micro:bit.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Managing Arduino board.", NotifyType.StatusMessage);
 
         }
 
@@ -89,11 +88,11 @@ namespace Gigabyte
             App.Current.Suspending -= App_Suspending;
             App.Current.Resuming -= App_Resuming;
 
-            // Zone Microbit
+            // Zone Arduino
 
 
             // Zone notification
-            rootPage.NotifyUser("A bientôt !", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Good bye !", NotifyType.StatusMessage);
 
         }
 
@@ -101,11 +100,11 @@ namespace Gigabyte
         {
 
 
-            // Zone Microbit
+            // Zone Arduino
 
 
             // Zone notification
-            rootPage.NotifyUser("A bientôt !", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Good bye !", NotifyType.StatusMessage);
 
         }
 
@@ -113,48 +112,42 @@ namespace Gigabyte
         {
 
 
-            // Zone Microbit
+            // Zone Arduino
 
 
             // Zone notification
-            rootPage.NotifyUser("Gestion de la carte micro:bit.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Managing Arduino board.", NotifyType.StatusMessage);
 
         }
 
-        // Zone Microbit
-        public async void ManageMicrobit()
+        // Zone Arduino
+        public async void ManageArduino()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-            LocalSettingName = localSettings.Values["Name"] as string;
-            LocalSettingAddress = localSettings.Values["Address"] as string;
-            LocalSettingColor = localSettings.Values["Color"] as string;
+            LocalSettingArduinoName = localSettings.Values["Name"] as string;
+            LocalSettingArduinoAddress = localSettings.Values["Address"] as string;
 
-            if (LocalSettingName == null)
+            if (LocalSettingArduinoName == null)
             {
-                localSettingName.Text = "";
+                ArduinoName.Text = "";
             }
 
-            if (LocalSettingAddress == null)
+            if (LocalSettingArduinoAddress == null)
             {
-                localSettingAddress.Text = "";
+                ArduinoAddress.Text = "";
             }
 
-            if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+            if (LocalSettingArduinoName != null && LocalSettingArduinoAddress != null)
             {
 
-                if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                if (!LocalSettingArduinoName.Equals("") && !LocalSettingArduinoAddress.Equals(""))
                 {
 
-                    localSettingName.Text = LocalSettingName;
+                    ArduinoName.Text = LocalSettingArduinoName;
 
-                    localSettingAddress.Text = LocalSettingAddress;
-
-                    if (LocalSettingColor.Equals("bleu")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_bleu.png")); }
-                    if (LocalSettingColor.Equals("jaune")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_jaune.png")); }
-                    if (LocalSettingColor.Equals("rouge")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_rouge.png")); }
-                    if (LocalSettingColor.Equals("vert")) { ImageMicrobit.Source = new BitmapImage(new Uri("ms-appx:///Assets/microbit_vert.png")); }
+                    ArduinoAddress.Text = LocalSettingArduinoAddress;
 
                 }
 
@@ -164,32 +157,27 @@ namespace Gigabyte
 
                 localSettings.Values["Name"] = null;
                 localSettings.Values["Address"] = null;
-                localSettings.Values["Color"] = null;
 
             }
 
             if (this.rootPage.BluetoothLEDevice != null)
             {
 
-                Debug.WriteLine(">>>>>>>>>> Scenario2_ManagingMicrobit : BluetoothLEDevice not null");
-
                 BluetoothConnectionStatus bluetoothConnectionStatus = this.rootPage.BluetoothLEDevice.ConnectionStatus;
 
                 if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
                 {
 
-                    MicrobitDeviceConnected.Text = "Connected";
+                    ArduinoConnected.Text = "Connected";
 
                 }
                 else if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
                 {
 
-                    MicrobitDeviceConnected.Text = "Disconnected";
+                    ArduinoConnected.Text = "Disconnected";
                 }
 
                 IReadOnlyList<GattDeviceService> listGattDeviceService = this.rootPage.BluetoothLEDevice.GattServices;
-
-                Debug.WriteLine(">>>>>>>>>> listGattDeviceService : " + listGattDeviceService.Count);
 
                 foreach (GattDeviceService gattDeviceService in listGattDeviceService)
                 {
@@ -286,14 +274,6 @@ namespace Gigabyte
             CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
 
-                if (input[8] == 1)
-                {
-                    ImageEtat.Source = new BitmapImage(new Uri("ms-appx:///Assets/SIG_V.png"));
-                }
-                else
-                {
-                    ImageEtat.Source = new BitmapImage(new Uri("ms-appx:///Assets/SIG_R.png"));
-                }
 
             });
 

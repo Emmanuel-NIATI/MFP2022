@@ -15,21 +15,21 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid x:Name="Microbit" Grid.Row="0">
+        <Grid x:Name="Arduino" Grid.Row="0">
 
             <StackPanel Orientation="Vertical" Padding="5,5,5,5">
 
-                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing micro:bit board (BlockyTalky)</TextBlock>
+                <TextBlock Style="{StaticResource PageDescriptionTextStyle}" Margin="0,0,0,5" FontWeight="Bold" TextWrapping="Wrap">Managing Arduino board (BlockyTalky)</TextBlock>
 
                 <StackPanel Orientation="Horizontal">
 
-                    <Image x:Name="ImageMicrobit" Width="74" Height="60" Source="Assets/microbit.png" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,5,5" />
+                    <Image x:Name="ImageArduino" Width="74" Height="60" Source="Assets/arduino.png" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,5,5" />
 
                     <ScrollViewer VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Visible" BorderBrush="White" BorderThickness="1" Height="60" Width="175">
                         <StackPanel Orientation="Vertical" Padding="5,5,5,5">
-                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="12">Name : <Run x:Name="localSettingName" Text="" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
-                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run x:Name="localSettingAddress" Text=""/></TextBlock>
-                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Device Connected : <Run x:Name="MicrobitDeviceConnected" Text=""/></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="12">Name : <Run x:Name="ArduinoName" Text="" FontStyle="Normal"  FontWeight="Bold"/></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Address : <Run x:Name="ArduinoAddress" Text=""/></TextBlock>
+                            <TextBlock FontFamily="Segoe UI" FontStyle="Italic" FontWeight="Normal" FontSize="10">Connected : <Run x:Name="ArduinoConnected" Text=""/></TextBlock>
                         </StackPanel>
                     </ScrollViewer>
 
@@ -48,7 +48,7 @@
                     <Button x:Name="ButtonB" Style="{StaticResource ButtonStyle}" Content="Arrêt" Click="{x:Bind ButtonB_Click}" Width="60" Height="30" Margin="0,0,10,10" />
                 </StackPanel>
 
-                <Image x:Name="ImageEtat" Width="100" Height="184" Source="Assets/SIG_R.png" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,5,5" />
+
                 
             </StackPanel>
 
