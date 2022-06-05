@@ -26,7 +26,7 @@ namespace Gigabyte
         // Zone commune
         public static MainPage Current;
 
-        // Zone Microbit
+        // Zone Arduino
 
         public BluetoothLEDevice _BluetoothLEDevice { get; set; }
         public BluetoothLEDevice BluetoothLEDevice
@@ -43,8 +43,7 @@ namespace Gigabyte
 
         String LocalSettingName;
         String LocalSettingAddress;
-        String LocalSettingColor;
-
+        
         // Generic Access
         private string SelectedServiceGenericAccessUUID = "00001800-0000-1000-8000-00805f9b34fb";
         private string SelectedCharacteristicDeviceNameUUID = "00002a00-0000-1000-8000-00805f9b34fb";
@@ -75,8 +74,8 @@ namespace Gigabyte
 
             ApplicationTitle.Text = APPLICATION_TITLE;
 
-            // Zone Microbit
-            this.ManageMicrobit();
+            // Zone Arduino
+            this.ManageArduino();
 
         }
 
@@ -205,9 +204,9 @@ namespace Gigabyte
         }
 
 
-        // Zone Microbit
+        // Zone Arduino
 
-        private async void ManageMicrobit()
+        private async void ManageArduino()
         {
 
             try
@@ -217,12 +216,11 @@ namespace Gigabyte
 
                 LocalSettingName = localSettings.Values["Name"] as string;
                 LocalSettingAddress = localSettings.Values["Address"] as string;
-                LocalSettingColor = localSettings.Values["Color"] as string;
-
-                if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)
+                
+                if (LocalSettingName != null && LocalSettingAddress != null)
                 {
 
-                    if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals("") && !LocalSettingColor.Equals(""))
+                    if (!LocalSettingName.Equals("") && !LocalSettingAddress.Equals(""))
                     {
 
                         if (this.BluetoothLEDevice == null)
@@ -233,12 +231,8 @@ namespace Gigabyte
                             if (this.BluetoothLEDevice != null)
                             {
 
-                                Debug.WriteLine(">>>>>>>>>> MainPage : BluetoothLEDevice not null");
-
                                 IReadOnlyList<GattDeviceService> ListGattDeviceService = this.BluetoothLEDevice.GattServices;
-
-                                Debug.WriteLine(">>>>>>>>>> ListGattDeviceService : " + ListGattDeviceService.Count);
-
+                                
                             }
                             else
                             {

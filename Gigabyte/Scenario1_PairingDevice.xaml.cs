@@ -24,10 +24,9 @@ namespace Gigabyte
         // Zone commune
         private MainPage rootPage;
 
-        // Zone Microbit
+        // Zone Arduino
         String LocalSettingName;
         String LocalSettingAddress;
-        String LocalSettingColor;
 
         // Zone Advertisement
         BluetoothLEAdvertisementWatcher bluetoothLEAdvertisementWatcher;
@@ -49,8 +48,8 @@ namespace Gigabyte
             // Zone commune
             this.rootPage = MainPage.Current;
 
-            // Zone Microbit
-            this.ManageMicrobit();
+            // Zone Arduino
+            this.ManageArduino();
 
             // Zone Advertisement
             bluetoothLEAdvertisementWatcher = new BluetoothLEAdvertisementWatcher();
@@ -68,7 +67,7 @@ namespace Gigabyte
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
 
-            // Zone Microbit
+            // Zone Arduino
 
             // Zone Advertisement
             bluetoothLEAdvertisementWatcher.Received += BluetoothLEAdvertisementWatcher_Received;
@@ -82,7 +81,7 @@ namespace Gigabyte
             deviceWatcher.Stopped += DeviceWatcher_Stopped;
 
             // Zone notification
-            rootPage.NotifyUser("Appairage de la carte micro:bit.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Pairing Arduino board.", NotifyType.StatusMessage);
 
         }
 
@@ -93,7 +92,7 @@ namespace Gigabyte
             App.Current.Suspending -= App_Suspending;
             App.Current.Resuming -= App_Resuming;
 
-            // Zone Microbit
+            // Zone Arduino
 
             // Zone Advertisement
 
@@ -121,7 +120,7 @@ namespace Gigabyte
             deviceWatcher.Stopped -= DeviceWatcher_Stopped;
 
             // Zone notification
-            rootPage.NotifyUser("A bientôt !", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Good bye !", NotifyType.StatusMessage);
 
         }
 
@@ -139,7 +138,7 @@ namespace Gigabyte
             bluetoothLEAdvertisementWatcher.Received -= BluetoothLEAdvertisementWatcher_Received;
             bluetoothLEAdvertisementWatcher.Stopped -= BluetoothLEAdvertisementWatcher_Stopped;
 
-            // Zone Microbit
+            // Zone Arduino
 
             // Zone Device
 
@@ -156,7 +155,7 @@ namespace Gigabyte
             deviceWatcher.Stopped -= DeviceWatcher_Stopped;
 
             // Zone notification
-            rootPage.NotifyUser("A bientôt !", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Good bye !", NotifyType.StatusMessage);
 
         }
 
@@ -168,7 +167,7 @@ namespace Gigabyte
             bluetoothLEAdvertisementWatcher.Received += BluetoothLEAdvertisementWatcher_Received;
             bluetoothLEAdvertisementWatcher.Stopped += BluetoothLEAdvertisementWatcher_Stopped;
 
-            // Zone Microbit
+            // Zone Arduino
 
             // Zone Device
 
@@ -179,12 +178,12 @@ namespace Gigabyte
             deviceWatcher.Stopped += DeviceWatcher_Stopped;
 
             // Zone notification
-            rootPage.NotifyUser("Appairage de la carte micro:bit.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Pairing Arduino board.", NotifyType.StatusMessage);
 
         }
 
 
-        // Zone Microbit
+        // Zone Arduino
 
         private async void ManageMicrobit()
         {
@@ -193,16 +192,15 @@ namespace Gigabyte
 
             LocalSettingName = localSettings.Values["Name"] as string;
             LocalSettingAddress = localSettings.Values["Address"] as string;
-            LocalSettingColor = localSettings.Values["Color"] as string;
 
             if (LocalSettingName == null)
             {
-                MicrobitName.Text = "";
+                ArduinoName.Text = "";
             }
 
             if (LocalSettingAddress == null)
             {
-                MicrobitAddress.Text = "";
+                ArduinoAddress.Text = "";
             }
 
             if (LocalSettingName != null && LocalSettingAddress != null && LocalSettingColor != null)

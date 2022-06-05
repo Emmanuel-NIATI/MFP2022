@@ -11,7 +11,7 @@ namespace Gigabyte
     public sealed partial class MainPage : Page
     {
 
-        public const string APPLICATION_TITLE = "Le manège de la fête foraine (micro:bit)";
+        public const string APPLICATION_TITLE = "Gigabyte PC Case (Arduino NANO 33 IoT)";
 
         public List<Scenario> Scenarios
         {
