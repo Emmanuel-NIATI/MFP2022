@@ -294,6 +294,8 @@ namespace Gigabyte
                 if (sender == bluetoothLEAdvertisementWatcher)
                 {
 
+                    Debug.WriteLine("BluetoothLE Advertisement Watcher Received : " + args.Advertisement.LocalName);
+
                     if (args.Advertisement.LocalName != "")
                     {
 
