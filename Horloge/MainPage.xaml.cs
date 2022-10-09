@@ -40,8 +40,17 @@ namespace Horloge
         private GpioPin _gpio21;
 
         // Variables liées à l'affichage LCD
+
+        uint[] rgb_black = new uint[240 * 64];
+        uint[] rgb_win10iot = new uint[240 * 256];
+
         uint[] rgb_chat01 = new uint[ 240 * 320 ];
-        uint[] rgb_fo = new uint[ 240 * 320 ];
+
+        uint[] rgb_csa = new uint[240 * 256];
+        uint[] rgb_admin = new uint[240 * 256];
+        uint[] rgb_gamer = new uint[240 * 256];
+
+        String rgb = "";
 
         public MainPage()
         {
@@ -65,8 +74,14 @@ namespace Horloge
         private void InitVariable()
         {
 
+            ecran.LoadImage(rgb_black, "ms-appx:///Pictures/black.png");
+            ecran.LoadImage(rgb_win10iot, "ms-appx:///Pictures/win10iot.png");
+
             ecran.LoadImage(rgb_chat01, "ms-appx:///Pictures/chat01.png");
-            ecran.LoadImage(rgb_fo, "ms-appx:///Pictures/fo.png");
+
+            ecran.LoadImage(rgb_csa, "ms-appx:///Pictures/csa.png");
+            ecran.LoadImage(rgb_admin, "ms-appx:///Pictures/admin.png");
+            ecran.LoadImage(rgb_gamer, "ms-appx:///Pictures/gamer.png");
 
         }
 
@@ -114,18 +129,18 @@ namespace Horloge
             // Affiche HH:MM:SS
 
             ecran.PlaceCursor(0, 34 * 8);
-            ecran.Print( _hh + ":" + _mm, 4, ILI9341.COLOR_PINK);
+            ecran.Print( _hh + ":" + _mm, 4, ILI9341.COLOR_BLUE_WINDOWS);
 
             ecran.PlaceCursor(20 * 6, 34 * 8);
-            ecran.Print( ":" + _ss, 3, ILI9341.COLOR_PINK);
+            ecran.Print( ":" + _ss, 3, ILI9341.COLOR_BLUE_WINDOWS);
 
             ecran.PlaceCursor(23 * 6, 34 * 8);
-            ecran.Print(_ss, 3, ILI9341.COLOR_PINK);
+            ecran.Print(_ss, 3, ILI9341.COLOR_BLUE_WINDOWS);
 
             // Affiche Dow dd/mm/yyyy
 
             ecran.PlaceCursor(0, 38 * 8);
-            ecran.Print( _dow + " " + _day + "/" + _month + "/" + _year, 2, ILI9341.COLOR_PINK);
+            ecran.Print( _dow + " " + _day + "/" + _month + "/" + _year, 2, ILI9341.COLOR_BLUE_WINDOWS);
 
         }
 
@@ -139,7 +154,11 @@ namespace Horloge
             ecran.ClearScreen();
 
             // Dessiner l'image de fond
-            ecran.DrawPicture(rgb_chat01, 0, 0, 240, 320);
+            ecran.DrawPicture(rgb_win10iot, 0, 0, 240, 256);
+            rgb = "win10iot";
+
+            // Dessiner l'image du bas
+            ecran.DrawPicture(rgb_black, 0, 256, 240, 64);
 
             // Initialiser l'affichage de l'heure et de la date
             string hh = "09";
@@ -157,11 +176,17 @@ namespace Horloge
         private void TravauxTimer()
         {
 
-            // Configuration du Timer
+            // Configuration du Timer Horloge
             DispatcherTimer dispatcherTimerHorloge = new DispatcherTimer();
             dispatcherTimerHorloge.Tick += DispatcherTimerHorloge_Tick;
             dispatcherTimerHorloge.Interval = new TimeSpan(0, 0, 0, 0, 200);
             dispatcherTimerHorloge.Start();
+
+            // Configuration du Timer Image
+            DispatcherTimer dispatcherTimerImage = new DispatcherTimer();
+            dispatcherTimerImage.Tick += DispatcherTimerImage_Tick;
+            dispatcherTimerImage.Interval = new TimeSpan(0, 0, 0, 0, 2000);
+            dispatcherTimerImage.Start();
 
         }
 
@@ -198,6 +223,39 @@ namespace Horloge
 
         }
 
+        private void DispatcherTimerImage_Tick(object sender, object e)
+        {
+
+            if( "win10iot".Equals( rgb ) )
+            {
+
+                ecran.DrawPicture(rgb_csa, 0, 0, 240, 256);
+                rgb = "csa";
+
+            }
+            else if( "csa".Equals( rgb ) )
+            {
+
+                ecran.DrawPicture(rgb_admin, 0, 0, 240, 256);
+                rgb = "admin";
+
+            }
+            else if ("admin".Equals(rgb))
+            {
+
+                ecran.DrawPicture(rgb_gamer, 0, 0, 240, 256);
+                rgb = "gamer";
+
+            }
+            else if ("gamer".Equals(rgb))
+            {
+
+                ecran.DrawPicture(rgb_csa, 0, 0, 240, 256);
+                rgb = "csa";
+
+            }
+
+        }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {

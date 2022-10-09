@@ -191,6 +191,8 @@ namespace LCDDisplayDriver
         public static readonly uint COLOR_GREENYELLOW = 0xAFE5;   // 173, 255,  41
         public static readonly uint COLOR_PINK = 0xFC18;          // 255, 130, 198
 
+        public static readonly uint COLOR_BLUE_WINDOWS = 0x0B98;  //   8, 113, 196
+
         public static readonly uint COLOR_PINK_PAULINE = 0xFD38;  // 255, 165, 198
 
         public ILI9341()
@@ -464,8 +466,6 @@ namespace LCDDisplayDriver
 
                         i = (i + 1) % 4;
                     }
-
-
 
                 }
                 else
