@@ -46,8 +46,9 @@ namespace Horloge
 
         uint[] rgb_chat01 = new uint[ 240 * 320 ];
 
-        uint[] rgb_csa = new uint[240 * 256];
         uint[] rgb_admin = new uint[240 * 256];
+        uint[] rgb_blast = new uint[240 * 256];
+        uint[] rgb_csa = new uint[240 * 256];
         uint[] rgb_gamer = new uint[240 * 256];
 
         String rgb = "";
@@ -79,8 +80,9 @@ namespace Horloge
 
             ecran.LoadImage(rgb_chat01, "ms-appx:///Pictures/chat01.png");
 
-            ecran.LoadImage(rgb_csa, "ms-appx:///Pictures/csa.png");
             ecran.LoadImage(rgb_admin, "ms-appx:///Pictures/admin.png");
+            ecran.LoadImage(rgb_blast, "ms-appx:///Pictures/blast.png");
+            ecran.LoadImage(rgb_csa, "ms-appx:///Pictures/csa.png");
             ecran.LoadImage(rgb_gamer, "ms-appx:///Pictures/gamer.png");
 
         }
@@ -248,6 +250,13 @@ namespace Horloge
 
             }
             else if ("gamer".Equals(rgb))
+            {
+
+                ecran.DrawPicture(rgb_blast, 0, 0, 240, 256);
+                rgb = "blast";
+
+            }
+            else if ("blast".Equals(rgb))
             {
 
                 ecran.DrawPicture(rgb_csa, 0, 0, 240, 256);

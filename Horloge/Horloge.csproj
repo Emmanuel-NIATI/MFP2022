@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>Horloge_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>3300AE0EFC7FE72C5B418A666636CB169EEBC643</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>DF5DCF36B4FFB870CE2C4859EC1CD2F3CA3E42A4</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
@@ -141,6 +141,7 @@
   <ItemGroup>
     <Content Include="Pictures\admin.png" />
     <Content Include="Pictures\black.png" />
+    <Content Include="Pictures\blast.png" />
     <Content Include="Pictures\chat01.png" />
     <Content Include="Pictures\csa.png" />
     <Content Include="Pictures\gamer.png" />
