@@ -28,15 +28,15 @@ namespace LCDDisplayDriver
 
         // 1) +Vcc			 1) +3.3V				 1) +3.3V 					Fil rouge
         // 2) GND			20) GND					20) GND						Fil noir
-        // 3) CS			24) CE0 (SPI) GPIO 10	24) CE0 (SPI) GPIO 8		Fil jaune
-        // 4) RESET			16) GPIO 4				16) GPIO 23					Fil violet
-        // 5) DC/RS			15) GPIO 3				15) GPIO 22					Fil vert
+        // 3) CS			24) CE0 (SPI) GPIO 10	24) CE0 (SPI) GPIO 8		Fil blanc
+        // 4) RESET			16) GPIO 4				16) GPIO 23					Fil jaune
+        // 5) DC/RS			15) GPIO 3				15) GPIO 22					Fil violet
         // 6) MOSI			19) MOSI (SPI) GPIO 12	19) MOSI (SPI) GPIO 10		Fil bleu
-        // 7) SCK			23) SCLK (SPI) GPIO 14	23) SCLK (SPI) GPIO 11		Fil blanc
-        // 8) LED			17) +3.3V				17) +3.3V					Fil rouge
-        // 9) MISO			21) MISO (SPI) GPIO 13	21) MISO (SPI) GPIO 9		Fil orange
+        // 7) SCK			23) SCLK (SPI) GPIO 14	23) SCLK (SPI) GPIO 11		Fil orange
+        // 8) LED			17) +3.3V				17) +3.3V					Fil vert
+        // 9) MISO			21) MISO (SPI) GPIO 13	21) MISO (SPI) GPIO 9		Fil marron
 
-
+            
         // Mémo :
 
         // sbyte	Signed 1 byte       Stores whole numbers from -128 to 127
