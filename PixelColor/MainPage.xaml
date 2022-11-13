@@ -5,58 +5,79 @@
     xmlns:local="using:PixelColor"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <StackPanel Name="StackPanelLeft" HorizontalAlignment="Center" Grid.Column="0" Margin="25">
-
-            <Button x:Name="BtnBlack" Width="50" Height="50" Margin="20" Background="Black" BorderBrush="Black" IsEnabled="True" Click="BtnBlack_Click"/>
-
-            <Button x:Name="BtnWhite" Width="50" Height="50" Margin="20" Background="White" BorderBrush="Black" IsEnabled="True" Click="BtnWhite_Click"/>
-
-            <Button x:Name="BtnBlue" Width="50" Height="50" Margin="20" Background="Blue" BorderBrush="Black" IsEnabled="True" Click="BtnBlue_Click"/>
-
-            <Button x:Name="BtnLightSkyBlue" Width="50" Height="50" Margin="20" Background="LightSkyBlue" BorderBrush="Black" IsEnabled="True" Click="BtnLightSkyBlue_Click"/>
-
-            <Button x:Name="BtnGreen" Width="50" Height="50" Margin="20" Background="Green" BorderBrush="Black" IsEnabled="True" Click="BtnGreen_Click"/>
-
-            <Button x:Name="BtnLightGreen" Width="50" Height="50" Margin="20" Background="LightGreen" BorderBrush="Black" IsEnabled="True" Click="BtnLightGreen_Click"/>
-
-            <Button x:Name="BtnRed" Width="50" Height="50" Margin="20" Background="Red" BorderBrush="Black" IsEnabled="True" Click="BtnRed_Click"/>
-
-            <Button x:Name="BtnOrange" Width="50" Height="50" Margin="20" Background="Orange" BorderBrush="Black" IsEnabled="True" Click="BtnOrange_Click"/>
-
-            <Button x:Name="BtnYellow" Width="50" Height="50" Margin="20" Background="Yellow" BorderBrush="Black" IsEnabled="True" Click="BtnYellow_Click"/>
-
-            <Button x:Name="BtnPurple" Width="50" Height="50" Margin="20" Background="Purple" BorderBrush="Black" IsEnabled="True" Click="BtnPurple_Click"/>
-
-            <Button x:Name="BtnViolet" Width="50" Height="50" Margin="20" Background="Violet" BorderBrush="Black" IsEnabled="True" Click="BtnViolet_Click"/>
+        <StackPanel Name="StackPanelUp" Orientation="Vertical" Grid.Row="0" Margin="25">
 
         </StackPanel>
 
-        <StackPanel Name="StackPanelRight" HorizontalAlignment="Center" Grid.Column="1" Margin="25">
+        <StackPanel Name="StackPanelBottom" Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="1" Margin="25">
 
-            <StackPanel Name="StackPanelRightLigne01" Orientation="Horizontal">
+            <StackPanel Name="StackPanelBottomLeft" Orientation="Vertical">
 
-                <Button x:Name="Btn0101" Width="20" Height="20" Margin="5" Background="White" BorderBrush="Black" IsEnabled="True" Click="Btn0101_Click"/>
-                <Button x:Name="Btn0201" Width="20" Height="20" Margin="5" Background="White" BorderBrush="Black" IsEnabled="True" Click="Btn0201_Click"/>
-                <Button x:Name="Btn0301" Width="20" Height="20" Margin="5" Background="White" BorderBrush="Black" IsEnabled="True" Click="Btn0301_Click"/>
-                
+                <StackPanel Name="StackPanelBottomLeftLin01" Orientation="Horizontal">
+
+                    <Button x:Name="BtnBlack" Width="50" Height="50" Margin="20" Background="Black" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnBlack_Click"/>
+
+                    <Button x:Name="BtnWhite" Width="50" Height="50" Margin="20" Background="White" BorderBrush="Black" BorderThickness="2" IsEnabled="True" Click="BtnWhite_Click"/>
+
+                </StackPanel>
+
+                <StackPanel Name="StackPanelBottomLeftLin02" Orientation="Horizontal">
+
+                    <Button x:Name="BtnBlue" Width="50" Height="50" Margin="20" Background="Blue" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnBlue_Click"/>
+
+                    <Button x:Name="BtnLightSkyBlue" Width="50" Height="50" Margin="20" Background="LightSkyBlue" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnLightSkyBlue_Click"/>
+
+                </StackPanel>
+
+                <StackPanel Name="StackPanelBottomLeftLin03" Orientation="Horizontal">
+
+                    <Button x:Name="BtnGreen" Width="50" Height="50" Margin="20" Background="Green" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnGreen_Click"/>
+
+                    <Button x:Name="BtnLightGreen" Width="50" Height="50" Margin="20" Background="LightGreen" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnLightGreen_Click"/>
+
+                </StackPanel>
+
+                <StackPanel Name="StackPanelBottomLeftLin04" Orientation="Horizontal">
+
+                    <Button x:Name="BtnRed" Width="50" Height="50" Margin="20" Background="Red" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnRed_Click"/>
+
+                    <Button x:Name="BtnPink" Width="50" Height="50" Margin="20" Background="Pink" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnPink_Click"/>
+
+                </StackPanel>
+
+                <StackPanel Name="StackPanelBottomLeftLin05" Orientation="Horizontal">
+
+                    <Button x:Name="BtnOrange" Width="50" Height="50" Margin="20" Background="Orange" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnOrange_Click"/>
+
+                    <Button x:Name="BtnYellow" Width="50" Height="50" Margin="20" Background="Yellow" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnYellow_Click"/>
+
+                </StackPanel>
+
+                <StackPanel Name="StackPanelBottomLeftLin06" Orientation="Horizontal">
+
+                    <Button x:Name="BtnPurple" Width="50" Height="50" Margin="20" Background="Purple" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnPurple_Click"/>
+
+                    <Button x:Name="BtnViolet" Width="50" Height="50" Margin="20" Background="Violet" BorderBrush="Gray" BorderThickness="2" IsEnabled="True" Click="BtnViolet_Click"/>
+
+                </StackPanel>
+
             </StackPanel>
 
+            <StackPanel Name="StackPanelBottomRight" BorderBrush="Black" BorderThickness="2" HorizontalAlignment="Center" Margin="20">
 
-
-
-
-
+            </StackPanel>
+        
         </StackPanel>
-
     </Grid>
 
 </Page>
