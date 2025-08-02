@@ -127,8 +127,11 @@
     <Compile Include="Scenario1_PairingDevice.xaml.cs">
       <DependentUpon>Scenario1_PairingDevice.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Scenario2_ManagingDevice.xaml.cs">
-      <DependentUpon>Scenario2_ManagingDevice.xaml</DependentUpon>
+    <Compile Include="Scenario2_ManagingDevice01.xaml.cs">
+      <DependentUpon>Scenario2_ManagingDevice01.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Scenario3_ManagingDevice02.xaml.cs">
+      <DependentUpon>Scenario3_ManagingDevice02.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +163,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Scenario2_ManagingDevice.xaml">
+    <Page Include="Scenario2_ManagingDevice01.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Scenario3_ManagingDevice02.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

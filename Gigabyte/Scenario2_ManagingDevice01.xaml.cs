@@ -28,15 +28,15 @@ using Windows.UI.Core;
 namespace Gigabyte
 {
 
-    public sealed partial class Scenario2_ManagingDevice : Page
+    public sealed partial class Scenario2_ManagingDevice01 : Page
     {
 
         // Zone commune
         private MainPage rootPage;
 
-        // Zone Microbit
-        String LocalSettingArduinoName;
-        String LocalSettingArduinoAddress;
+        // Zone BLE Device
+        String LocalSettingBLEDeviceName;
+        String LocalSettingBLEDeviceAddress;
 
         // BLOCKY TALKY
         private string SelectedServiceBTUUID = "0b78ac2d-fe36-43ac-32d0-a29d8fbe05d6";
@@ -52,7 +52,7 @@ namespace Gigabyte
         readonly int E_ACCESSDENIED = unchecked((int)0x80070005);
         readonly int E_DEVICE_NOT_AVAILABLE = unchecked((int)0x800710df);
 
-        public Scenario2_ManagingDevice()
+        public Scenario2_ManagingDevice01()
         {
 
             this.InitializeComponent();
@@ -60,8 +60,8 @@ namespace Gigabyte
             // Zone commune
             this.rootPage = MainPage.Current;
 
-            // Zone Arduino
-            this.ManageArduino();
+            // Zone BLE Device
+            this.ManageBLEDevice();
 
         }
 
@@ -73,7 +73,7 @@ namespace Gigabyte
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
 
-            // Zone Arduino
+            // Zone BLE Device
 
 
             // Zone notification
@@ -88,7 +88,7 @@ namespace Gigabyte
             App.Current.Suspending -= App_Suspending;
             App.Current.Resuming -= App_Resuming;
 
-            // Zone Arduino
+            // Zone BLE Device
 
 
             // Zone notification
@@ -100,7 +100,7 @@ namespace Gigabyte
         {
 
 
-            // Zone Arduino
+            // Zone BLE Device
 
 
             // Zone notification
@@ -112,7 +112,7 @@ namespace Gigabyte
         {
 
 
-            // Zone Arduino
+            // Zone BLE Device
 
 
             // Zone notification
@@ -120,34 +120,33 @@ namespace Gigabyte
 
         }
 
-        // Zone Arduino
-        public async void ManageArduino()
+        // Zone BLE Device
+        public async void ManageBLEDevice()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-            LocalSettingArduinoName = localSettings.Values["Name"] as string;
-            LocalSettingArduinoAddress = localSettings.Values["Address"] as string;
+            LocalSettingBLEDeviceName = localSettings.Values["Name"] as string;
+            LocalSettingBLEDeviceAddress = localSettings.Values["Address"] as string;
 
-            if (LocalSettingArduinoName == null)
+            if (LocalSettingBLEDeviceName == null)
             {
-                ArduinoName.Text = "";
+                BLEDeviceName.Text = "";
             }
 
-            if (LocalSettingArduinoAddress == null)
+            if (LocalSettingBLEDeviceAddress == null)
             {
-                ArduinoAddress.Text = "";
+                BLEDeviceAddress.Text = "";
             }
 
-            if (LocalSettingArduinoName != null && LocalSettingArduinoAddress != null)
+            if (LocalSettingBLEDeviceName != null && LocalSettingBLEDeviceAddress != null)
             {
 
-                if (!LocalSettingArduinoName.Equals("") && !LocalSettingArduinoAddress.Equals(""))
+                if (!LocalSettingBLEDeviceName.Equals("") && !LocalSettingBLEDeviceAddress.Equals(""))
                 {
 
-                    ArduinoName.Text = LocalSettingArduinoName;
-
-                    ArduinoAddress.Text = LocalSettingArduinoAddress;
+                    BLEDeviceName.Text = LocalSettingBLEDeviceName;
+                    BLEDeviceAddress.Text = LocalSettingBLEDeviceAddress;
 
                 }
 
@@ -168,13 +167,13 @@ namespace Gigabyte
                 if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
                 {
 
-                    ArduinoConnected.Text = "Connected";
+                    BLEDeviceConnected.Text = "Connected";
 
                 }
                 else if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
                 {
 
-                    ArduinoConnected.Text = "Disconnected";
+                    BLEDeviceConnected.Text = "Disconnected";
                 }
 
                 IReadOnlyList<GattDeviceService> listGattDeviceService = this.rootPage.BluetoothLEDevice.GattServices;

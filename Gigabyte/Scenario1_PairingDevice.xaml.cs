@@ -9,6 +9,7 @@ using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -24,9 +25,9 @@ namespace Gigabyte
         // Zone commune
         private MainPage rootPage;
 
-        // Zone Arduino
-        String LocalSettingArduinoName;
-        String LocalSettingArduinoAddress;
+        // Zone BLE Device
+        String LocalSettingDeviceName;
+        String LocalSettingDeviceAddress;
 
         // Zone Advertisement
         BluetoothLEAdvertisementWatcher bluetoothLEAdvertisementWatcher;
@@ -48,8 +49,8 @@ namespace Gigabyte
             // Zone commune
             this.rootPage = MainPage.Current;
 
-            // Zone Arduino
-            this.ManageArduino();
+            // Zone BLE Device
+            this.ManageBLEDevice();
 
             // Zone Advertisement
             bluetoothLEAdvertisementWatcher = new BluetoothLEAdvertisementWatcher();
@@ -67,7 +68,7 @@ namespace Gigabyte
             App.Current.Suspending += App_Suspending;
             App.Current.Resuming += App_Resuming;
 
-            // Zone Arduino
+            // Zone BLE Device
 
             // Zone Advertisement
             bluetoothLEAdvertisementWatcher.Received += BluetoothLEAdvertisementWatcher_Received;
@@ -81,7 +82,7 @@ namespace Gigabyte
             deviceWatcher.Stopped += DeviceWatcher_Stopped;
 
             // Zone notification
-            rootPage.NotifyUser("Pairing Arduino board.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Pairing device.", NotifyType.StatusMessage);
 
         }
 
@@ -92,7 +93,6 @@ namespace Gigabyte
             App.Current.Suspending -= App_Suspending;
             App.Current.Resuming -= App_Resuming;
 
-            // Zone Arduino
 
             // Zone Advertisement
 
@@ -104,6 +104,7 @@ namespace Gigabyte
 
             bluetoothLEAdvertisementWatcher.Received -= BluetoothLEAdvertisementWatcher_Received;
             bluetoothLEAdvertisementWatcher.Stopped -= BluetoothLEAdvertisementWatcher_Stopped;
+
 
             // Zone Device
 
@@ -119,8 +120,10 @@ namespace Gigabyte
             deviceWatcher.EnumerationCompleted -= DeviceWatcher_EnumerationCompleted;
             deviceWatcher.Stopped -= DeviceWatcher_Stopped;
 
+
             // Zone notification
             rootPage.NotifyUser("Good bye !", NotifyType.StatusMessage);
+
 
         }
 
@@ -138,7 +141,7 @@ namespace Gigabyte
             bluetoothLEAdvertisementWatcher.Received -= BluetoothLEAdvertisementWatcher_Received;
             bluetoothLEAdvertisementWatcher.Stopped -= BluetoothLEAdvertisementWatcher_Stopped;
 
-            // Zone Arduino
+            // Zone BLE Device
 
             // Zone Device
 
@@ -167,7 +170,7 @@ namespace Gigabyte
             bluetoothLEAdvertisementWatcher.Received += BluetoothLEAdvertisementWatcher_Received;
             bluetoothLEAdvertisementWatcher.Stopped += BluetoothLEAdvertisementWatcher_Stopped;
 
-            // Zone Arduino
+            // Zone BLE Device
 
             // Zone Device
 
@@ -178,40 +181,40 @@ namespace Gigabyte
             deviceWatcher.Stopped += DeviceWatcher_Stopped;
 
             // Zone notification
-            rootPage.NotifyUser("Pairing Arduino board.", NotifyType.StatusMessage);
+            rootPage.NotifyUser("Pairing device board.", NotifyType.StatusMessage);
 
         }
 
 
-        // Zone Arduino
+        // Zone BLE Device
 
-        private async void ManageArduino()
+        private async void ManageBLEDevice()
         {
 
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
-            LocalSettingArduinoName = localSettings.Values["Name"] as string;
-            LocalSettingArduinoAddress = localSettings.Values["Address"] as string;
+            LocalSettingDeviceName = localSettings.Values["Name"] as string;
+            LocalSettingDeviceAddress = localSettings.Values["Address"] as string;
 
-            if (LocalSettingArduinoName == null)
+            if (LocalSettingDeviceName == null)
             {
-                ArduinoName.Text = "";
+                BLEDeviceName.Text = "";
             }
 
-            if (LocalSettingArduinoAddress == null)
+            if (LocalSettingDeviceAddress == null)
             {
-                ArduinoAddress.Text = "";
+                BLEDeviceAddress.Text = "";
             }
 
-            if (LocalSettingArduinoName != null && LocalSettingArduinoAddress != null)
+            if (LocalSettingDeviceName != null && LocalSettingDeviceAddress != null)
             {
 
-                if (!LocalSettingArduinoName.Equals("") && !LocalSettingArduinoAddress.Equals(""))
+                if (!LocalSettingDeviceName.Equals("") && !LocalSettingDeviceAddress.Equals(""))
                 {
 
-                    ArduinoName.Text = LocalSettingArduinoName;
+                    BLEDeviceName.Text = LocalSettingDeviceName;
 
-                    ArduinoAddress.Text = LocalSettingArduinoAddress;
+                    BLEDeviceAddress.Text = LocalSettingDeviceAddress;
 
                     if (this.rootPage.BluetoothLEDevice != null)
                     {
@@ -221,13 +224,13 @@ namespace Gigabyte
                         if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Connected))
                         {
 
-                            ArduinoConnected.Text = "Connected";
+                            BLEDeviceConnected.Text = "Connected";
 
                         }
                         else if (bluetoothConnectionStatus.Equals(BluetoothConnectionStatus.Disconnected))
                         {
 
-                            ArduinoConnected.Text = "Disconnected";
+                            BLEDeviceConnected.Text = "Disconnected";
                         }
 
                     }
@@ -248,7 +251,7 @@ namespace Gigabyte
 
         // Zone Advertisement
 
-        private void EnumerateButtonAdvertisement_Click(object sender, RoutedEventArgs e)
+        private void RunEnumerateButtonAdvertisement_Click(object sender, RoutedEventArgs e)
         {
 
             if (!isBluetoothLEAdvertisementWatcherStarted)
@@ -261,6 +264,20 @@ namespace Gigabyte
                 listBluetoothLEDeviceDisplay.Clear();
 
                 rootPage.NotifyUser("Running... Advertisement Watcher started.", NotifyType.StatusMessage);
+
+            }
+
+        }
+
+        private void StopEnumerateButtonAdvertisement_Click(object sender, RoutedEventArgs e)
+        {
+
+            if ( isBluetoothLEAdvertisementWatcherStarted )
+            {
+
+                bluetoothLEAdvertisementWatcher.Stop();
+
+                isBluetoothLEAdvertisementWatcherStarted = false;
 
             }
 
@@ -288,17 +305,59 @@ namespace Gigabyte
         private async void BluetoothLEAdvertisementWatcher_Received(BluetoothLEAdvertisementWatcher sender, BluetoothLEAdvertisementReceivedEventArgs args)
         {
 
+            // We can obtain various information about the advertisement we just received by accessing 
+            // the properties of the EventArgs class
+
+            // The timestamp of the event
+            DateTimeOffset timestamp = args.Timestamp;
+
+            // The type of advertisement
+            BluetoothLEAdvertisementType advertisementType = args.AdvertisementType;
+
+            // The received signal strength indicator (RSSI)
+            Int16 rssi = args.RawSignalStrengthInDBm;
+
+            // The local name of the advertising device contained within the payload, if any
+            string localName = args.Advertisement.LocalName;
+
+            // Check if there are any manufacturer-specific sections.
+            // If there is, print the raw data of the first manufacturer section (if there are multiple).
+            string manufacturerDataString = "";
+            var manufacturerSections = args.Advertisement.ManufacturerData;
+
+            if (manufacturerSections.Count > 0)
+            {
+
+                // Only print the first one of the list
+                var manufacturerData = manufacturerSections[0];
+                var data = new byte[manufacturerData.Data.Length];
+
+                using (var reader = DataReader.FromBuffer(manufacturerData.Data))
+                {
+                    reader.ReadBytes(data);
+                }
+
+                // Print the company ID + the raw data in hex format
+                manufacturerDataString = string.Format("0x{0}: {1}", manufacturerData.CompanyId.ToString("X"), BitConverter.ToString(data));
+
+            }
+
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
 
+                string message = string.Format("[{0}]: type={1}, rssi={2}, name={3}, manufacturerData=[{4}]", timestamp.ToString("hh\\:mm\\:ss\\.fff"), advertisementType.ToString(), rssi.ToString(), localName, manufacturerDataString);
+
+                Debug.WriteLine(message);
+                                                                                                                                                        
                 if (sender == bluetoothLEAdvertisementWatcher)
                 {
 
                     Debug.WriteLine("BluetoothLE Advertisement Watcher Received !");
-                    Debug.WriteLine("BluetoothLE Advertisement Watcher Received : " + args.Advertisement.LocalName);
 
                     if (args.Advertisement.LocalName != "")
                     {
+
+                        Debug.WriteLine("  => Local Name : " + args.Advertisement.LocalName);
 
                         try
                         {
@@ -329,10 +388,10 @@ namespace Gigabyte
                             if (!FindBluetoothLEDeviceDisplay(bluetoothLEDeviceDisplay.Id))
                             {
                                 
-                                if (LocalSettingArduinoName != null && !LocalSettingArduinoName.Equals(""))
+                                if (LocalSettingDeviceName != null && !LocalSettingDeviceName.Equals(""))
                                 {
 
-                                    if (LocalSettingArduinoName.Equals(bluetoothLEDeviceDisplay.Name))
+                                    if (LocalSettingDeviceName.Equals(bluetoothLEDeviceDisplay.Name))
                                     {
 
                                         listBluetoothLEDeviceDisplay.Add(bluetoothLEDeviceDisplay);
@@ -353,6 +412,23 @@ namespace Gigabyte
                         {
 
                             Debug.WriteLine("Exception : " + e.Message);
+
+                        }
+
+                    }
+                    else
+                    {
+
+                        Debug.WriteLine("BluetoothLE Advertisement Watcher Received : ");
+
+                        IList<BluetoothLEAdvertisementDataSection> dataSections = args.Advertisement.DataSections;
+
+                        foreach (BluetoothLEAdvertisementDataSection bluetoothLEAdvertisementDataSection in dataSections)
+                        {
+                            
+                            Debug.WriteLine("  => Data type : " + bluetoothLEAdvertisementDataSection.DataType);
+                            Debug.WriteLine("  => Data      : " + bluetoothLEAdvertisementDataSection.Data);
+                            Debug.WriteLine("");
 
                         }
 
@@ -405,14 +481,14 @@ namespace Gigabyte
                             // Zone commune
                             this.rootPage.BluetoothLEDevice = bluetoothLEDevice;
                             
-                            // Zone Microbit
+                            // Zone BLE Device
 
                             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
                             localSettings.Values["Name"] = bluetoothLEDevice.Name;
                             localSettings.Values["Address"] = bluetoothLEDeviceDisplay.Address;
 
-                            this.ManageArduino();
+                            this.ManageBLEDevice();
 
                             // Zone Advertisement
                             if (isBluetoothLEAdvertisementWatcherStarted)
@@ -463,7 +539,7 @@ namespace Gigabyte
 
                 listDeviceInformationDisplay.Clear();
 
-                rootPage.NotifyUser("Running... device Watcher started.", NotifyType.StatusMessage);
+                rootPage.NotifyUser("Running... Device Watcher started.", NotifyType.StatusMessage);
 
             }
 
@@ -506,6 +582,9 @@ namespace Gigabyte
                             if (deviceInformation.Name != string.Empty)
                             {
 
+
+                                // Pour micro:bit
+
                                 if(deviceInformation.Name.Contains("micro:bit"))
                                 {
 
@@ -519,6 +598,9 @@ namespace Gigabyte
                                     }
 
                                 }
+
+
+
 
                             }
 
@@ -641,7 +723,7 @@ namespace Gigabyte
                         // Zone commune
                         this.rootPage.BluetoothLEDevice = null;
 
-                        // Zone Microbit
+                        // Zone BLE Device
 
                         ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
 
@@ -649,7 +731,7 @@ namespace Gigabyte
                         localSettings.Values["Address"] = null;
                         localSettings.Values["Color"] = null;
 
-                        this.ManageArduino();
+                        this.ManageBLEDevice();
 
                         // Zone Advertisement
                         if (isBluetoothLEAdvertisementWatcherStarted)

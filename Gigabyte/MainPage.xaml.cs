@@ -74,8 +74,8 @@ namespace Gigabyte
 
             ApplicationTitle.Text = APPLICATION_TITLE;
 
-            // Zone Arduino
-            this.ManageArduino();
+            // Zone Device
+            this.ManageDevice();
 
         }
 
@@ -204,9 +204,9 @@ namespace Gigabyte
         }
 
 
-        // Zone Arduino
+        // Zone Device
 
-        private async void ManageArduino()
+        private async void ManageDevice()
         {
 
             try
@@ -237,7 +237,7 @@ namespace Gigabyte
                             else
                             {
 
-                                NotifyUser("Impossible to find the bluetooth device from the micro:bit board known.", NotifyType.ErrorMessage);
+                                NotifyUser("Impossible to find the bluetooth device from the device board known.", NotifyType.ErrorMessage);
 
                             }
 
